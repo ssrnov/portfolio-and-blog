@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ATS Resume Builder | SSRNovX Studio</title>
+  <meta name="description" content="Generate an ATS-compliant developer resume PDF from your portfolio data." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+</head>
+<body class="dashboard-shell">
+
+  <!-- Left Sidebar -->
+  <aside class="dashboard-sidebar" role="navigation">
+    <div>
+      <div class="sidebar-header">
+        <a href="/" class="brand-logo" aria-label="SSRNovX Home">
+          <span>SSRNovX</span>
+          <span class="brand-badge">Studio</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="/dashboard/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Overview</span>
+        </a>
+        <a href="/dashboard/builder/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+          <span>Portfolio Builder</span>
+        </a>
+        <a href="/dashboard/projects/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+          <span>Projects &amp; GitHub</span>
+        </a>
+        <a href="/dashboard/resume/" class="sidebar-link active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          <span>ATS Resume</span>
+          <span class="sidebar-link-badge">PDF</span>
+        </a>
+        <a href="/dashboard/settings/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-snippet">
+        <div class="user-avatar-small">S</div>
+        <div class="user-info-text">
+          <h4>Sunny / SSRNovX</h4>
+          <p>/u/sunny</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main View -->
+  <main class="dashboard-main">
+    <header class="dashboard-topbar">
+      <div class="topbar-breadcrumbs">
+        <a href="/dashboard/" style="color: inherit; text-decoration: none;">Studio</a>
+        <span>/</span>
+        <strong>ATS Resume Builder</strong>
+      </div>
+
+      <div class="topbar-actions">
+        <!-- Download PDF Action -->
+        <a href="/assets/resume/SSRNovX_Resume.pdf" download="SSRNovX_Resume.pdf" class="btn btn-primary btn-card" id="download-pdf-btn">
+          <span>Download ATS PDF</span>
+          <span aria-hidden="true">&darr;</span>
+        </a>
+      </div>
+    </header>
+
+    <div class="dashboard-content">
+      
+      <!-- Resume Builder Shell: Left Controls, Right A4 Canvas -->
+      <div class="resume-builder-shell">
+        
+        <!-- Left: Resume Customizer Controls -->
+        <div style="display: flex; flex-direction: column; gap: var(--space-6);">
+          <div style="background-color: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6);">
+            <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">
+              ATS Optimization Rules
+            </h3>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+              This document uses single-column layout, standard headings, and machine-readable text without tables, columns, or graphic barriers that confuse Applicant Tracking Systems.
+            </p>
+          </div>
+
+          <!-- Section Controls -->
+          <div class="editor-section">
+            <div class="editor-section-header">
+              <span class="editor-section-title">Contact &amp; Header Info</span>
+            </div>
+            <div class="editor-section-content">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" id="resume-input-name" class="form-input" value="Sunny / SSRNovX" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Target Role</label>
+                <input type="text" id="resume-input-role" class="form-input" value="Software Engineer — Full-Stack &amp; Systems" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" value="contact@ssrnovx.dev" />
+              </div>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <div class="editor-section-header">
+              <span class="editor-section-title">Summary / Objective</span>
+            </div>
+            <div class="editor-section-content">
+              <textarea class="form-textarea" rows="3">Software Engineer with strong fundamentals in distributed systems, web platform APIs, and database architecture. Proven track record building high-performance web applications with sub-second response times.</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Real A4 Document Preview Canvas -->
+        <div>
+          <div class="a4-preview-canvas" id="a4-canvas" aria-label="A4 Resume Document Preview">
+            
+            <header class="a4-header">
+              <h2 class="a4-name" id="preview-resume-name">Sunny (SSRNovX)</h2>
+              <div class="a4-contact-bar">
+                <span>contact@ssrnovx.dev</span>
+                <span>&bull;</span>
+                <span>github.com/ssrnov</span>
+                <span>&bull;</span>
+                <span>India (IST)</span>
+                <span>&bull;</span>
+                <span>ssrnovx.dev/u/sunny</span>
+              </div>
+            </header>
+
+            <!-- Education -->
+            <section>
+              <h3 class="a4-section-title">Education</h3>
+              <div class="a4-item-heading">
+                <span>SRM University</span>
+                <span>2023 — 2027</span>
+              </div>
+              <div class="a4-item-sub">Bachelor of Technology — Computer Science &amp; Engineering</div>
+              <p style="font-size: 11px; color: #444; margin-bottom: 8px;">
+                <strong>Relevant Coursework:</strong> Data Structures &amp; Algorithms, Operating Systems, Database Management Systems, Computer Networks, Distributed Architecture.
+              </p>
+            </section>
+
+            <!-- Technical Skills -->
+            <section>
+              <h3 class="a4-section-title">Technical Competencies</h3>
+              <ul class="a4-bullets">
+                <li><strong>Languages:</strong> JavaScript (ES6+), TypeScript, C++, SQL, HTML5, CSS3.</li>
+                <li><strong>Backend &amp; Systems:</strong> Node.js, Express, Redis, PostgreSQL, Asynchronous Task Queues, WebSockets.</li>
+                <li><strong>Tools &amp; Infrastructure:</strong> Git, Docker, Linux CLI, Vercel, Postman, Vite.</li>
+              </ul>
+            </section>
+
+            <!-- Projects -->
+            <section>
+              <h3 class="a4-section-title">Featured Projects</h3>
+              
+              <div class="a4-item-heading">
+                <span>Distributed Task Queue &amp; Worker Engine</span>
+                <span>github.com/ssrnov/task-engine</span>
+              </div>
+              <div class="a4-item-sub">Node.js, Redis, Worker Threads, Concurrency</div>
+              <ul class="a4-bullets">
+                <li>Engineered an asynchronous queue engine with exponential backoff retries and worker thread isolation.</li>
+                <li>Reduced message processing latency by 40% utilizing Redis pipelines and atomic transactions.</li>
+              </ul>
+
+              <div class="a4-item-heading">
+                <span>Cloud Observability &amp; Telemetry Dashboard</span>
+                <span>github.com/ssrnov/cloud-metrics</span>
+              </div>
+              <div class="a4-item-sub">Vanilla JS, WebSockets, Telemetry APIs</div>
+              <ul class="a4-bullets">
+                <li>Constructed real-time metrics visualizer streaming over 1,000 events/sec via native WebSockets.</li>
+                <li>Architected zero-framework rendering achieving 60 FPS charts on mobile and desktop viewports.</li>
+              </ul>
+            </section>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="/js/main.js"></script>
+  <script>
+    // Live Resume Text Updates
+    document.getElementById('resume-input-name')?.addEventListener('input', (e) => {
+      const el = document.getElementById('preview-resume-name');
+      if (el) el.textContent = e.target.value;
+    });
+
+    // Print to ATS Vector PDF Trigger
+    document.getElementById('download-pdf-btn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.print();
+    });
+  </script>
+</body>
+</html>

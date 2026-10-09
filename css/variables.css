@@ -76,7 +76,11 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
 
+  --container-article-width: 760px;
   --header-backdrop: rgba(255, 255, 255, 0.85);
+  --code-bg: #18181b;
+  --code-text: #f4f4f5;
+  --code-border: #27272a;
 }
 
 /* Dark Theme Overrides */
@@ -107,4 +111,7 @@
   --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.7), 0 4px 6px -4px rgba(0, 0, 0, 0.6);
 
   --header-backdrop: rgba(10, 10, 10, 0.85);
+  --code-bg: #111114;
+  --code-text: #f4f4f5;
+  --code-border: #27272a;
 }

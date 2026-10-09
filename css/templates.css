@@ -1,0 +1,141 @@
+/* ==========================================================================
+   PORTFOLIO TEMPLATES THEME ENGINE
+   SSRNovX — Curated Developer Portfolio Templates
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Template: Terminal Hacker ([data-template="terminal"] / .template-terminal)
+   Unix terminal aesthetic, JetBrains Mono typography, scanline accents
+   -------------------------------------------------------------------------- */
+[data-template="terminal"],
+.template-terminal {
+  --font-sans: 'JetBrains Mono', monospace !important;
+  font-family: var(--font-mono) !important;
+}
+
+[data-template="terminal"] body,
+.template-terminal {
+  background-color: #0d1117 !important;
+  color: #c9d1d9 !important;
+}
+
+[data-template="terminal"] .site-header,
+.template-terminal .site-header {
+  background-color: rgba(13, 17, 23, 0.95) !important;
+  border-bottom: 1px solid #30363d !important;
+}
+
+[data-template="terminal"] .logo-text::before,
+.template-terminal .logo-text::before {
+  content: "~/ ";
+  color: #58a6ff;
+}
+
+[data-template="terminal"] .logo-text::after,
+.template-terminal .logo-text::after {
+  content: " $";
+  color: #3fb950;
+}
+
+[data-template="terminal"] h1[data-builder-target="headline"]::before,
+.template-terminal h1[data-builder-target="headline"]::before {
+  content: "> echo \"";
+  color: #58a6ff;
+  font-weight: 400;
+  font-size: 0.6em;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+[data-template="terminal"] h1[data-builder-target="headline"]::after,
+.template-terminal h1[data-builder-target="headline"]::after {
+  content: "\"";
+  color: #58a6ff;
+}
+
+[data-template="terminal"] .project-card,
+.template-terminal .project-card {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+[data-template="terminal"] .project-card:hover,
+.template-terminal .project-card:hover {
+  border-color: #58a6ff !important;
+}
+
+[data-template="terminal"] .badge,
+.template-terminal .badge {
+  background-color: #21262d !important;
+  color: #79c0ff !important;
+  border: 1px solid #30363d !important;
+  font-family: var(--font-mono) !important;
+}
+
+[data-template="terminal"] .btn-primary,
+.template-terminal .btn-primary {
+  background-color: #238636 !important;
+  color: #ffffff !important;
+  border: 1px solid #2ea043 !important;
+  font-family: var(--font-mono) !important;
+}
+
+[data-template="terminal"] .btn-primary:hover,
+.template-terminal .btn-primary:hover {
+  background-color: #2ea043 !important;
+}
+
+[data-template="terminal"] .btn-secondary,
+.template-terminal .btn-secondary {
+  background-color: #21262d !important;
+  color: #c9d1d9 !important;
+  border: 1px solid #30363d !important;
+  font-family: var(--font-mono) !important;
+}
+
+[data-template="terminal"] .btn-secondary:hover,
+.template-terminal .btn-secondary:hover {
+  border-color: #8b949e !important;
+  background-color: #30363d !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. Template: Clean Editorial ([data-template="editorial"] / .template-editorial)
+   High-density architectural layout, grid borders, high contrast
+   -------------------------------------------------------------------------- */
+[data-template="editorial"] h1,
+[data-template="editorial"] h2,
+[data-template="editorial"] h3,
+.template-editorial h1,
+.template-editorial h2,
+.template-editorial h3 {
+  letter-spacing: -0.05em !important;
+  font-weight: 800 !important;
+  text-transform: none !important;
+}
+
+[data-template="editorial"] .project-card,
+.template-editorial .project-card {
+  border-radius: 0 !important;
+  border: 1px solid var(--border-color) !important;
+  transition: transform 0ms !important;
+}
+
+[data-template="editorial"] .project-card:hover,
+.template-editorial .project-card:hover {
+  border-color: var(--text-primary) !important;
+}
+
+[data-template="editorial"] .badge,
+.template-editorial .badge {
+  border-radius: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+}
+
+[data-template="editorial"] .btn,
+.template-editorial .btn {
+  border-radius: 0 !important;
+}

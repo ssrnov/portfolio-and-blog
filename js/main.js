@@ -1,5 +1,5 @@
 /**
- * SSRNovX Portfolio & Blog — Main Application Entry Point
+ * SSRNovX Portfolio & Blog — Main Application Coordinator
  * TechSpace BuildLab B04
  */
 
@@ -10,10 +10,21 @@ import { initContact } from './contact.js';
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
   initMobileNavigation();
-  initScrollSpy();
-  initProjects();
-  initBlog();
-  initContact();
+  initActiveNavLink();
+
+  // Conditionally initialize components present on the current page
+  if (document.getElementById('projects-grid') || document.getElementById('featured-projects-grid')) {
+    initProjects();
+  }
+
+  if (document.getElementById('blog-grid') || document.getElementById('featured-blog-grid') || document.getElementById('article-modal')) {
+    initBlog();
+  }
+
+  if (document.getElementById('contact-form')) {
+    initContact();
+  }
+
   initConsoleBanner();
 });
 
@@ -93,34 +104,41 @@ function initMobileNavigation() {
 }
 
 /**
- * Updates active navigation link based on scroll position
+ * Detects current pathname and synchronizes the active state and ARIA attributes
+ * across navigation items.
  */
-function initScrollSpy() {
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+function initActiveNavLink() {
+  const currentPath = window.location.pathname.replace(/\/index\.html$/, '/');
+  const navLinks = document.querySelectorAll('.nav-link');
 
-  if (sections.length === 0 || navLinks.length === 0) return;
+  navLinks.forEach((link) => {
+    const href = link.getAttribute('href');
+    if (!href) return;
 
-  const updateActiveLink = () => {
-    const scrollPosition = window.scrollY + 100;
+    // Normalize href for comparison
+    const normalizedHref = href.replace(/\/index\.html$/, '/');
+    let isActive = false;
 
-    sections.forEach((section) => {
-      const top = section.offsetTop;
-      const height = section.offsetHeight;
-      const id = section.getAttribute('id');
+    if (normalizedHref === '/' || normalizedHref === '') {
+      isActive = currentPath === '/' || currentPath === '';
+    } else if (normalizedHref.startsWith('/about')) {
+      isActive = currentPath.startsWith('/about');
+    } else if (normalizedHref.startsWith('/projects')) {
+      isActive = currentPath.startsWith('/projects');
+    } else if (normalizedHref.startsWith('/blog')) {
+      isActive = currentPath.startsWith('/blog');
+    } else if (normalizedHref.startsWith('/contact')) {
+      isActive = currentPath.startsWith('/contact');
+    }
 
-      if (scrollPosition >= top && scrollPosition < top + height) {
-        navLinks.forEach((link) => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${id}`) {
-            link.classList.add('active');
-          }
-        });
-      }
-    });
-  };
-
-  window.addEventListener('scroll', updateActiveLink, { passive: true });
+    if (isActive) {
+      link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
+    } else {
+      link.classList.remove('active');
+      link.removeAttribute('aria-current');
+    }
+  });
 }
 
 /**
@@ -128,8 +146,8 @@ function initScrollSpy() {
  */
 function initConsoleBanner() {
   console.log(
-    '%cSSRNovX Personal Portfolio & Blog%c\nBuildLab B04 | Vite + ES Modules + Accessible Design Tokens',
-    'font-weight: bold; font-size: 14px; color: #ffffff; background: #000000; padding: 4px 8px; border-radius: 4px;',
+    '%cSSRNovX Personal Portfolio & Blog%c\nBuildLab B04 | Complete UI Design Phase | Monochrome System',
+    'font-weight: bold; font-size: 13px; color: #ffffff; background: #000000; padding: 4px 8px; border-radius: 4px;',
     'font-size: 11px; color: #888888; margin-top: 4px;'
   );
 }

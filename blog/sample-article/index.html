@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Building High-Performance Web Applications with Zero-Framework Vanilla JS | SSRNovX</title>
+  <meta name="description" content="Why leveraging native browser standards, semantic HTML5, and Vanilla JavaScript creates blazingly fast, accessible user experiences." />
+  <meta name="author" content="SSRNovX" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://github.com/ssrnov/portfolio-and-blog" />
+  <meta property="og:title" content="Building High-Performance Web Applications with Zero-Framework Vanilla JS | SSRNovX" />
+  <meta property="og:description" content="Why leveraging native browser standards, semantic HTML5, and Vanilla JavaScript creates blazingly fast, accessible user experiences." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+
+  <!-- Early Theme Init -->
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <!-- Accessibility Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo" aria-label="SSRNovX Home">
+        <span>SSRNovX</span>
+        <span class="brand-badge">BuildLab</span>
+      </a>
+
+      <div class="nav-right">
+        <nav class="site-nav" role="navigation" aria-label="Main Navigation">
+          <ul class="nav-links" id="nav-menu">
+            <li><a href="/" class="nav-link" data-page="home">Home</a></li>
+            <li><a href="/about" class="nav-link" data-page="about">About</a></li>
+            <li><a href="/projects" class="nav-link" data-page="projects">Projects</a></li>
+            <li><a href="/blog" class="nav-link active" data-page="blog">Blog</a></li>
+            <li><a href="/contact" class="nav-link" data-page="contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">
+          <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+          <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
+
+        <!-- Mobile Toggle -->
+        <button id="mobile-menu-toggle" class="mobile-toggle-btn" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open navigation menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Article Content -->
+  <main id="main-content" class="article-page">
+    <div class="article-container">
+      
+      <!-- Back to Blog Link -->
+      <a href="/blog" class="back-to-blog-link">
+        <span aria-hidden="true">&larr;</span>
+        <span>Back to all articles</span>
+      </a>
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <span class="category-pill">Frontend Engineering &bull; Architecture</span>
+        <h1 class="article-title">
+          Building High-Performance Web Applications with Zero-Framework Vanilla JS
+        </h1>
+        <div class="article-meta-bar">
+          <time datetime="2026-10-08">October 8, 2026</time>
+          <span>&bull;</span>
+          <span>5 min read</span>
+          <span>&bull;</span>
+          <span>By SSRNovX</span>
+          <span>&bull;</span>
+          <span>BuildLab B04</span>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <article class="article-body">
+        <p class="lead">
+          In an era where modern frontend development is frequently dominated by multi-megabyte bundles, complex JSX compilation pipelines, and runtime virtual DOM diffing, returning to the fundamentals of Vanilla JavaScript, semantic HTML5, and CSS custom properties delivers profound performance advantages.
+        </p>
+
+        <h2>The Power of Native Web Standards</h2>
+        <p>
+          Over the past decade, evergreen browser engines (Chromium V8, Apple JavaScriptCore, Mozilla SpiderMonkey) have matured extraordinarily. Primitives that once necessitated heavy polyfills or utility runtimes—such as ES Modules (ESM), Web Storage APIs, CSS Variables, the Fetch API, and the Intersection Observer API—are now natively built into the platform.
+        </p>
+        <p>
+          When you execute code directly against browser APIs rather than through abstract framework intermediaries, you eliminate virtualization overhead and achieve near-instant First Contentful Paint (FCP) and Largest Contentful Paint (LCP) benchmarks.
+        </p>
+
+        <div class="code-container">
+          <div class="code-header">
+            <span>event-bus.js &mdash; Native Pub/Sub via EventTarget</span>
+            <span>JavaScript (ESM)</span>
+          </div>
+          <pre class="code-block"><code>// Lightweight reactive event bus utilizing native EventTarget
+class ReactiveBus extends EventTarget {
+  publish(topic, payload = {}) {
+    this.dispatchEvent(new CustomEvent(topic, { detail: payload }));
+  }
+
+  subscribe(topic, handler) {
+    const listener = (event) => handler(event.detail);
+    this.addEventListener(topic, listener);
+    // Returns clean unsubscribe closure
+    return () => this.removeEventListener(topic, listener);
+  }
+}
+
+export const bus = new ReactiveBus();</code></pre>
+        </div>
+
+        <h2>Architectural Boundaries Without Bloat</h2>
+        <p>
+          Authoring applications with Vanilla JavaScript does not mean returning to unmaintainable, imperative jQuery-style spaghetti code. By enforcing clean domain boundaries, adopting unidirectional state flow, and segregating presentation markup from data services, codebases remain modular, predictable, and simple to test.
+        </p>
+        
+        <!-- Architectural Comparison Table -->
+        <div class="comparison-table-wrapper">
+          <table class="comparison-table" aria-label="Performance comparison table">
+            <thead>
+              <tr>
+                <th>Engineering Metric</th>
+                <th>Typical SPA Framework</th>
+                <th>Zero-Framework Vanilla JS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Initial JS Bundle</strong></td>
+                <td>350 kB &mdash; 850 kB</td>
+                <td>&lt; 20 kB (Gzipped)</td>
+              </tr>
+              <tr>
+                <td><strong>First Contentful Paint</strong></td>
+                <td>1.4s &mdash; 2.2s</td>
+                <td>&lt; 250ms</td>
+              </tr>
+              <tr>
+                <td><strong>Memory Overhead</strong></td>
+                <td>High (Virtual DOM Trees)</td>
+                <td>Minimal (Direct Native Nodes)</td>
+              </tr>
+              <tr>
+                <td><strong>Long-Term Maintenance</strong></td>
+                <td>Frequent breaking upgrades</td>
+                <td>Stable web platform standards</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <blockquote>
+          "Choose standards over ephemeral library churn whenever possible. Software founded on native browser primitives continues functioning seamlessly for decades without rewrite cycles."
+        </blockquote>
+
+        <h2>Pragmatic Engineering Takeaways</h2>
+        <p>
+          When architecting your next digital platform, consider these core recommendations:
+        </p>
+        <ul>
+          <li><strong>Audit your dependencies:</strong> Before adding an npm dependency, evaluate if modern JavaScript already provides the utility natively.</li>
+          <li><strong>Adopt CSS custom properties for theming:</strong> Swapping CSS variables on <code>:root</code> or <code>[data-theme]</code> is instantaneous and avoids flash of unstyled content (FOUC).</li>
+          <li><strong>Organize in ES modules:</strong> Native <code>import</code> and <code>export</code> statements allow clear, testable boundaries with zero bundler friction during development.</li>
+        </ul>
+
+        <!-- Key Takeaways Callout -->
+        <div class="callout-box">
+          <h4>Key Architecture Summary</h4>
+          <p>
+            By combining semantic HTML5 structures, modular CSS design tokens, and Vanilla JavaScript controllers, you maximize accessibility, ensure blistering fast response times on constrained mobile networks, and craft products that endure.
+          </p>
+        </div>
+
+      </article>
+
+      <!-- Article Footer -->
+      <footer class="article-footer">
+        <div class="project-tags" style="margin-bottom: var(--space-8);" aria-label="Article tags">
+          <span class="project-tag">JavaScript</span>
+          <span class="project-tag">Performance</span>
+          <span class="project-tag">Web Standards</span>
+          <span class="project-tag">Clean Architecture</span>
+        </div>
+
+        <!-- Author Bio Card -->
+        <div class="author-bio-card">
+          <div class="author-avatar" aria-hidden="true">S</div>
+          <div class="author-info">
+            <h4>Written by SSRNovX</h4>
+            <p>
+              Software engineer specializing in systems design, performant web platforms, and engineering craftsmanship. Building for TechSpace BuildLab '26.
+            </p>
+          </div>
+        </div>
+
+        <!-- Related Posts Section -->
+        <div class="related-section">
+          <h3>Related Technical Articles</h3>
+          <div class="blog-grid">
+            <article class="blog-card">
+              <div>
+                <div class="blog-meta">
+                  <span>Backend &bull; 7 min read</span>
+                </div>
+                <h4 class="blog-card-title">Designing Scalable System Architecture: From Monolith to Microservices</h4>
+                <p class="blog-card-excerpt">
+                  A pragmatic engineer's guide to decomposing monolithic systems without premature complexity or distributed transaction nightmares.
+                </p>
+              </div>
+              <div style="margin-top: 1rem;">
+                <a href="/blog/sample-article/" class="read-article-btn">Read article &rarr;</a>
+              </div>
+            </article>
+
+            <article class="blog-card">
+              <div>
+                <div class="blog-meta">
+                  <span>Architecture &bull; 4 min read</span>
+                </div>
+                <h4 class="blog-card-title">Mastering Reactive State Management Patterns in JavaScript</h4>
+                <p class="blog-card-excerpt">
+                  Exploring reactive state patterns, event emitters, and pub-sub architectures without external third-party dependencies.
+                </p>
+              </div>
+              <div style="margin-top: 1rem;">
+                <a href="/blog/sample-article/" class="read-article-btn">Read article &rarr;</a>
+              </div>
+            </article>
+          </div>
+        </div>
+
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-container">
+      <p>&copy; 2026 SSRNovX. Built for TechSpace BuildLab '26 (BuildLab B04).</p>
+      <div class="footer-links">
+        <a href="/" class="footer-link">Home</a>
+        <a href="/about" class="footer-link">About</a>
+        <a href="/projects" class="footer-link">Projects</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/contact" class="footer-link">Contact</a>
+        <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
