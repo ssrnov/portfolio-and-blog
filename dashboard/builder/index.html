@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Split-Pane Portfolio Builder | SSRNovX Studio</title>
+  <meta name="description" content="Visual split-pane developer portfolio builder with live reactive preview." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/templates.css" />
+
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+</head>
+<body class="builder-shell">
+
+  <!-- Top Builder Toolbar -->
+  <header class="builder-header">
+    <div class="builder-title-group">
+      <a href="/dashboard/" class="btn btn-secondary btn-card" title="Back to dashboard">
+        &larr; Studio
+      </a>
+      <div>
+        <h1 style="font-size: var(--text-sm); font-weight: 700; margin: 0; color: var(--text-primary);">
+          Portfolio Builder &bull; /u/sunny
+        </h1>
+        <div class="builder-save-badge">
+          <span class="pulse-dot" style="width:6px; height:6px;"></span>
+          <span id="save-status-text">All changes saved</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Responsive Canvas Viewport Controls -->
+    <div class="builder-viewport-controls" aria-label="Viewport size switcher">
+      <button type="button" class="viewport-btn active" data-viewport="desktop" title="Desktop View (100%)">
+        Desktop
+      </button>
+      <button type="button" class="viewport-btn" data-viewport="tablet" title="Tablet View (768px)">
+        Tablet
+      </button>
+      <button type="button" class="viewport-btn" data-viewport="mobile" title="Mobile View (375px)">
+        Mobile
+      </button>
+    </div>
+
+    <!-- Action Triggers -->
+    <div style="display: flex; align-items: center; gap: var(--space-3);">
+      <!-- Theme Toggle -->
+      <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme">
+        <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+        <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+      </button>
+
+      <a href="/u/sunny" target="_blank" class="btn btn-secondary btn-card">
+        <span>Preview Page</span>
+        <span aria-hidden="true">&nearr;</span>
+      </a>
+
+      <button type="button" class="btn btn-primary btn-card" id="publish-btn">
+        <span>Publish Live</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Split Body Layout -->
+  <div class="builder-body">
+    
+    <!-- LEFT PANE: Form Controls & Sections -->
+    <aside class="builder-editor-pane" aria-label="Portfolio Editor Controls">
+      
+      <!-- Template Selector Pill -->
+      <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-4);">
+        <label for="template-select" class="form-label">Active Portfolio Template</label>
+        <select id="template-select" class="form-input" style="padding: 0.5rem;">
+          <option value="minimal" selected>Monochrome Minimal (Default)</option>
+          <option value="terminal">Terminal Hacker (Unix CLI)</option>
+          <option value="editorial">Clean Editorial (High-Density)</option>
+        </select>
+      </div>
+
+      <!-- Section 1: Basic Profile -->
+      <div class="editor-section">
+        <div class="editor-section-header">
+          <span class="editor-section-title">
+            <span>&bull;</span>
+            <span>Profile &amp; Headline</span>
+          </span>
+          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">Required</span>
+        </div>
+        <div class="editor-section-content">
+          <div class="form-group">
+            <label for="input-display-name" class="form-label">Full Name</label>
+            <input type="text" id="input-display-name" class="form-input" value="Sunny / SSRNovX" />
+          </div>
+
+          <div class="form-group">
+            <label for="input-headline" class="form-label">Professional Headline</label>
+            <input type="text" id="input-headline" class="form-input" value="Engineering Scalable Systems &amp; Modern Web Experiences" />
+          </div>
+
+          <div class="form-group">
+            <label for="input-bio" class="form-label">Bio Summary</label>
+            <textarea id="input-bio" class="form-textarea" rows="3">Software engineer focused on clean architecture, performance optimization, and responsive interface design. Building robust software with native web standards.</textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="input-location" class="form-label">Location</label>
+            <input type="text" id="input-location" class="form-input" value="India (IST / UTC+5:30)" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Projects & GitHub Sync -->
+      <div class="editor-section">
+        <div class="editor-section-header">
+          <span class="editor-section-title">
+            <span>&bull;</span>
+            <span>Projects &amp; GitHub</span>
+          </span>
+          <a href="/dashboard/projects/" class="btn btn-secondary btn-card" style="padding: 2px 8px; font-size: 11px;">
+            + Import from GitHub
+          </a>
+        </div>
+        <div class="editor-section-content">
+          <div style="padding: var(--space-3); border: 1px solid var(--border-color); border-radius: var(--radius-sm); background-color: var(--bg-secondary);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+              <strong style="font-size: var(--text-xs); color: var(--text-primary);">Distributed Task Queue</strong>
+              <span class="brand-badge">Backend</span>
+            </div>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Redis, Node.js, Concurrency, Worker Threads</p>
+          </div>
+
+          <div style="padding: var(--space-3); border: 1px solid var(--border-color); border-radius: var(--radius-sm); background-color: var(--bg-secondary);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+              <strong style="font-size: var(--text-xs); color: var(--text-primary);">Cloud Observability Dashboard</strong>
+              <span class="brand-badge">Web</span>
+            </div>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">JavaScript, WebSockets, Telemetry, CSS Grid</p>
+          </div>
+
+          <div style="padding: var(--space-3); border: 1px solid var(--border-color); border-radius: var(--radius-sm); background-color: var(--bg-secondary);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+              <strong style="font-size: var(--text-xs); color: var(--text-primary);">Client-Side Cryptographic Vault</strong>
+              <span class="brand-badge">Security</span>
+            </div>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Web Crypto API, AES-256-GCM, PBKDF2</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Technical Skills -->
+      <div class="editor-section">
+        <div class="editor-section-header">
+          <span class="editor-section-title">
+            <span>&bull;</span>
+            <span>Technical Skills</span>
+          </span>
+          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">4 Domains</span>
+        </div>
+        <div class="editor-section-content">
+          <div class="form-group">
+            <label for="input-skills-frontend" class="form-label">Frontend Engineering</label>
+            <input type="text" id="input-skills-frontend" class="form-input" value="JavaScript (ES6+), TypeScript, HTML5, Modern CSS3, Vite" />
+          </div>
+          <div class="form-group">
+            <label for="input-skills-backend" class="form-label">Backend &amp; Systems</label>
+            <input type="text" id="input-skills-backend" class="form-input" value="Node.js, Express, REST APIs, Redis, PostgreSQL, WebSockets" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Social Channels -->
+      <div class="editor-section">
+        <div class="editor-section-header">
+          <span class="editor-section-title">
+            <span>&bull;</span>
+            <span>Social Channels</span>
+          </span>
+          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">Links</span>
+        </div>
+        <div class="editor-section-content">
+          <div class="form-group">
+            <label for="input-github-url" class="form-label">GitHub Profile URL</label>
+            <input type="url" id="input-github-url" class="form-input" value="https://github.com/ssrnov" />
+          </div>
+          <div class="form-group">
+            <label for="input-contact-email" class="form-label">Public Inquiries Email</label>
+            <input type="email" id="input-contact-email" class="form-input" value="contact@ssrnovx.dev" />
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- RIGHT PANE: Live Reactive Preview Window -->
+    <section class="builder-preview-pane" aria-label="Live Portfolio Preview">
+      <div class="preview-canvas-wrapper" id="preview-canvas" style="max-width: 100%;">
+        <div class="preview-browser-frame">
+          <span class="frame-dot"></span>
+          <span class="frame-dot"></span>
+          <span class="frame-dot"></span>
+          <span style="margin-left: auto; font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);">
+            Live Preview Canvas &bull; ssrnovx.dev/u/sunny
+          </span>
+        </div>
+        <!-- Live iframe pointing to the dynamic public portfolio -->
+        <iframe src="/u/sunny" class="preview-iframe" id="live-preview-frame" title="Live Portfolio Render"></iframe>
+      </div>
+    </section>
+
+  </div>
+
+  <script type="module" src="/js/main.js"></script>
+  <script type="module" src="/js/builder.js"></script>
+</body>
+</html>

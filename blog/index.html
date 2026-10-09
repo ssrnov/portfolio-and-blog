@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Engineering Blog | SSRNovX — Personal Portfolio &amp; Blog</title>
+  <meta name="description" content="Technical articles, architectural teardowns, and practical guides on web performance, distributed systems, and software craftsmanship." />
+  <meta name="author" content="SSRNovX" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="blog" />
+  <meta property="og:url" content="https://github.com/ssrnov/portfolio-and-blog" />
+  <meta property="og:title" content="Engineering Blog | SSRNovX" />
+  <meta property="og:description" content="Technical articles, architectural teardowns, and practical guides on web performance and distributed systems." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+
+  <!-- Early Theme Init -->
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <!-- Accessibility Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo" aria-label="SSRNovX Home">
+        <span>SSRNovX</span>
+        <span class="brand-badge">BuildLab</span>
+      </a>
+
+      <div class="nav-right">
+        <nav class="site-nav" role="navigation" aria-label="Main Navigation">
+          <ul class="nav-links" id="nav-menu">
+            <li><a href="/" class="nav-link" data-page="home">Home</a></li>
+            <li><a href="/about" class="nav-link" data-page="about">About</a></li>
+            <li><a href="/projects" class="nav-link" data-page="projects">Projects</a></li>
+            <li><a href="/blog" class="nav-link active" data-page="blog">Blog</a></li>
+            <li><a href="/contact" class="nav-link" data-page="contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">
+          <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+          <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
+
+        <!-- Mobile Toggle -->
+        <button id="mobile-menu-toggle" class="mobile-toggle-btn" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open navigation menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    
+    <!-- Page Header Banner -->
+    <section class="page-header">
+      <div class="container page-header-content">
+        <span class="page-label">Technical Writing</span>
+        <h1 class="page-title">Engineering Blog</h1>
+        <p class="page-subtitle">
+          In-depth technical articles, architectural teardowns, and engineering insights on web performance, state management, and distributed systems.
+        </p>
+      </div>
+    </section>
+
+    <!-- Blog Articles Listing Section -->
+    <section class="section-py" aria-labelledby="blog-heading">
+      <div class="container">
+        
+        <!-- Controls Toolbar -->
+        <div class="controls-toolbar" role="search" aria-label="Blog filter controls">
+          <div class="search-box-wrapper">
+            <svg class="search-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="search"
+              id="blog-search"
+              class="search-input"
+              placeholder="Search articles by title, topic, or keyword..."
+              aria-label="Search blog articles"
+            />
+          </div>
+
+          <div class="filter-pills" id="blog-filters" role="group" aria-label="Blog topic filters">
+            <button type="button" class="filter-btn active" data-tag="all" aria-pressed="true">All</button>
+            <button type="button" class="filter-btn" data-tag="frontend" aria-pressed="false">Frontend</button>
+            <button type="button" class="filter-btn" data-tag="backend" aria-pressed="false">Backend</button>
+            <button type="button" class="filter-btn" data-tag="architecture" aria-pressed="false">Architecture</button>
+            <button type="button" class="filter-btn" data-tag="engineering" aria-pressed="false">Engineering</button>
+          </div>
+        </div>
+
+        <!-- Status Counter -->
+        <p id="blog-count" class="fact-label" style="margin-bottom: var(--space-6);" aria-live="polite">
+          Loading articles...
+        </p>
+
+        <!-- Dynamic Blog Grid -->
+        <div id="blog-grid" class="blog-grid" aria-live="polite">
+          <!-- Populated dynamically by js/blog.js -->
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Quick Article Reader Modal -->
+  <div id="article-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-article-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2 id="modal-article-title">Article Title</h2>
+          <p id="modal-article-meta" class="modal-meta">Article Meta</p>
+        </div>
+        <button id="modal-close-btn" class="modal-close-btn" type="button" aria-label="Close article modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div id="modal-article-body" class="modal-body">
+        <!-- Content injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-container">
+      <p>&copy; 2026 SSRNovX. Built for TechSpace BuildLab '26 (BuildLab B04).</p>
+      <div class="footer-links">
+        <a href="/" class="footer-link">Home</a>
+        <a href="/about" class="footer-link">About</a>
+        <a href="/projects" class="footer-link">Projects</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/contact" class="footer-link">Contact</a>
+        <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

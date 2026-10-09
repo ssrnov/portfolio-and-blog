@@ -56,7 +56,7 @@
   <!-- Global Header & Navigation -->
   <header class="site-header" role="banner">
     <div class="container nav-container">
-      <a href="#hero" class="brand-logo" aria-label="SSRNovX Home">
+      <a href="/" class="brand-logo" aria-label="SSRNovX Home">
         <span>SSRNovX</span>
         <span class="brand-badge">BuildLab</span>
       </a>
@@ -64,18 +64,16 @@
       <div class="nav-right">
         <nav class="site-nav" role="navigation" aria-label="Main Navigation">
           <ul class="nav-links" id="nav-menu">
-            <li><a href="#hero" class="nav-link active">Home</a></li>
-            <li><a href="#about" class="nav-link">About</a></li>
-            <li><a href="#skills" class="nav-link">Skills</a></li>
-            <li><a href="#projects" class="nav-link">Projects</a></li>
-            <li><a href="#blog" class="nav-link">Blog</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li><a href="/" class="nav-link active" data-page="home">Home</a></li>
+            <li><a href="/about" class="nav-link" data-page="about">About</a></li>
+            <li><a href="/projects" class="nav-link" data-page="projects">Projects</a></li>
+            <li><a href="/blog" class="nav-link" data-page="blog">Blog</a></li>
+            <li><a href="/contact" class="nav-link" data-page="contact">Contact</a></li>
           </ul>
         </nav>
 
         <!-- Theme Toggle Button -->
         <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">
-          <!-- Sun Icon (for Dark Mode) -->
           <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="4"></circle>
             <path d="M12 2v2"></path>
@@ -87,7 +85,6 @@
             <path d="m6.34 17.66-1.41 1.41"></path>
             <path d="m19.07 4.93-1.41 1.41"></path>
           </svg>
-          <!-- Moon Icon (for Light Mode) -->
           <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24">
             <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
           </svg>
@@ -117,14 +114,16 @@
         </h1>
         <p class="hero-lead">
           Software engineer focused on clean architecture, performance optimization, and responsive interface design. 
-          Building robust software with native web standards and resilient backend services.
+          Building robust software with native web standards, resilient backend services, and a minimalist design philosophy.
         </p>
 
         <div class="hero-actions">
-          <a href="#projects" class="btn btn-primary">Explore Projects</a>
-          <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+          <a href="/projects" class="btn btn-primary">
+            <span>View Projects</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
           <a href="/assets/resume/SSRNovX_Resume.pdf" download="SSRNovX_Resume.pdf" class="btn btn-secondary" title="Download Resume PDF">
-            <span>Download CV</span>
+            <span>Download Resume</span>
             <span aria-hidden="true">&darr;</span>
           </a>
         </div>
@@ -132,93 +131,59 @@
         <div class="hero-socials" aria-label="Social and repository links">
           <a href="https://github.com/ssrnov" target="_blank" rel="noopener noreferrer" class="social-link">
             <span>GitHub</span>
-            <span aria-hidden="true">↗</span>
+            <span aria-hidden="true">&nearr;</span>
           </a>
           <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="social-link">
-            <span>Project Repository</span>
-            <span aria-hidden="true">↗</span>
+            <span>Repository</span>
+            <span aria-hidden="true">&nearr;</span>
           </a>
-          <a href="#contact" class="social-link">
-            <span>Email</span>
+          <a href="/contact" class="social-link">
+            <span>Contact</span>
             <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- 2. About Me & Education Section -->
-    <section id="about" class="about-section section-py" aria-labelledby="about-title">
+    <!-- 2. Featured Projects Preview -->
+    <section class="section-py" aria-labelledby="featured-projects-title">
       <div class="container">
-        <div class="section-header">
-          <span class="section-label">Background &amp; Education</span>
-          <h2 id="about-title" class="section-title">About Me</h2>
-          <p class="section-subtitle">
-            A snapshot of my engineering journey, problem-solving philosophy, and academic background.
-          </p>
+        <div class="home-section-header">
+          <div>
+            <span class="section-label">Selected Work</span>
+            <h2 id="featured-projects-title" class="section-title">Featured Projects</h2>
+            <p class="section-subtitle">
+              A highlight of recent applications, distributed background workers, and web experiments.
+            </p>
+          </div>
+          <a href="/projects" class="section-more-link">
+            <span>View all projects</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
         </div>
 
-        <div class="about-grid">
-          <!-- Bio Narrative -->
-          <div class="about-bio-card">
-            <p>
-              I am a passionate software engineer with a strong foundation in computer science and full-stack development. 
-              My focus is on creating responsive, highly accessible applications and architecting scalable backend systems.
-            </p>
-            <p>
-              I believe in the pragmatic balance between clean code principles and pragmatic execution. Rather than defaulting to heavy dependencies, 
-              I prioritize deep mastery of native web standards, algorithm efficiency, and intuitive user experiences.
-            </p>
-            <p>
-              Currently participating in the <strong>TechSpace BuildLab '26</strong>, developing modular, production-ready web platforms with modern tools.
-            </p>
-          </div>
-
-          <!-- Quick Facts & Academic Timeline -->
-          <div>
-            <div class="facts-grid">
-              <div class="fact-card">
-                <p class="fact-label">Primary Role</p>
-                <p class="fact-value">Software Engineer</p>
-              </div>
-              <div class="fact-card">
-                <p class="fact-label">Specialization</p>
-                <p class="fact-value">Full-Stack &amp; Systems</p>
-              </div>
-              <div class="fact-card">
-                <p class="fact-label">Academic Degree</p>
-                <p class="fact-value">B.Tech in CSE</p>
-              </div>
-              <div class="fact-card">
-                <p class="fact-label">Current Status</p>
-                <p class="fact-value">Open to Opportunities</p>
-              </div>
-            </div>
-
-            <!-- Education Timeline -->
-            <div class="timeline" aria-label="Education history">
-              <div class="timeline-item">
-                <span class="timeline-year">2023 &mdash; 2027 (Expected)</span>
-                <h3 class="timeline-title">Bachelor of Technology &mdash; Computer Science &amp; Engineering</h3>
-                <p class="timeline-institution">SRM University</p>
-                <p class="timeline-desc">
-                  Core Coursework: Data Structures &amp; Algorithms, Database Management Systems, Operating Systems, Computer Networks, and Object-Oriented Software Design.
-                </p>
-              </div>
-            </div>
-          </div>
+        <!-- Populated dynamically by js/projects.js -->
+        <div id="featured-projects-grid" class="projects-grid">
+          <!-- Fallback static preview while JavaScript loads -->
         </div>
       </div>
     </section>
 
-    <!-- 3. Skills Matrix Section -->
-    <section id="skills" class="skills-section section-py" aria-labelledby="skills-title">
+    <!-- 3. Skills Preview -->
+    <section class="section-py" aria-labelledby="skills-preview-title">
       <div class="container">
-        <div class="section-header">
-          <span class="section-label">Competencies</span>
-          <h2 id="skills-title" class="section-title">Technical Skills</h2>
-          <p class="section-subtitle">
-            Tools, technologies, and core proficiencies I leverage to build dependable digital products.
-          </p>
+        <div class="home-section-header">
+          <div>
+            <span class="section-label">Core Proficiencies</span>
+            <h2 id="skills-preview-title" class="section-title">Technical Competencies</h2>
+            <p class="section-subtitle">
+              Modern tooling and engineering standards I employ to build performant, maintainable systems.
+            </p>
+          </div>
+          <a href="/about#skills" class="section-more-link">
+            <span>Full background &amp; skills</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
         </div>
 
         <div class="skills-container">
@@ -234,13 +199,11 @@
               <span class="skill-badge">HTML5 Semantic</span>
               <span class="skill-badge">Modern CSS3</span>
               <span class="skill-badge">Vite</span>
-              <span class="skill-badge">Responsive Design</span>
               <span class="skill-badge">Accessibility (a11y)</span>
-              <span class="skill-badge">DOM Performance</span>
             </div>
           </div>
 
-          <!-- Category 2: Backend & Systems -->
+          <!-- Category 2: Backend -->
           <div class="skill-category-card">
             <h3 class="skill-category-title">
               <span>Backend &amp; Systems</span>
@@ -251,13 +214,12 @@
               <span class="skill-badge">Express</span>
               <span class="skill-badge">RESTful APIs</span>
               <span class="skill-badge">Redis</span>
-              <span class="skill-badge">SQL / Databases</span>
-              <span class="skill-badge">Asynchronous Workers</span>
+              <span class="skill-badge">SQL Databases</span>
               <span class="skill-badge">WebSockets</span>
             </div>
           </div>
 
-          <!-- Category 3: DevOps & Tools -->
+          <!-- Category 3: DevOps -->
           <div class="skill-category-card">
             <h3 class="skill-category-title">
               <span>DevOps &amp; Workflow</span>
@@ -269,11 +231,10 @@
               <span class="skill-badge">Docker</span>
               <span class="skill-badge">Linux CLI</span>
               <span class="skill-badge">Postman</span>
-              <span class="skill-badge">CI/CD Pipelines</span>
             </div>
           </div>
 
-          <!-- Category 4: Architecture -->
+          <!-- Category 4: Core Engineering -->
           <div class="skill-category-card">
             <h3 class="skill-category-title">
               <span>Core Engineering</span>
@@ -285,260 +246,102 @@
               <span class="skill-badge">System Design</span>
               <span class="skill-badge">Clean Code</span>
               <span class="skill-badge">Refactoring</span>
-              <span class="skill-badge">Security Basics</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 4. Projects Gallery Section -->
-    <section id="projects" class="projects-section section-py" aria-labelledby="projects-title">
+    <!-- 4. Short About Section -->
+    <section class="section-py" aria-labelledby="short-about-title">
       <div class="container">
-        <div class="section-header">
-          <span class="section-label">Showcase</span>
-          <h2 id="projects-title" class="section-title">Featured Projects</h2>
-          <p class="section-subtitle">
-            A curated collection of production applications, distributed tools, and experiments. Use the search bar and category filters to browse.
-          </p>
-        </div>
-
-        <!-- Toolbar: Search and Filter Pills -->
-        <div class="controls-toolbar" role="search" aria-label="Project filter controls">
-          <div class="search-box-wrapper">
-            <svg class="search-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input
-              type="search"
-              id="project-search"
-              class="search-input"
-              placeholder="Search projects by name, description, or tag..."
-              aria-label="Search projects"
-            />
+        <div class="home-section-header">
+          <div>
+            <span class="section-label">Overview</span>
+            <h2 id="short-about-title" class="section-title">About Me</h2>
+            <p class="section-subtitle">
+              A snapshot of my engineering journey, problem-solving philosophy, and academic foundation.
+            </p>
           </div>
-
-          <div class="filter-pills" id="project-filters" role="group" aria-label="Category filters">
-            <button type="button" class="filter-btn active" data-category="all">All</button>
-            <button type="button" class="filter-btn" data-category="web">Web</button>
-            <button type="button" class="filter-btn" data-category="backend">Backend</button>
-            <button type="button" class="filter-btn" data-category="tools">Tools</button>
-            <button type="button" class="filter-btn" data-category="security">Security</button>
-          </div>
-        </div>
-
-        <!-- Status Counter -->
-        <p id="projects-count" class="fact-label" style="margin-bottom: var(--space-4);" aria-live="polite">
-          Loading projects...
-        </p>
-
-        <!-- Dynamic Projects Grid -->
-        <div id="projects-grid" class="projects-grid" aria-live="polite">
-          <!-- Populated dynamically by js/projects.js -->
-        </div>
-
-        <!-- Resume Download Callout Banner -->
-        <div class="resume-banner">
-          <div class="resume-info">
-            <h3>Looking for my full background?</h3>
-            <p>Download my comprehensive resume for details on education, project architecture, and technical capabilities.</p>
-          </div>
-          <a href="/assets/resume/SSRNovX_Resume.pdf" download="SSRNovX_Resume.pdf" class="btn btn-primary">
-            <span>Download Resume (PDF)</span>
-            <span aria-hidden="true">&darr;</span>
+          <a href="/about" class="section-more-link">
+            <span>Read full story</span>
+            <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
-      </div>
-    </section>
 
-    <!-- 5. JSON-Based Engineering Blog Section -->
-    <section id="blog" class="blog-section section-py" aria-labelledby="blog-title">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-label">Technical Writing</span>
-          <h2 id="blog-title" class="section-title">Engineering Blog</h2>
-          <p class="section-subtitle">
-            Deep-dives into web performance, system design, architectural patterns, and pragmatic software engineering.
-          </p>
-        </div>
-
-        <!-- Toolbar: Search and Filter Pills for Blog -->
-        <div class="controls-toolbar" role="search" aria-label="Blog filter controls">
-          <div class="search-box-wrapper">
-            <svg class="search-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input
-              type="search"
-              id="blog-search"
-              class="search-input"
-              placeholder="Search articles by title, topic, or keyword..."
-              aria-label="Search blog articles"
-            />
-          </div>
-
-          <div class="filter-pills" id="blog-filters" role="group" aria-label="Blog topic filters">
-            <button type="button" class="filter-btn active" data-tag="all">All</button>
-            <button type="button" class="filter-btn" data-tag="frontend">Frontend</button>
-            <button type="button" class="filter-btn" data-tag="backend">Backend</button>
-            <button type="button" class="filter-btn" data-tag="architecture">Architecture</button>
-            <button type="button" class="filter-btn" data-tag="engineering">Engineering</button>
-          </div>
-        </div>
-
-        <!-- Status Counter -->
-        <p id="blog-count" class="fact-label" style="margin-bottom: var(--space-4);" aria-live="polite">
-          Loading articles...
-        </p>
-
-        <!-- Dynamic Blog Grid -->
-        <div id="blog-grid" class="blog-grid" aria-live="polite">
-          <!-- Populated dynamically by js/blog.js -->
-        </div>
-      </div>
-    </section>
-
-    <!-- 6. Interactive Contact Section -->
-    <section id="contact" class="contact-section section-py" aria-labelledby="contact-title">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-label">Communication</span>
-          <h2 id="contact-title" class="section-title">Get in Touch</h2>
-          <p class="section-subtitle">
-            Have a project, technical inquiry, or collaboration in mind? Fill out the form or reach out through direct channels.
-          </p>
-        </div>
-
-        <div class="contact-container">
-          <!-- Contact Info Channels -->
-          <div class="contact-info-card">
-            <h3>Let's Connect</h3>
+        <div class="about-grid">
+          <div class="about-bio-card">
             <p>
-              I am always keen to discuss challenging engineering problems, open-source initiatives, and software craftsmanship.
+              I am a software engineer passionate about clean software architecture, native web standards, and distributed systems. 
+              My engineering philosophy focuses on cutting through excessive runtime bloat to deliver reliable, high-speed, and deeply accessible digital experiences.
             </p>
-
-            <div class="contact-channels">
-              <div class="channel-item">
-                <span class="channel-icon" aria-hidden="true">&commat;</span>
-                <span><strong>Email:</strong> contact@ssrnovx.dev</span>
-              </div>
-              <div class="channel-item">
-                <span class="channel-icon" aria-hidden="true">&gt;</span>
-                <span><strong>GitHub:</strong> <a href="https://github.com/ssrnov" target="_blank" rel="noopener noreferrer" class="footer-link">github.com/ssrnov</a></span>
-              </div>
-              <div class="channel-item">
-                <span class="channel-icon" aria-hidden="true">&bull;</span>
-                <span><strong>Location:</strong> India (IST / UTC+5:30)</span>
-              </div>
-              <div class="channel-item">
-                <span class="channel-icon" aria-hidden="true">&check;</span>
-                <span><strong>Response Time:</strong> Within 24-48 hours</span>
-              </div>
-            </div>
-
-            <div class="integration-note">
-              <p><strong>Integration Notice:</strong> Form dispatch supports both <strong>EmailJS</strong> and <strong>Formspree</strong>. In local development or review mode, an interactive simulation handler verifies client validation and response states.</p>
+            <p>
+              Currently participating in the <strong>TechSpace BuildLab '26</strong>, developing modular web platforms with strict engineering standards and modern toolchains.
+            </p>
+            <div style="margin-top: var(--space-6);">
+              <a href="/about" class="btn btn-secondary btn-card">
+                <span>Detailed Background &amp; Education</span>
+                <span aria-hidden="true">&rarr;</span>
+              </a>
             </div>
           </div>
 
-          <!-- Contact Form with Validation -->
-          <form id="contact-form" class="contact-form" novalidate aria-label="Contact form">
-            <div id="contact-status" class="form-status" role="alert" aria-live="polite"></div>
-
-            <div class="form-group">
-              <label for="contact-name" class="form-label">Your Name *</label>
-              <input
-                type="text"
-                id="contact-name"
-                name="name"
-                class="form-input"
-                placeholder="e.g. Alex Morgan"
-                required
-                autocomplete="name"
-              />
-              <span id="name-error" class="error-message" role="alert"></span>
+          <div class="facts-grid">
+            <div class="fact-card">
+              <p class="fact-label">Primary Role</p>
+              <p class="fact-value">Software Engineer</p>
             </div>
-
-            <div class="form-group">
-              <label for="contact-email" class="form-label">Email Address *</label>
-              <input
-                type="email"
-                id="contact-email"
-                name="email"
-                class="form-input"
-                placeholder="name@example.com"
-                required
-                autocomplete="email"
-              />
-              <span id="email-error" class="error-message" role="alert"></span>
+            <div class="fact-card">
+              <p class="fact-label">Specialization</p>
+              <p class="fact-value">Full-Stack &amp; Systems</p>
             </div>
-
-            <div class="form-group">
-              <label for="contact-subject" class="form-label">Subject *</label>
-              <input
-                type="text"
-                id="contact-subject"
-                name="subject"
-                class="form-input"
-                placeholder="e.g. Collaboration on BuildLab Project"
-                required
-              />
-              <span id="subject-error" class="error-message" role="alert"></span>
+            <div class="fact-card">
+              <p class="fact-label">Degree</p>
+              <p class="fact-value">B.Tech in CSE</p>
             </div>
-
-            <div class="form-group">
-              <label for="contact-message" class="form-label">Message *</label>
-              <textarea
-                id="contact-message"
-                name="message"
-                class="form-textarea"
-                placeholder="Write your message here (minimum 10 characters)..."
-                required
-              ></textarea>
-              <span id="message-error" class="error-message" role="alert"></span>
+            <div class="fact-card">
+              <p class="fact-label">Institution</p>
+              <p class="fact-value">SRM University</p>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <button type="submit" id="contact-submit-btn" class="btn btn-primary" style="margin-top: var(--space-2);">
-              Send Message
-            </button>
-          </form>
+    <!-- 5. Contact CTA Section -->
+    <section class="section-py" aria-labelledby="contact-cta-title">
+      <div class="container">
+        <div class="contact-cta-banner">
+          <div class="contact-cta-content">
+            <span class="section-label">Collaboration</span>
+            <h2 id="contact-cta-title">Have a project or technical inquiry?</h2>
+            <p>
+              I am always open to exploring challenging engineering opportunities, discussing software architecture, or collaborating on open-source initiatives.
+            </p>
+          </div>
+          <div>
+            <a href="/contact" class="btn btn-primary">
+              <span>Get in Touch</span>
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Article Reader Modal -->
-  <div id="article-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-article-title">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <div class="modal-title-group">
-          <h2 id="modal-article-title">Article Title</h2>
-          <p id="modal-article-meta" class="modal-meta">Article Meta</p>
-        </div>
-        <button id="modal-close-btn" class="modal-close-btn" type="button" aria-label="Close article modal">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-      <div id="modal-article-body" class="modal-body">
-        <!-- Content injected dynamically -->
-      </div>
-    </div>
-  </div>
-
   <!-- Site Footer -->
   <footer class="site-footer" role="contentinfo">
     <div class="container footer-container">
       <p>&copy; 2026 SSRNovX. Built for TechSpace BuildLab '26 (BuildLab B04).</p>
       <div class="footer-links">
-        <a href="#hero" class="footer-link">Back to Top &uarr;</a>
-        <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Fork</a>
-        <a href="https://github.com/Techspace-srmuh/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">TechSpace Repo</a>
+        <a href="/" class="footer-link">Home</a>
+        <a href="/about" class="footer-link">About</a>
+        <a href="/projects" class="footer-link">Projects</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/contact" class="footer-link">Contact</a>
+        <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
       </div>
     </div>
   </footer>

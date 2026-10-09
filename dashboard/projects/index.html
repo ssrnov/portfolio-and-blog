@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects &amp; GitHub Sync | SSRNovX Studio</title>
+  <meta name="description" content="Manage projects and import repositories directly from GitHub." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+</head>
+<body class="dashboard-shell">
+
+  <!-- Left Sidebar -->
+  <aside class="dashboard-sidebar" role="navigation">
+    <div>
+      <div class="sidebar-header">
+        <a href="/" class="brand-logo" aria-label="SSRNovX Home">
+          <span>SSRNovX</span>
+          <span class="brand-badge">Studio</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="/dashboard/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Overview</span>
+        </a>
+        <a href="/dashboard/builder/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+          <span>Portfolio Builder</span>
+        </a>
+        <a href="/dashboard/projects/" class="sidebar-link active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+          <span>Projects &amp; GitHub</span>
+          <span class="sidebar-link-badge">Sync</span>
+        </a>
+        <a href="/dashboard/resume/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          <span>ATS Resume</span>
+        </a>
+        <a href="/dashboard/settings/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-snippet">
+        <div class="user-avatar-small">S</div>
+        <div class="user-info-text">
+          <h4>Sunny / SSRNovX</h4>
+          <p>/u/sunny</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main View -->
+  <main class="dashboard-main">
+    <header class="dashboard-topbar">
+      <div class="topbar-breadcrumbs">
+        <a href="/dashboard/" style="color: inherit; text-decoration: none;">Studio</a>
+        <span>/</span>
+        <strong>Projects &amp; GitHub Sync</strong>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme">
+          <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+          <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="dashboard-content">
+      
+      <!-- GitHub Connection Banner -->
+      <div style="background-color: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); margin-bottom: var(--space-8); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4);">
+        <div style="display: flex; align-items: center; gap: var(--space-4);">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+          <div>
+            <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0;">
+              GitHub Integration Active
+            </h3>
+            <p style="font-size: var(--text-xs); color: var(--text-muted); margin: 0; font-family: var(--font-mono);">
+              Connected to @ssrnov &bull; 6 repositories synced
+            </p>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary btn-card" id="refresh-sync-btn">
+          <span>Refresh All Repositories</span>
+        </button>
+      </div>
+
+      <!-- Import Repositories Selection Box -->
+      <section style="background-color: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-8); margin-bottom: var(--space-8);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); flex-wrap: wrap; gap: var(--space-2);">
+          <div>
+            <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0;">
+              Select GitHub Repositories to Import
+            </h3>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); margin: 0;">
+              Checked repositories will automatically convert into portfolio project cards with live links and star counts.
+            </p>
+          </div>
+          <button type="button" class="btn btn-primary btn-card" id="import-selected-btn">
+            Import Selected (2)
+          </button>
+        </div>
+
+        <!-- Repository List -->
+        <div class="github-repo-grid">
+          
+          <label class="repo-select-item">
+            <input type="checkbox" checked />
+            <div class="repo-select-info">
+              <h4>ssrnov/task-engine</h4>
+              <p>Asynchronous background task runner with priority queueing and worker pool concurrency.</p>
+              <div class="repo-select-meta">
+                <span>&bull; Node.js</span>
+                <span>&star; 42 stars</span>
+                <span>Pushed 2 days ago</span>
+              </div>
+            </div>
+          </label>
+
+          <label class="repo-select-item">
+            <input type="checkbox" checked />
+            <div class="repo-select-info">
+              <h4>ssrnov/cloud-metrics</h4>
+              <p>Real-time cloud observability dashboard featuring live streaming metrics via WebSockets.</p>
+              <div class="repo-select-meta">
+                <span>&bull; JavaScript</span>
+                <span>&star; 28 stars</span>
+                <span>Pushed last week</span>
+              </div>
+            </div>
+          </label>
+
+          <label class="repo-select-item">
+            <input type="checkbox" />
+            <div class="repo-select-info">
+              <h4>ssrnov/algo-visualizer</h4>
+              <p>Canvas-based visual sandbox demonstrating graph pathfinding (A*, Dijkstra) and sorting.</p>
+              <div class="repo-select-meta">
+                <span>&bull; HTML5 Canvas</span>
+                <span>&star; 19 stars</span>
+                <span>Pushed 3 weeks ago</span>
+              </div>
+            </div>
+          </label>
+
+          <label class="repo-select-item">
+            <input type="checkbox" />
+            <div class="repo-select-info">
+              <h4>ssrnov/crypto-vault</h4>
+              <p>Zero-knowledge secret storage application implementing client-side AES-GCM encryption.</p>
+              <div class="repo-select-meta">
+                <span>&bull; Web Crypto</span>
+                <span>&star; 14 stars</span>
+                <span>Pushed last month</span>
+              </div>
+            </div>
+          </label>
+
+        </div>
+      </section>
+
+      <!-- Active Portfolio Projects List -->
+      <section style="background-color: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-8);">
+        <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-4);">
+          Currently Showcased on /u/sunny (6 Projects)
+        </h3>
+
+        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: var(--space-4); border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: var(--bg-primary);">
+            <div>
+              <strong style="color: var(--text-primary);">Personal Portfolio &amp; Blog (BuildLab B04)</strong>
+              <p style="font-size: var(--text-xs); color: var(--text-muted); margin: 0;">Category: Web &bull; Featured</p>
+            </div>
+            <div style="display: flex; gap: var(--space-2);">
+              <a href="/dashboard/builder/" class="btn btn-secondary btn-card">Edit Details</a>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: var(--space-4); border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: var(--bg-primary);">
+            <div>
+              <strong style="color: var(--text-primary);">Distributed Task Queue &amp; Worker Engine</strong>
+              <p style="font-size: var(--text-xs); color: var(--text-muted); margin: 0;">Category: Backend &bull; Synced from GitHub</p>
+            </div>
+            <div style="display: flex; gap: var(--space-2);">
+              <a href="/dashboard/builder/" class="btn btn-secondary btn-card">Edit Details</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script type="module" src="/js/main.js"></script>
+  <script type="module" src="/js/projects-sync.js"></script>
+</body>
+</html>

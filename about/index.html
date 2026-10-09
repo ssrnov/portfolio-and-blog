@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>About Me | SSRNovX — Personal Portfolio &amp; Blog</title>
+  <meta name="description" content="Learn more about SSRNovX: engineering background, academic education timeline at SRM University, technical competencies, and software philosophy." />
+  <meta name="author" content="SSRNovX" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="profile" />
+  <meta property="og:url" content="https://github.com/ssrnov/portfolio-and-blog" />
+  <meta property="og:title" content="About Me | SSRNovX" />
+  <meta property="og:description" content="Engineering background, academic education timeline at SRM University, technical competencies, and software philosophy." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+
+  <!-- Early Theme Init -->
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <!-- Accessibility Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo" aria-label="SSRNovX Home">
+        <span>SSRNovX</span>
+        <span class="brand-badge">BuildLab</span>
+      </a>
+
+      <div class="nav-right">
+        <nav class="site-nav" role="navigation" aria-label="Main Navigation">
+          <ul class="nav-links" id="nav-menu">
+            <li><a href="/" class="nav-link" data-page="home">Home</a></li>
+            <li><a href="/about" class="nav-link active" data-page="about">About</a></li>
+            <li><a href="/projects" class="nav-link" data-page="projects">Projects</a></li>
+            <li><a href="/blog" class="nav-link" data-page="blog">Blog</a></li>
+            <li><a href="/contact" class="nav-link" data-page="contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">
+          <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+          <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
+
+        <!-- Mobile Toggle -->
+        <button id="mobile-menu-toggle" class="mobile-toggle-btn" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open navigation menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    
+    <!-- Page Header Banner -->
+    <section class="page-header">
+      <div class="container page-header-content">
+        <span class="page-label">Background &amp; Philosophy</span>
+        <h1 class="page-title">About Me</h1>
+        <p class="page-subtitle">
+          Software engineer focused on scalable architectures, native web standards, and crafting durable, high-speed software with minimal cognitive overhead.
+        </p>
+      </div>
+    </section>
+
+    <!-- Bio & Profile Overview Section -->
+    <section class="section-py" aria-labelledby="bio-heading">
+      <div class="container">
+        <div class="about-grid">
+          
+          <!-- Profile Card with Avatar Placeholder -->
+          <div>
+            <div class="profile-card">
+              <div class="profile-avatar-wrapper" aria-label="Profile avatar placeholder">
+                <!-- Monochrome Architectural Avatar SVG -->
+                <svg class="profile-avatar-svg" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect width="140" height="140" fill="var(--bg-secondary)" />
+                  <circle cx="70" cy="50" r="26" stroke="currentColor" stroke-width="2" fill="none" />
+                  <path d="M30 120 C30 92 48 85 70 85 C92 85 110 92 110 120" stroke="currentColor" stroke-width="2" fill="none" />
+                  <path d="M15 15 L25 15 M15 15 L15 25" stroke="var(--border-color)" stroke-width="1.5" />
+                  <path d="M125 15 L115 15 M125 15 L125 25" stroke="var(--border-color)" stroke-width="1.5" />
+                  <path d="M15 125 L25 125 M15 125 L15 115" stroke="var(--border-color)" stroke-width="1.5" />
+                  <path d="M125 125 L115 125 M125 125 L125 115" stroke="var(--border-color)" stroke-width="1.5" />
+                </svg>
+              </div>
+
+              <div>
+                <h2 class="profile-name">SSRNovX</h2>
+                <p class="profile-title">Software Engineer &bull; Full-Stack</p>
+                <div class="status-badge-live">
+                  <span class="pulse-dot" aria-hidden="true"></span>
+                  <span>Available for Opportunities</span>
+                </div>
+              </div>
+
+              <div style="width: 100%; border-top: 1px solid var(--border-subtle); padding-top: var(--space-4);">
+                <a href="/assets/resume/SSRNovX_Resume.pdf" download="SSRNovX_Resume.pdf" class="btn btn-secondary btn-card" style="width: 100%;">
+                  <span>Download Full CV (PDF)</span>
+                  <span aria-hidden="true">&darr;</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="facts-grid">
+              <div class="fact-card">
+                <p class="fact-label">Primary Role</p>
+                <p class="fact-value">Software Engineer</p>
+              </div>
+              <div class="fact-card">
+                <p class="fact-label">Specialization</p>
+                <p class="fact-value">Systems &amp; Web</p>
+              </div>
+              <div class="fact-card">
+                <p class="fact-label">Academic Program</p>
+                <p class="fact-value">B.Tech in CSE</p>
+              </div>
+              <div class="fact-card">
+                <p class="fact-label">Location</p>
+                <p class="fact-value">India (IST)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- In-depth Narrative -->
+          <div class="about-bio-card">
+            <h2 id="bio-heading" class="section-title" style="font-size: var(--text-2xl); margin-bottom: var(--space-4);">
+              Engineering Philosophy &amp; Approach
+            </h2>
+            <p>
+              I specialize in software engineering across modern web systems and distributed backend pipelines. Rather than reaching for heavy external dependencies by default, my methodology is rooted in mastering native platform APIs, clear modular decomposition, and writing predictable, debuggable code.
+            </p>
+            <p>
+              Throughout my academic studies and competitive engineering labs, I have focused on the delicate balance between developer velocity and long-term system maintainability. I prioritize low memory footprints, sub-second build times, and high accessibility standards (WCAG AAA).
+            </p>
+            <p>
+              Currently participating in <strong>TechSpace BuildLab '26</strong>, developing robust web applications with zero unnecessary runtime overhead and strict architecture constraints.
+            </p>
+            
+            <div style="margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--border-subtle);">
+              <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-3);">
+                Core Principles
+              </h3>
+              <ul style="color: var(--text-secondary); line-height: var(--leading-relaxed); padding-left: var(--space-6); display: flex; flex-direction: column; gap: var(--space-2);">
+                <li><strong>Standards Over Ephemeral Hype:</strong> Leverage stable browser and OS primitives before adding external dependencies.</li>
+                <li><strong>Measurable Performance:</strong> Optimize for cold-start latency, memory efficiency, and deterministic data flow.</li>
+                <li><strong>Accessibility by Default:</strong> Ensure complete keyboard navigation, semantic markup, and sufficient contrast across all screens.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Education Timeline Section -->
+    <section class="section-py" aria-labelledby="education-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Academic Foundation</span>
+          <h2 id="education-heading" class="section-title">Education &amp; Credentials</h2>
+          <p class="section-subtitle">
+            Formal computer science coursework, foundational theory, and practical engineering labs.
+          </p>
+        </div>
+
+        <div class="timeline" aria-label="Education history timeline">
+          <div class="timeline-item">
+            <span class="timeline-year">2023 &mdash; 2027 (Expected)</span>
+            <h3 class="timeline-title">Bachelor of Technology &mdash; Computer Science &amp; Engineering</h3>
+            <p class="timeline-institution">SRM University</p>
+            <p class="timeline-desc" style="margin-bottom: var(--space-3);">
+              Comprehensive curriculum emphasizing computational complexity, distributed architecture, and software design fundamentals.
+            </p>
+            <div class="skill-badges" aria-label="Coursework subjects">
+              <span class="skill-badge">Data Structures &amp; Algorithms</span>
+              <span class="skill-badge">Database Management Systems</span>
+              <span class="skill-badge">Operating Systems</span>
+              <span class="skill-badge">Computer Networks</span>
+              <span class="skill-badge">Object-Oriented Design</span>
+              <span class="skill-badge">System Architecture</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Grouped by Category -->
+    <section id="skills" class="section-py" aria-labelledby="skills-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Domain Expertise</span>
+          <h2 id="skills-heading" class="section-title">Skills Matrix</h2>
+          <p class="section-subtitle">
+            Categorized technical capabilities applied across production software and engineering projects.
+          </p>
+        </div>
+
+        <div class="skills-container">
+          <!-- 1. Frontend -->
+          <div class="skill-category-card">
+            <h3 class="skill-category-title">
+              <span>Frontend Engineering</span>
+              <span class="brand-badge">UI/UX</span>
+            </h3>
+            <div class="skill-badges">
+              <span class="skill-badge">JavaScript (ES6+)</span>
+              <span class="skill-badge">TypeScript</span>
+              <span class="skill-badge">HTML5 Semantic</span>
+              <span class="skill-badge">Modern CSS3</span>
+              <span class="skill-badge">Vite</span>
+              <span class="skill-badge">Responsive Design</span>
+              <span class="skill-badge">Accessibility (a11y)</span>
+              <span class="skill-badge">DOM Performance</span>
+            </div>
+          </div>
+
+          <!-- 2. Backend & Systems -->
+          <div class="skill-category-card">
+            <h3 class="skill-category-title">
+              <span>Backend &amp; Systems</span>
+              <span class="brand-badge">APIs</span>
+            </h3>
+            <div class="skill-badges">
+              <span class="skill-badge">Node.js</span>
+              <span class="skill-badge">Express</span>
+              <span class="skill-badge">RESTful APIs</span>
+              <span class="skill-badge">Redis</span>
+              <span class="skill-badge">SQL Databases</span>
+              <span class="skill-badge">Asynchronous Workers</span>
+              <span class="skill-badge">WebSockets</span>
+            </div>
+          </div>
+
+          <!-- 3. DevOps & Workflow -->
+          <div class="skill-category-card">
+            <h3 class="skill-category-title">
+              <span>DevOps &amp; Workflow</span>
+              <span class="brand-badge">Infra</span>
+            </h3>
+            <div class="skill-badges">
+              <span class="skill-badge">Git &amp; GitHub</span>
+              <span class="skill-badge">Vercel Deployment</span>
+              <span class="skill-badge">Docker</span>
+              <span class="skill-badge">Linux CLI</span>
+              <span class="skill-badge">Postman</span>
+              <span class="skill-badge">CI/CD Workflows</span>
+            </div>
+          </div>
+
+          <!-- 4. Core Engineering -->
+          <div class="skill-category-card">
+            <h3 class="skill-category-title">
+              <span>Core Engineering</span>
+              <span class="brand-badge">Logic</span>
+            </h3>
+            <div class="skill-badges">
+              <span class="skill-badge">Data Structures</span>
+              <span class="skill-badge">Algorithms</span>
+              <span class="skill-badge">System Design</span>
+              <span class="skill-badge">Clean Code</span>
+              <span class="skill-badge">Refactoring</span>
+              <span class="skill-badge">Security Basics</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interests and Learning Goals -->
+    <section class="section-py" aria-labelledby="interests-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Future Focus</span>
+          <h2 id="interests-heading" class="section-title">Interests &amp; Learning Goals</h2>
+          <p class="section-subtitle">
+            Areas of computer science and software architecture I actively research, explore, and prototype.
+          </p>
+        </div>
+
+        <div class="interests-grid">
+          <div class="interest-card">
+            <h3 class="interest-card-title">
+              <span>&gt;_</span>
+              <span>Distributed Consensus</span>
+            </h3>
+            <p class="interest-card-desc">
+              Studying leader-election and log replication models (Raft, Paxos), vector clocks, and crash fault tolerance in distributed storage systems.
+            </p>
+          </div>
+
+          <div class="interest-card">
+            <h3 class="interest-card-title">
+              <span>&gt;_</span>
+              <span>WebAssembly (Wasm)</span>
+            </h3>
+            <p class="interest-card-desc">
+              Compiling performant C/Rust algorithms to the browser for heavy client-side compute workloads, cryptography, and image analysis.
+            </p>
+          </div>
+
+          <div class="interest-card">
+            <h3 class="interest-card-title">
+              <span>&gt;_</span>
+              <span>Database Engine Internals</span>
+            </h3>
+            <p class="interest-card-desc">
+              Investigating LSM trees, WAL append-only logs, indexing strategies (B-Trees, SSTables), and write amplification trade-offs.
+            </p>
+          </div>
+
+          <div class="interest-card">
+            <h3 class="interest-card-title">
+              <span>&gt;_</span>
+              <span>Low-Latency Networking</span>
+            </h3>
+            <p class="interest-card-desc">
+              Exploring HTTP/3 QUIC streams, custom TCP packet handling, and asynchronous event loops for minimal packet round-trip times.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation CTA -->
+    <section class="section-py" aria-labelledby="about-cta-heading">
+      <div class="container">
+        <div class="contact-cta-banner">
+          <div class="contact-cta-content">
+            <span class="section-label">Next Steps</span>
+            <h2 id="about-cta-heading">Explore My Work or Connect Directly</h2>
+            <p>
+              Review full architectural breakdowns in the projects gallery, or send a direct message regarding technical collaborations.
+            </p>
+          </div>
+          <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
+            <a href="/projects" class="btn btn-primary">
+              <span>View Projects</span>
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+            <a href="/contact" class="btn btn-secondary">
+              <span>Contact Me</span>
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-container">
+      <p>&copy; 2026 SSRNovX. Built for TechSpace BuildLab '26 (BuildLab B04).</p>
+      <div class="footer-links">
+        <a href="/" class="footer-link">Home</a>
+        <a href="/about" class="footer-link">About</a>
+        <a href="/projects" class="footer-link">Projects</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/contact" class="footer-link">Contact</a>
+        <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

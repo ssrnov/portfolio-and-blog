@@ -1,29 +1,8 @@
 /**
  * SSRNovX Portfolio & Blog — Contact Form Module
- * Client-side validation, accessible feedback states, and service integration
+ * Client-side validation, accessible feedback states, and visual design preview
+ * TechSpace BuildLab B04
  */
-
-/**
- * Service Configuration
- * Easily configure between 'simulation' (default out-of-the-box demo),
- * 'formspree', or 'emailjs'.
- */
-export const CONTACT_CONFIG = {
-  // Options: 'simulation' | 'formspree' | 'emailjs'
-  provider: 'simulation',
-
-  formspree: {
-    // Replace with your Formspree endpoint (e.g., 'https://formspree.io/f/xknlqwer')
-    endpoint: 'https://formspree.io/f/YOUR_FORMSPREE_ID',
-  },
-
-  emailjs: {
-    // Replace with your EmailJS credentials
-    publicKey: 'YOUR_EMAILJS_PUBLIC_KEY',
-    serviceId: 'YOUR_EMAILJS_SERVICE_ID',
-    templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
-  },
-};
 
 export function initContact() {
   const form = document.getElementById('contact-form');
@@ -36,31 +15,44 @@ export function initContact() {
   const submitBtn = document.getElementById('contact-submit-btn');
   const statusBanner = document.getElementById('contact-status');
 
+  // Real-time input clearing of error states
+  [nameInput, emailInput, subjectInput, messageInput].forEach((input) => {
+    if (!input) return;
+    input.addEventListener('input', () => {
+      if (input.classList.contains('is-invalid')) {
+        input.classList.remove('is-invalid');
+        const errSpan = input.parentElement.querySelector('.error-message');
+        if (errSpan) errSpan.classList.remove('is-visible');
+      }
+    });
+  });
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    // Reset previous error messages
     clearErrors();
 
-    // Validate fields
     let isValid = true;
 
+    // 1. Name validation
     if (!nameInput.value.trim() || nameInput.value.trim().length < 2) {
-      showError(nameInput, 'name-error', 'Please enter your name (minimum 2 characters).');
+      showError(nameInput, 'name-error', 'Please enter your full name (minimum 2 characters).');
       isValid = false;
     }
 
+    // 2. Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(emailInput.value.trim())) {
-      showError(emailInput, 'email-error', 'Please enter a valid email address.');
+      showError(emailInput, 'email-error', 'Please provide a valid email address (e.g., name@domain.com).');
       isValid = false;
     }
 
+    // 3. Subject validation
     if (!subjectInput.value.trim() || subjectInput.value.trim().length < 3) {
-      showError(subjectInput, 'subject-error', 'Please enter a subject (minimum 3 characters).');
+      showError(subjectInput, 'subject-error', 'Please enter a message subject (minimum 3 characters).');
       isValid = false;
     }
 
+    // 4. Message validation
     if (!messageInput.value.trim() || messageInput.value.trim().length < 10) {
       showError(messageInput, 'message-error', 'Please enter a message with at least 10 characters.');
       isValid = false;
@@ -68,29 +60,23 @@ export function initContact() {
 
     if (!isValid) return;
 
-    // Begin Submission
+    // Simulate sending with loading state
     setLoadingState(true);
 
     try {
-      const formData = {
-        name: nameInput.value.trim(),
-        email: emailInput.value.trim(),
-        subject: subjectInput.value.trim(),
-        message: messageInput.value.trim(),
-      };
+      // Realistic simulation delay for review
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
-      await dispatchMessage(formData);
-
-      // Display Success State
+      // Display explicit Phase 2 design preview message
       showStatus(
-        'Thank you! Your message has been sent successfully. I will get back to you shortly.',
+        'Validation passed: Form design simulation verified. Live backend transmission will be connected in Phase 3.',
         'success'
       );
       form.reset();
     } catch (err) {
-      console.error('Contact Form Error:', err);
+      console.error('Contact Form Simulation Error:', err);
       showStatus(
-        'An error occurred while sending your message. Please try again or reach out directly via GitHub / email.',
+        'An error occurred during form submission simulation. Please try again.',
         'error'
       );
     } finally {
@@ -100,6 +86,7 @@ export function initContact() {
 
   function showError(inputEl, errorId, message) {
     inputEl.classList.add('is-invalid');
+    inputEl.setAttribute('aria-invalid', 'true');
     const errorEl = document.getElementById(errorId);
     if (errorEl) {
       errorEl.textContent = message;
@@ -110,6 +97,7 @@ export function initContact() {
   function clearErrors() {
     form.querySelectorAll('.form-input, .form-textarea').forEach((el) => {
       el.classList.remove('is-invalid');
+      el.removeAttribute('aria-invalid');
     });
     form.querySelectorAll('.error-message').forEach((el) => {
       el.textContent = '';
@@ -130,45 +118,8 @@ export function initContact() {
   function setLoadingState(loading) {
     if (!submitBtn) return;
     submitBtn.disabled = loading;
-    submitBtn.textContent = loading ? 'Sending message...' : 'Send Message';
+    submitBtn.innerHTML = loading
+      ? '<span class="pulse-dot" style="display:inline-block; margin-right:6px;"></span> Simulating Send...'
+      : 'Send Message';
   }
-}
-
-/**
- * Dispatches message according to CONTACT_CONFIG
- */
-async function dispatchMessage(data) {
-  if (CONTACT_CONFIG.provider === 'formspree') {
-    const res = await fetch(CONTACT_CONFIG.formspree.endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) throw new Error(`Formspree error HTTP ${res.status}`);
-    return await res.json();
-  }
-
-  if (CONTACT_CONFIG.provider === 'emailjs') {
-    const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        service_id: CONTACT_CONFIG.emailjs.serviceId,
-        template_id: CONTACT_CONFIG.emailjs.templateId,
-        user_id: CONTACT_CONFIG.emailjs.publicKey,
-        template_params: data,
-      }),
-    });
-    if (!res.ok) throw new Error(`EmailJS error HTTP ${res.status}`);
-    return true;
-  }
-
-  // Default: Simulation mode (produces realistic network delay for testing)
-  await new Promise((resolve) => setTimeout(resolve, 800));
-  return { status: 'simulated_success' };
 }

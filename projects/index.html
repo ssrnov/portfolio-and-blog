@@ -3,17 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>404 — Page Not Found | SSRNovX</title>
-  <meta name="description" content="The page you are looking for does not exist. Return to the SSRNovX Personal Portfolio &amp; Blog homepage." />
-  <meta name="robots" content="noindex, follow" />
+  
+  <title>Projects | SSRNovX — Personal Portfolio &amp; Blog</title>
+  <meta name="description" content="Explore software engineering projects, web applications, distributed queue engines, and open-source tools created by SSRNovX." />
+  <meta name="author" content="SSRNovX" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://github.com/ssrnov/portfolio-and-blog" />
+  <meta property="og:title" content="Projects | SSRNovX" />
+  <meta property="og:description" content="Explore software engineering projects, web applications, distributed queue engines, and open-source tools." />
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
 
-  <!-- Fonts & Styles -->
+  <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="/css/variables.css" />
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/components.css" />
@@ -40,7 +50,7 @@
     <div class="container nav-container">
       <a href="/" class="brand-logo" aria-label="SSRNovX Home">
         <span>SSRNovX</span>
-        <span class="brand-badge">404</span>
+        <span class="brand-badge">BuildLab</span>
       </a>
 
       <div class="nav-right">
@@ -48,7 +58,7 @@
           <ul class="nav-links" id="nav-menu">
             <li><a href="/" class="nav-link" data-page="home">Home</a></li>
             <li><a href="/about" class="nav-link" data-page="about">About</a></li>
-            <li><a href="/projects" class="nav-link" data-page="projects">Projects</a></li>
+            <li><a href="/projects" class="nav-link active" data-page="projects">Projects</a></li>
             <li><a href="/blog" class="nav-link" data-page="blog">Blog</a></li>
             <li><a href="/contact" class="nav-link" data-page="contact">Contact</a></li>
           </ul>
@@ -85,37 +95,79 @@
   </header>
 
   <!-- Main Content -->
-  <main id="main-content" style="display: flex; align-items: center; justify-content: center; min-height: 70vh; padding: var(--space-8) 0;">
-    <div class="container" style="text-align: center; max-width: 620px;">
-      <span class="section-label" style="margin-bottom: var(--space-2);">HTTP 404 Error</span>
-      <p style="font-family: var(--font-mono); font-size: clamp(var(--text-4xl), 8vw, var(--text-6xl)); font-weight: 800; color: var(--text-primary); margin-bottom: var(--space-2); letter-spacing: -0.04em;">
-        404
-      </p>
-      <h1 style="font-size: var(--text-2xl); font-weight: 700; margin-bottom: var(--space-4); color: var(--text-primary);">
-        Page Not Found
-      </h1>
-      <p style="color: var(--text-secondary); margin-bottom: var(--space-8); line-height: var(--leading-relaxed); font-size: var(--text-base);">
-        The page or resource you are looking for does not exist, has been removed, or is temporarily unavailable. Return to the homepage or explore one of the main sections below.
-      </p>
-      <div style="display: flex; justify-content: center; gap: var(--space-4); flex-wrap: wrap;">
-        <a href="/" class="btn btn-primary">
-          <span>Return to Homepage</span>
-          <span aria-hidden="true">&rarr;</span>
-        </a>
-        <a href="/projects" class="btn btn-secondary">
-          <span>Browse Projects</span>
-        </a>
-        <a href="/blog" class="btn btn-secondary">
-          <span>Read Blog</span>
-        </a>
+  <main id="main-content">
+    
+    <!-- Page Header Banner -->
+    <section class="page-header">
+      <div class="container page-header-content">
+        <span class="page-label">Portfolio Gallery</span>
+        <h1 class="page-title">Projects &amp; Work</h1>
+        <p class="page-subtitle">
+          Curated applications, distributed backend services, and developer tools. Use the search field or category filters below to browse.
+        </p>
       </div>
-    </div>
+    </section>
+
+    <!-- Projects Gallery Section -->
+    <section class="section-py" aria-labelledby="gallery-heading">
+      <div class="container">
+        
+        <!-- Controls Toolbar -->
+        <div class="controls-toolbar" role="search" aria-label="Project filter controls">
+          <div class="search-box-wrapper">
+            <svg class="search-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="search"
+              id="project-search"
+              class="search-input"
+              placeholder="Search projects by name, description, or technology tag..."
+              aria-label="Search projects"
+            />
+          </div>
+
+          <div class="filter-pills" id="project-filters" role="group" aria-label="Category filters">
+            <button type="button" class="filter-btn active" data-category="all" aria-pressed="true">All</button>
+            <button type="button" class="filter-btn" data-category="web" aria-pressed="false">Web</button>
+            <button type="button" class="filter-btn" data-category="backend" aria-pressed="false">Backend</button>
+            <button type="button" class="filter-btn" data-category="tools" aria-pressed="false">Tools</button>
+            <button type="button" class="filter-btn" data-category="security" aria-pressed="false">Security</button>
+          </div>
+        </div>
+
+        <!-- Status Counter -->
+        <p id="projects-count" class="fact-label" style="margin-bottom: var(--space-6);" aria-live="polite">
+          Loading projects...
+        </p>
+
+        <!-- Dynamic Projects Grid -->
+        <div id="projects-grid" class="projects-grid" aria-live="polite">
+          <!-- Populated dynamically by js/projects.js with thumbnail placeholders and cards -->
+        </div>
+
+        <!-- Resume Download Callout Banner -->
+        <div class="resume-banner">
+          <div class="resume-info">
+            <h3>Looking for full background details?</h3>
+            <p>Download my comprehensive resume for details on education, architecture methodologies, and system design experience.</p>
+          </div>
+          <a href="/assets/resume/SSRNovX_Resume.pdf" download="SSRNovX_Resume.pdf" class="btn btn-primary">
+            <span>Download Resume (PDF)</span>
+            <span aria-hidden="true">&darr;</span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
   <!-- Site Footer -->
   <footer class="site-footer" role="contentinfo">
     <div class="container footer-container">
-      <p>&copy; 2026 SSRNovX. TechSpace BuildLab '26 (BuildLab B04).</p>
+      <p>&copy; 2026 SSRNovX. Built for TechSpace BuildLab '26 (BuildLab B04).</p>
       <div class="footer-links">
         <a href="/" class="footer-link">Home</a>
         <a href="/about" class="footer-link">About</a>
