@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Primary Meta Tags -->
+  <title>SSRNovX | Personal Portfolio &amp; Blog</title>
+  <meta name="title" content="SSRNovX | Personal Portfolio &amp; Blog" />
+  <meta name="description" content="Personal Portfolio and Engineering Blog of SSRNovX. Showcasing software architecture, projects, technical writing, and problem-solving." />
+  <meta name="author" content="SSRNovX" />
+  <meta name="keywords" content="SSRNovX, Portfolio, Blog, Software Engineer, Web Development, JavaScript, TechSpace" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://github.com/ssrnov/portfolio-and-blog" />
+  <meta property="og:title" content="SSRNovX | Personal Portfolio &amp; Blog" />
+  <meta property="og:description" content="Personal Portfolio and Engineering Blog of SSRNovX." />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:title" content="SSRNovX | Personal Portfolio &amp; Blog" />
+  <meta property="twitter:description" content="Personal Portfolio and Engineering Blog of SSRNovX." />
+
+  <!-- Favicon (SVG Monogram) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+
+  <!-- Early Theme Initialization to Prevent Flash of Wrong Theme (FOUC) -->
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <!-- Accessibility: Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Global Header & Navigation -->
+  <header class="site-header" role="banner">
+    <div class="container nav-container">
+      <a href="#hero" class="brand-logo" aria-label="SSRNovX Home">
+        <span>SSRNovX</span>
+        <span class="brand-badge">B04</span>
+      </a>
+
+      <div class="nav-right">
+        <nav class="site-nav" role="navigation" aria-label="Main Navigation">
+          <ul class="nav-links" id="nav-menu">
+            <li><a href="#hero" class="nav-link active">Home</a></li>
+            <li><a href="#features" class="nav-link">Roadmap</a></li>
+            <li><a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub ↗</a></li>
+          </ul>
+        </nav>
+
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">
+          <!-- Sun Icon (for Dark Mode) -->
+          <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+          <!-- Moon Icon (for Light Mode) -->
+          <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
+
+        <!-- Mobile Navigation Toggle -->
+        <button id="mobile-menu-toggle" class="mobile-toggle-btn" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open navigation menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="main-content">
+    <!-- Hero / Minimal Working Homepage Section -->
+    <section id="hero" class="hero-section" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="status-chip">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Phase 1: Project Foundation Active</span>
+        </div>
+
+        <h1 id="hero-title" class="hero-title">
+          SSRNovX — Engineer, Builder &amp; Problem Solver.
+        </h1>
+
+        <p class="hero-description">
+          Welcome to the official personal portfolio and engineering blog repository for TechSpace BuildLab B04. 
+          Built with lightweight Vanilla JavaScript, HTML5, modern CSS, and Vite for performance, accessibility, and clean aesthetics.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#features" class="btn btn-primary">View Implementation Modules</a>
+          <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+            <span>Repository on GitHub</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture & Modules Preview Section -->
+    <section id="features" class="roadmap-section" aria-labelledby="roadmap-title">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-label">BuildLab B04 Scope</p>
+          <h2 id="roadmap-title" class="section-title">Planned Portfolio Modules</h2>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card">
+            <p class="feature-phase">Phase 2</p>
+            <h3 class="feature-card-title">About, Education &amp; Skills</h3>
+            <p class="feature-card-desc">Detailed background, credentials timeline, and interactive categorized technical skill badges.</p>
+          </article>
+
+          <article class="feature-card">
+            <p class="feature-phase">Phase 3</p>
+            <h3 class="feature-card-title">Projects Gallery &amp; Resume</h3>
+            <p class="feature-card-desc">Live searchable projects showcase with tech filters, GitHub repositories, and downloadable CV.</p>
+          </article>
+
+          <article class="feature-card">
+            <p class="feature-phase">Phase 4</p>
+            <h3 class="feature-card-title">JSON-Powered Blog</h3>
+            <p class="feature-card-desc">Lightweight engineering article system powered by structured JSON data with topic filtering.</p>
+          </article>
+
+          <article class="feature-card">
+            <p class="feature-phase">Phase 5</p>
+            <h3 class="feature-card-title">Interactive Contact Form</h3>
+            <p class="feature-card-desc">Direct messaging with client-side field validation, feedback states, and service integration.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-container">
+      <p>&copy; 2026 SSRNovX. Built for TechSpace BuildLab B04.</p>
+      <div class="footer-links">
+        <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Repository</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Entry JavaScript Module -->
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
