@@ -399,38 +399,110 @@
       </div>
     </section>
 
-    <!-- Architecture & Modules Preview Section -->
-    <section id="features" class="roadmap-section" aria-labelledby="roadmap-title">
+    <!-- 6. Interactive Contact Section -->
+    <section id="contact" class="contact-section section-py" aria-labelledby="contact-title">
       <div class="container">
         <div class="section-header">
-          <p class="section-label">BuildLab B04 Scope</p>
-          <h2 id="roadmap-title" class="section-title">Planned Portfolio Modules</h2>
+          <span class="section-label">Communication</span>
+          <h2 id="contact-title" class="section-title">Get in Touch</h2>
+          <p class="section-subtitle">
+            Have a project, technical inquiry, or collaboration in mind? Fill out the form or reach out through direct channels.
+          </p>
         </div>
 
-        <div class="feature-grid">
-          <article class="feature-card">
-            <p class="feature-phase">Phase 2</p>
-            <h3 class="feature-card-title">About, Education &amp; Skills</h3>
-            <p class="feature-card-desc">Detailed background, credentials timeline, and interactive categorized technical skill badges.</p>
-          </article>
+        <div class="contact-container">
+          <!-- Contact Info Channels -->
+          <div class="contact-info-card">
+            <h3>Let's Connect</h3>
+            <p>
+              I am always keen to discuss challenging engineering problems, open-source initiatives, and software craftsmanship.
+            </p>
 
-          <article class="feature-card">
-            <p class="feature-phase">Phase 3</p>
-            <h3 class="feature-card-title">Projects Gallery &amp; Resume</h3>
-            <p class="feature-card-desc">Live searchable projects showcase with tech filters, GitHub repositories, and downloadable CV.</p>
-          </article>
+            <div class="contact-channels">
+              <div class="channel-item">
+                <span class="channel-icon" aria-hidden="true">&commat;</span>
+                <span><strong>Email:</strong> contact@ssrnovx.dev</span>
+              </div>
+              <div class="channel-item">
+                <span class="channel-icon" aria-hidden="true">&gt;</span>
+                <span><strong>GitHub:</strong> <a href="https://github.com/ssrnov" target="_blank" rel="noopener noreferrer" class="footer-link">github.com/ssrnov</a></span>
+              </div>
+              <div class="channel-item">
+                <span class="channel-icon" aria-hidden="true">&bull;</span>
+                <span><strong>Location:</strong> India (IST / UTC+5:30)</span>
+              </div>
+              <div class="channel-item">
+                <span class="channel-icon" aria-hidden="true">&check;</span>
+                <span><strong>Response Time:</strong> Within 24-48 hours</span>
+              </div>
+            </div>
 
-          <article class="feature-card">
-            <p class="feature-phase">Phase 4</p>
-            <h3 class="feature-card-title">JSON-Powered Blog</h3>
-            <p class="feature-card-desc">Lightweight engineering article system powered by structured JSON data with topic filtering.</p>
-          </article>
+            <div class="integration-note">
+              <p><strong>Integration Notice:</strong> Form dispatch supports both <strong>EmailJS</strong> and <strong>Formspree</strong>. In local development or review mode, an interactive simulation handler verifies client validation and response states.</p>
+            </div>
+          </div>
 
-          <article class="feature-card">
-            <p class="feature-phase">Phase 5</p>
-            <h3 class="feature-card-title">Interactive Contact Form</h3>
-            <p class="feature-card-desc">Direct messaging with client-side field validation, feedback states, and service integration.</p>
-          </article>
+          <!-- Contact Form with Validation -->
+          <form id="contact-form" class="contact-form" novalidate aria-label="Contact form">
+            <div id="contact-status" class="form-status" role="alert" aria-live="polite"></div>
+
+            <div class="form-group">
+              <label for="contact-name" class="form-label">Your Name *</label>
+              <input
+                type="text"
+                id="contact-name"
+                name="name"
+                class="form-input"
+                placeholder="e.g. Alex Morgan"
+                required
+                autocomplete="name"
+              />
+              <span id="name-error" class="error-message" role="alert"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-email" class="form-label">Email Address *</label>
+              <input
+                type="email"
+                id="contact-email"
+                name="email"
+                class="form-input"
+                placeholder="name@example.com"
+                required
+                autocomplete="email"
+              />
+              <span id="email-error" class="error-message" role="alert"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-subject" class="form-label">Subject *</label>
+              <input
+                type="text"
+                id="contact-subject"
+                name="subject"
+                class="form-input"
+                placeholder="e.g. Collaboration on BuildLab Project"
+                required
+              />
+              <span id="subject-error" class="error-message" role="alert"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-message" class="form-label">Message *</label>
+              <textarea
+                id="contact-message"
+                name="message"
+                class="form-textarea"
+                placeholder="Write your message here (minimum 10 characters)..."
+                required
+              ></textarea>
+              <span id="message-error" class="error-message" role="alert"></span>
+            </div>
+
+            <button type="submit" id="contact-submit-btn" class="btn btn-primary" style="margin-top: var(--space-2);">
+              Send Message
+            </button>
+          </form>
         </div>
       </div>
     </section>

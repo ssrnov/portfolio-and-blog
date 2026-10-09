@@ -1,11 +1,13 @@
 import { initProjects } from './projects.js';
 import { initBlog } from './blog.js';
+import { initContact } from './contact.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
   initMobileNavigation();
   initProjects();
   initBlog();
+  initContact();
   initConsoleBanner();
 });
 
