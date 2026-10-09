@@ -34,6 +34,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/css/variables.css" />
   <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
 
   <!-- Early Theme Initialization to Prevent Flash of Wrong Theme (FOUC) -->
   <script>
@@ -106,28 +107,35 @@
 
   <!-- Main Content Landmark -->
   <main id="main-content">
-    <!-- Hero / Minimal Working Homepage Section -->
-    <section id="hero" class="hero-section" aria-labelledby="hero-title">
-      <div class="container">
-        <div class="status-chip">
-          <span class="status-dot" aria-hidden="true"></span>
-          <span>Phase 1: Project Foundation Active</span>
-        </div>
-
+    <!-- 1. Hero Section -->
+    <section id="hero" class="hero-section section-py" aria-labelledby="hero-title">
+      <div class="container hero-content">
+        <span class="hero-greeting">Hi, I'm SSRNovX</span>
         <h1 id="hero-title" class="hero-title">
-          SSRNovX — Engineer, Builder &amp; Problem Solver.
+          Engineering Scalable Systems &amp; Modern Web Experiences.
         </h1>
-
-        <p class="hero-description">
-          Welcome to the official personal portfolio and engineering blog repository for TechSpace BuildLab B04. 
-          Built with lightweight Vanilla JavaScript, HTML5, modern CSS, and Vite for performance, accessibility, and clean aesthetics.
+        <p class="hero-lead">
+          Software engineer focused on clean architecture, performance optimization, and responsive interface design. 
+          Building robust software with native web standards and resilient backend services.
         </p>
 
         <div class="hero-actions">
-          <a href="#features" class="btn btn-primary">View Implementation Modules</a>
-          <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-            <span>Repository on GitHub</span>
+          <a href="#projects" class="btn btn-primary">Explore Projects</a>
+          <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+        </div>
+
+        <div class="hero-socials" aria-label="Social and repository links">
+          <a href="https://github.com/ssrnov" target="_blank" rel="noopener noreferrer" class="social-link">
+            <span>GitHub</span>
             <span aria-hidden="true">↗</span>
+          </a>
+          <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="social-link">
+            <span>Project Repository</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="#contact" class="social-link">
+            <span>Email</span>
+            <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
       </div>
