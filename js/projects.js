@@ -27,11 +27,16 @@ export async function initProjects() {
     });
   }
 
-  // Bind Filter Buttons
+  // Bind Filter Buttons with accessible state
   filterButtons.forEach((btn) => {
+    btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
     btn.addEventListener('click', () => {
-      filterButtons.forEach((b) => b.classList.remove('active'));
+      filterButtons.forEach((b) => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
       btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
       currentCategory = btn.getAttribute('data-category') || 'all';
       renderFilteredProjects();
     });
