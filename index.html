@@ -5,38 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <!-- Primary Meta Tags -->
-  <title>SSRNovX | Personal Portfolio &amp; Blog</title>
-  <meta name="title" content="SSRNovX | Personal Portfolio &amp; Blog" />
-  <meta name="description" content="Personal Portfolio and Engineering Blog of SSRNovX. Showcasing software architecture, projects, technical writing, and problem-solving." />
+  <title>SSRNovX | Personal Portfolio &amp; Engineering Blog</title>
+  <meta name="title" content="SSRNovX | Personal Portfolio &amp; Engineering Blog" />
+  <meta name="description" content="Personal Portfolio and Engineering Blog of SSRNovX (TechSpace BuildLab B04). Featuring scalable systems, modern web engineering, projects gallery, and technical writing." />
   <meta name="author" content="SSRNovX" />
-  <meta name="keywords" content="SSRNovX, Portfolio, Blog, Software Engineer, Web Development, JavaScript, TechSpace" />
+  <meta name="keywords" content="SSRNovX, Portfolio, Blog, Software Engineer, Full-Stack, JavaScript, System Design, TechSpace BuildLab" />
   <meta name="robots" content="index, follow" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://github.com/ssrnov/portfolio-and-blog" />
-  <meta property="og:title" content="SSRNovX | Personal Portfolio &amp; Blog" />
-  <meta property="og:description" content="Personal Portfolio and Engineering Blog of SSRNovX." />
+  <meta property="og:title" content="SSRNovX | Personal Portfolio &amp; Engineering Blog" />
+  <meta property="og:description" content="Personal Portfolio and Engineering Blog of SSRNovX (TechSpace BuildLab B04)." />
 
-  <!-- Twitter -->
+  <!-- Twitter Card -->
   <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:title" content="SSRNovX | Personal Portfolio &amp; Blog" />
-  <meta property="twitter:description" content="Personal Portfolio and Engineering Blog of SSRNovX." />
+  <meta property="twitter:title" content="SSRNovX | Personal Portfolio &amp; Engineering Blog" />
+  <meta property="twitter:description" content="Personal Portfolio and Engineering Blog of SSRNovX (TechSpace BuildLab B04)." />
 
   <!-- Favicon (SVG Monogram) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
 
-  <!-- Google Fonts: Inter -->
+  <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/css/variables.css" />
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/components.css" />
 
-  <!-- Early Theme Initialization to Prevent Flash of Wrong Theme (FOUC) -->
+  <!-- Inline Script for Early Theme Initialization to Prevent FOUC -->
   <script>
     (function () {
       const storedTheme = localStorage.getItem('theme');
@@ -58,7 +58,7 @@
     <div class="container nav-container">
       <a href="#hero" class="brand-logo" aria-label="SSRNovX Home">
         <span>SSRNovX</span>
-        <span class="brand-badge">B04</span>
+        <span class="brand-badge">BuildLab</span>
       </a>
 
       <div class="nav-right">
@@ -107,6 +107,7 @@
 
   <!-- Main Content Landmark -->
   <main id="main-content">
+    
     <!-- 1. Hero Section -->
     <section id="hero" class="hero-section section-py" aria-labelledby="hero-title">
       <div class="container hero-content">
@@ -506,6 +507,7 @@
         </div>
       </div>
     </section>
+
   </main>
 
   <!-- Article Reader Modal -->
@@ -532,14 +534,16 @@
   <!-- Site Footer -->
   <footer class="site-footer" role="contentinfo">
     <div class="container footer-container">
-      <p>&copy; 2026 SSRNovX. Built for TechSpace BuildLab B04.</p>
+      <p>&copy; 2026 SSRNovX. Built for TechSpace BuildLab '26 (BuildLab B04).</p>
       <div class="footer-links">
-        <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Repository</a>
+        <a href="#hero" class="footer-link">Back to Top &uarr;</a>
+        <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Fork</a>
+        <a href="https://github.com/Techspace-srmuh/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">TechSpace Repo</a>
       </div>
     </div>
   </footer>
 
-  <!-- Entry JavaScript Module -->
+  <!-- Application Entry Module -->
   <script type="module" src="/js/main.js"></script>
 </body>
 </html>
