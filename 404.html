@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Page Not Found | SSRNovX</title>
+  <meta name="description" content="The page you are looking for does not exist. Return to the SSRNovX Personal Portfolio &amp; Blog homepage." />
+  <meta name="robots" content="noindex, follow" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header class="site-header" role="banner">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo" aria-label="SSRNovX Home">
+        <span>SSRNovX</span>
+        <span class="brand-badge">404</span>
+      </a>
+      <div class="nav-right">
+        <a href="/" class="btn btn-secondary btn-card">Back to Home &rarr;</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" style="display: flex; align-items: center; justify-content: center; min-height: 70vh;">
+    <div class="container" style="text-align: center; max-width: 600px;">
+      <p style="font-family: var(--font-mono); font-size: var(--text-5xl); font-weight: 800; color: var(--text-primary); margin-bottom: var(--space-4);">
+        404
+      </p>
+      <h1 style="font-size: var(--text-2xl); font-weight: 700; margin-bottom: var(--space-4); color: var(--text-primary);">
+        Page Not Found
+      </h1>
+      <p style="color: var(--text-secondary); margin-bottom: var(--space-8); line-height: var(--leading-relaxed);">
+        The page or article you requested could not be located. It might have been moved, renamed, or is temporarily unavailable.
+      </p>
+      <div style="display: flex; justify-content: center; gap: var(--space-4); flex-wrap: wrap;">
+        <a href="/" class="btn btn-primary">Return to Homepage</a>
+        <a href="/#projects" class="btn btn-secondary">Browse Projects</a>
+        <a href="/#blog" class="btn btn-secondary">Read Blog</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-container">
+      <p>&copy; 2026 SSRNovX. TechSpace BuildLab '26.</p>
+      <div class="footer-links">
+        <a href="/" class="footer-link">Home</a>
+        <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Repository</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

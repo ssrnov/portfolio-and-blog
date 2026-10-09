@@ -1,0 +1,90 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Length 1592 >>
+stream
+BT
+/F1 22 Tf
+50 720 Td
+(SSRNovX - Software Engineer & Builder) Tj
+/F2 10 Tf
+0 -18 Td
+(Email: contact@ssrnovx.dev | GitHub: github.com/ssrnov | TechSpace BuildLab B04) Tj
+0 -25 Td
+/F1 14 Tf
+(PROFESSIONAL SUMMARY) Tj
+0 -15 Td
+/F2 10 Tf
+(Results-oriented software engineer specializing in scalable web systems, clean architecture,) Tj
+0 -13 Td
+(and responsive interface design. Passionate about performant Vanilla web standards and system design.) Tj
+0 -25 Td
+/F1 14 Tf
+(EDUCATION) Tj
+0 -15 Td
+/F1 11 Tf
+(Bachelor of Technology in Computer Science & Engineering) Tj
+0 -13 Td
+/F2 10 Tf
+(SRM University | 2023 - 2027) Tj
+0 -13 Td
+(Relevant Coursework: Data Structures & Algorithms, Operating Systems, Database Management, Networks) Tj
+0 -25 Td
+/F1 14 Tf
+(TECHNICAL SKILLS) Tj
+0 -15 Td
+/F2 10 Tf
+(Languages: JavaScript (ES6+), TypeScript, HTML5, CSS3, Python, SQL) Tj
+0 -13 Td
+(Tools & Frameworks: Vite, Node.js, Express, Git, GitHub, REST APIs, Vercel) Tj
+0 -13 Td
+(Core Competencies: Responsive Design, Accessibility (a11y), Performance Optimization, Clean Architecture) Tj
+0 -25 Td
+/F1 14 Tf
+(KEY PROJECTS) Tj
+0 -15 Td
+/F1 11 Tf
+(Personal Portfolio & Engineering Blog | BuildLab B04) Tj
+0 -13 Td
+/F2 10 Tf
+(Built a zero-framework, lightning-fast portfolio with JSON blog engine and accessible design tokens.) Tj
+0 -18 Td
+/F1 11 Tf
+(Distributed Task Queue & Worker Engine) Tj
+0 -13 Td
+/F2 10 Tf
+(Engineered an asynchronous task processing engine with worker pools, priority queueing, and retry policies.) Tj
+0 -30 Td
+/F2 9 Tf
+(Resume generated for TechSpace BuildLab '26 Portfolio Project.) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000326 00000 n 
+0000000396 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2040
+%%EOF

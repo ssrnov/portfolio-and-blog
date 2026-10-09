@@ -1,11 +1,19 @@
 /**
- * SSRNovX Portfolio & Blog — Main JavaScript Entry Point
- * TechSpace BuildLab B04 - Phase 1 Foundation
+ * SSRNovX Portfolio & Blog — Main Application Entry Point
+ * TechSpace BuildLab B04
  */
+
+import { initProjects } from './projects.js';
+import { initBlog } from './blog.js';
+import { initContact } from './contact.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
   initMobileNavigation();
+  initScrollSpy();
+  initProjects();
+  initBlog();
+  initContact();
   initConsoleBanner();
 });
 
@@ -44,7 +52,6 @@ function initThemeToggle() {
   // Listen for OS-level theme preference changes
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   mediaQuery.addEventListener('change', (e) => {
-    // Only adjust automatically if user has not stored a manual choice
     if (!localStorage.getItem('theme')) {
       applyTheme(e.matches ? 'dark' : 'light', false);
     }
@@ -69,7 +76,6 @@ function initMobileNavigation() {
 
   mobileToggleBtn.addEventListener('click', toggleMenu);
 
-  // Close menu when a navigation link is clicked
   navMenu.querySelectorAll('.nav-link').forEach((link) => {
     link.addEventListener('click', () => {
       if (navMenu.classList.contains('is-open')) {
@@ -78,7 +84,6 @@ function initMobileNavigation() {
     });
   });
 
-  // Close menu on Escape key press
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && navMenu.classList.contains('is-open')) {
       toggleMenu();
@@ -88,11 +93,42 @@ function initMobileNavigation() {
 }
 
 /**
- * Developer console banner indicating environment & Phase 1 readiness
+ * Updates active navigation link based on scroll position
+ */
+function initScrollSpy() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+
+  if (sections.length === 0 || navLinks.length === 0) return;
+
+  const updateActiveLink = () => {
+    const scrollPosition = window.scrollY + 100;
+
+    sections.forEach((section) => {
+      const top = section.offsetTop;
+      const height = section.offsetHeight;
+      const id = section.getAttribute('id');
+
+      if (scrollPosition >= top && scrollPosition < top + height) {
+        navLinks.forEach((link) => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${id}`) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  };
+
+  window.addEventListener('scroll', updateActiveLink, { passive: true });
+}
+
+/**
+ * Developer console banner
  */
 function initConsoleBanner() {
   console.log(
-    '%cSSRNovX Portfolio & Blog%c\nPhase 1 Foundation Initialized.\nVite + Vanilla JavaScript + CSS3 Design System.',
+    '%cSSRNovX Personal Portfolio & Blog%c\nBuildLab B04 | Vite + ES Modules + Accessible Design Tokens',
     'font-weight: bold; font-size: 14px; color: #ffffff; background: #000000; padding: 4px 8px; border-radius: 4px;',
     'font-size: 11px; color: #888888; margin-top: 4px;'
   );
