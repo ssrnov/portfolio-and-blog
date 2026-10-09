@@ -1,9 +1,11 @@
 import { initProjects } from './projects.js';
+import { initBlog } from './blog.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
   initMobileNavigation();
   initProjects();
+  initBlog();
   initConsoleBanner();
 });
 

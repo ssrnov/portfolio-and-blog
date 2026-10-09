@@ -351,6 +351,54 @@
       </div>
     </section>
 
+    <!-- 5. JSON-Based Engineering Blog Section -->
+    <section id="blog" class="blog-section section-py" aria-labelledby="blog-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Technical Writing</span>
+          <h2 id="blog-title" class="section-title">Engineering Blog</h2>
+          <p class="section-subtitle">
+            Deep-dives into web performance, system design, architectural patterns, and pragmatic software engineering.
+          </p>
+        </div>
+
+        <!-- Toolbar: Search and Filter Pills for Blog -->
+        <div class="controls-toolbar" role="search" aria-label="Blog filter controls">
+          <div class="search-box-wrapper">
+            <svg class="search-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="search"
+              id="blog-search"
+              class="search-input"
+              placeholder="Search articles by title, topic, or keyword..."
+              aria-label="Search blog articles"
+            />
+          </div>
+
+          <div class="filter-pills" id="blog-filters" role="group" aria-label="Blog topic filters">
+            <button type="button" class="filter-btn active" data-tag="all">All</button>
+            <button type="button" class="filter-btn" data-tag="frontend">Frontend</button>
+            <button type="button" class="filter-btn" data-tag="backend">Backend</button>
+            <button type="button" class="filter-btn" data-tag="architecture">Architecture</button>
+            <button type="button" class="filter-btn" data-tag="engineering">Engineering</button>
+          </div>
+        </div>
+
+        <!-- Status Counter -->
+        <p id="blog-count" class="fact-label" style="margin-bottom: var(--space-4);" aria-live="polite">
+          Loading articles...
+        </p>
+
+        <!-- Dynamic Blog Grid -->
+        <div id="blog-grid" class="blog-grid" aria-live="polite">
+          <!-- Populated dynamically by js/blog.js -->
+        </div>
+      </div>
+    </section>
+
     <!-- Architecture & Modules Preview Section -->
     <section id="features" class="roadmap-section" aria-labelledby="roadmap-title">
       <div class="container">
