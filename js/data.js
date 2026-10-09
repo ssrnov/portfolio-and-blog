@@ -1,0 +1,142 @@
+/**
+ * SSRNovX Portfolio & Blog — Data Service
+ * Loads structured projects and blog articles with reliable fallback
+ */
+
+const FALLBACK_PROJECTS = [
+  {
+    id: "proj-1",
+    title: "Personal Portfolio & Blog (BuildLab B04)",
+    category: "Web",
+    featured: true,
+    year: "2026",
+    description: "High-performance, accessible developer portfolio and technical blog built with Vanilla JavaScript, semantic HTML5, modern CSS design tokens, and Vite.",
+    tags: ["JavaScript", "HTML5", "CSS3", "Vite", "Responsive Design"],
+    githubUrl: "https://github.com/ssrnov/portfolio-and-blog",
+    liveUrl: "https://github.com/ssrnov/portfolio-and-blog"
+  },
+  {
+    id: "proj-2",
+    title: "Distributed Task Queue & Worker Engine",
+    category: "Backend",
+    featured: true,
+    year: "2026",
+    description: "Asynchronous background task runner with priority queueing, worker pool concurrency control, exponential backoff retries, and dead-letter queues.",
+    tags: ["Node.js", "Redis", "System Design", "Concurrency", "Worker Threads"],
+    githubUrl: "https://github.com/ssrnov/task-engine",
+    liveUrl: "https://example.com/demo/task-engine"
+  },
+  {
+    id: "proj-3",
+    title: "Cloud Metrics & Telemetry Dashboard",
+    category: "Web",
+    featured: true,
+    year: "2025",
+    description: "Real-time cloud observability dashboard featuring live streaming metrics via WebSockets, anomaly threshold alerts, and responsive data visualizations.",
+    tags: ["JavaScript", "WebSockets", "CSS Grid", "REST API", "Telemetry"],
+    githubUrl: "https://github.com/ssrnov/cloud-metrics",
+    liveUrl: "https://example.com/demo/cloud-metrics"
+  },
+  {
+    id: "proj-4",
+    title: "Interactive Algorithm Visualizer & Sandbox",
+    category: "Tools",
+    featured: false,
+    year: "2025",
+    description: "Canvas-based visual sandbox demonstrating graph pathfinding (A*, Dijkstra), sorting algorithms, and dynamic programming step-by-step.",
+    tags: ["HTML5 Canvas", "Algorithms", "Data Structures", "CSS3"],
+    githubUrl: "https://github.com/ssrnov/algo-visualizer",
+    liveUrl: "https://example.com/demo/algo-visualizer"
+  },
+  {
+    id: "proj-5",
+    title: "Client-Side Cryptographic Vault",
+    category: "Security",
+    featured: false,
+    year: "2025",
+    description: "Zero-knowledge secret storage application implementing client-side AES-GCM encryption with PBKDF2 key derivation using the Web Crypto API.",
+    tags: ["Web Crypto API", "Security", "AES-256", "JavaScript"],
+    githubUrl: "https://github.com/ssrnov/crypto-vault",
+    liveUrl: "https://example.com/demo/crypto-vault"
+  },
+  {
+    id: "proj-6",
+    title: "API Gateway & Sliding Window Rate Limiter",
+    category: "Backend",
+    featured: false,
+    year: "2024",
+    description: "Reverse proxy and gateway with token-bucket rate limiting, JWT verification, request caching, and structured logging middleware.",
+    tags: ["Node.js", "Express", "Security", "Docker", "Middleware"],
+    githubUrl: "https://github.com/ssrnov/api-gateway",
+    liveUrl: "https://example.com/demo/api-gateway"
+  }
+];
+
+const FALLBACK_BLOG = [
+  {
+    id: "post-1",
+    slug: "high-performance-zero-framework-vanilla-js",
+    title: "Building High-Performance Web Applications with Zero-Framework Vanilla JS",
+    date: "October 8, 2026",
+    readTime: "5 min read",
+    category: "Frontend",
+    tags: ["Frontend", "Performance", "JavaScript", "Web Standards"],
+    excerpt: "Why stripping away heavy runtime abstractions and leveraging modern browser APIs can produce lightning-fast, accessible user experiences.",
+    content: "<p>In an era where modern frontend development is dominated by megabyte-sized bundles and complex meta-frameworks, returning to the fundamentals of Vanilla JavaScript, semantic HTML5, and modern CSS3 provides immense performance advantages.</p><h3>The Power of Native Web Standards</h3><p>Modern browser engines (V8, JavaScriptCore, Gecko) have evolved radically. Features that once required heavy polyfills or utility libraries—such as CSS custom properties, native modules (ESM), Web Storage, the Fetch API, and the Intersection Observer API—are now natively supported across all evergreen browsers.</p><p>By relying directly on native capabilities, we eliminate virtual DOM overhead, reduce the initial JavaScript execution phase, and achieve near-instant First Contentful Paint (FCP) and Largest Contentful Paint (LCP) scores.</p><h3>Clean Architecture Without Bloat</h3><p>Writing Vanilla JS does not mean writing unmaintainable spaghetti code. By adopting clean module separation, unidirectional data flows, and event delegation, we achieve clear architectural boundaries while shipping an order of magnitude less code to end users.</p><blockquote>Keep it simple: choose standards over ephemeral library churn whenever possible.</blockquote>"
+  },
+  {
+    id: "post-2",
+    slug: "scalable-system-architecture-monolith-to-microservices",
+    title: "Designing Scalable System Architecture: From Monolith to Microservices",
+    date: "September 24, 2026",
+    readTime: "7 min read",
+    category: "Backend",
+    tags: ["System Design", "Backend", "Architecture", "Microservices"],
+    excerpt: "A pragmatic engineer's guide to decomposing monolithic systems without premature complexity or distributed transaction nightmares.",
+    content: "<p>The journey from a monolithic application to a microservices architecture is often romanticized, but premature distribution can easily turn a simple product into an operational quagmire.</p><h3>Start with a Modular Monolith</h3><p>Before splitting code across network boundaries, define strict domain boundaries in a single deployable unit. A modular monolith enforces bounded contexts through clean interfaces, making future extraction straightforward while preserving transactional integrity and straightforward debugging.</p><h3>When to Actually Decompose</h3><p>Extract services only when specific organizational or technical scaling bottlenecks demand it: differing scaling profiles, team ownership boundaries, or isolated reliability requirements. Embrace asynchronous messaging (event-driven architecture) over synchronous RPC chains to prevent cascading failures.</p>"
+  },
+  {
+    id: "post-3",
+    slug: "mastering-state-management-patterns-in-javascript",
+    title: "Mastering Reactive State Management Patterns in JavaScript",
+    date: "August 15, 2026",
+    readTime: "4 min read",
+    category: "Architecture",
+    tags: ["JavaScript", "State Management", "Architecture", "Design Patterns"],
+    excerpt: "Exploring reactive state patterns, event emitters, and pub-sub architectures without external third-party dependencies.",
+    content: "<p>State management is the single most common source of bugs in frontend applications. However, you don't always need complex external libraries to manage state predictably.</p><h3>The Observer Pattern and Event Target</h3><p>By leveraging the browser's built-in <code>EventTarget</code> interface or implementing a lightweight publisher-subscriber store, components can subscribe to discrete state mutations and re-render only when relevant data updates.</p><h3>Immutability and Predictability</h3><p>Pairing a centralized store with shallow object cloning ensures state transitions are traceable and predictable. This allows developers to reason about UI changes with confidence, even in complex interactive applications.</p>"
+  },
+  {
+    id: "post-4",
+    slug: "pragmatic-engineers-guide-to-clean-code",
+    title: "The Pragmatic Engineer's Guide to Clean Code and Refactoring",
+    date: "July 12, 2026",
+    readTime: "6 min read",
+    category: "Engineering",
+    tags: ["Software Engineering", "Best Practices", "Clean Code", "Refactoring"],
+    excerpt: "Practical guidelines for writing maintainable, readable, and resilient code that your future self and team will appreciate.",
+    content: "<p>Clean code is not about dogmatic adherence to rules; it is about reducing cognitive load for the humans who must read, maintain, and extend software months or years later.</p><h3>Intent-Revealing Naming</h3><p>Code is read far more often than it is written. Variable and function names should clearly convey purpose and behavior, reducing the need for explanatory comments that quickly become obsolete.</p><h3>The Boy Scout Rule in Practice</h3><p>Always leave the codebase slightly cleaner than you found it. Small, incremental refactorings during regular feature development compound over time, preventing technical debt from accumulating into a major re-write.</p>"
+  }
+];
+
+export async function fetchProjects() {
+  try {
+    const res = await fetch('/data/projects.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.info('Loaded embedded fallback projects data');
+    return FALLBACK_PROJECTS;
+  }
+}
+
+export async function fetchBlogPosts() {
+  try {
+    const res = await fetch('/data/blog.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.info('Loaded embedded fallback blog data');
+    return FALLBACK_BLOG;
+  }
+}

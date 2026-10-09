@@ -1,0 +1,68 @@
+[
+  {
+    "id": "proj-1",
+    "title": "Personal Portfolio & Blog (BuildLab B04)",
+    "category": "Web",
+    "featured": true,
+    "year": "2026",
+    "description": "High-performance, accessible developer portfolio and technical blog built with Vanilla JavaScript, semantic HTML5, modern CSS design tokens, and Vite.",
+    "tags": ["JavaScript", "HTML5", "CSS3", "Vite", "Responsive Design"],
+    "githubUrl": "https://github.com/ssrnov/portfolio-and-blog",
+    "liveUrl": "https://github.com/ssrnov/portfolio-and-blog"
+  },
+  {
+    "id": "proj-2",
+    "title": "Distributed Task Queue & Worker Engine",
+    "category": "Backend",
+    "featured": true,
+    "year": "2026",
+    "description": "Asynchronous background task runner with priority queueing, worker pool concurrency control, exponential backoff retries, and dead-letter queues.",
+    "tags": ["Node.js", "Redis", "System Design", "Concurrency", "Worker Threads"],
+    "githubUrl": "https://github.com/ssrnov/task-engine",
+    "liveUrl": "https://example.com/demo/task-engine"
+  },
+  {
+    "id": "proj-3",
+    "title": "Cloud Metrics & Telemetry Dashboard",
+    "category": "Web",
+    "featured": true,
+    "year": "2025",
+    "description": "Real-time cloud observability dashboard featuring live streaming metrics via WebSockets, anomaly threshold alerts, and responsive data visualizations.",
+    "tags": ["JavaScript", "WebSockets", "CSS Grid", "REST API", "Telemetry"],
+    "githubUrl": "https://github.com/ssrnov/cloud-metrics",
+    "liveUrl": "https://example.com/demo/cloud-metrics"
+  },
+  {
+    "id": "proj-4",
+    "title": "Interactive Algorithm Visualizer & Sandbox",
+    "category": "Tools",
+    "featured": false,
+    "year": "2025",
+    "description": "Canvas-based visual sandbox demonstrating graph pathfinding (A*, Dijkstra), sorting algorithms, and dynamic programming step-by-step.",
+    "tags": ["HTML5 Canvas", "Algorithms", "Data Structures", "CSS3"],
+    "githubUrl": "https://github.com/ssrnov/algo-visualizer",
+    "liveUrl": "https://example.com/demo/algo-visualizer"
+  },
+  {
+    "id": "proj-5",
+    "title": "Client-Side Cryptographic Vault",
+    "category": "Security",
+    "featured": false,
+    "year": "2025",
+    "description": "Zero-knowledge secret storage application implementing client-side AES-GCM encryption with PBKDF2 key derivation using the Web Crypto API.",
+    "tags": ["Web Crypto API", "Security", "AES-256", "JavaScript"],
+    "githubUrl": "https://github.com/ssrnov/crypto-vault",
+    "liveUrl": "https://example.com/demo/crypto-vault"
+  },
+  {
+    "id": "proj-6",
+    "title": "API Gateway & Sliding Window Rate Limiter",
+    "category": "Backend",
+    "featured": false,
+    "year": "2024",
+    "description": "Reverse proxy and gateway with token-bucket rate limiting, JWT verification, request caching, and structured logging middleware.",
+    "tags": ["Node.js", "Express", "Security", "Docker", "Middleware"],
+    "githubUrl": "https://github.com/ssrnov/api-gateway",
+    "liveUrl": "https://example.com/demo/api-gateway"
+  }
+]

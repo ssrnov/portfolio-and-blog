@@ -1,11 +1,9 @@
-/**
- * SSRNovX Portfolio & Blog — Main JavaScript Entry Point
- * TechSpace BuildLab B04 - Phase 1 Foundation
- */
+import { initProjects } from './projects.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
   initMobileNavigation();
+  initProjects();
   initConsoleBanner();
 });
 
