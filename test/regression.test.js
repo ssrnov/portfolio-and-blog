@@ -260,6 +260,26 @@ test('Dashboard Route Protection: unauthenticated entry strictly blocked & redir
   });
 });
 
+// --------------------------------------------------------------------------
+// TEST 14: Onboarding & Project Sync Isolation (No Hardcoded Usernames)
+// --------------------------------------------------------------------------
+test('Onboarding & Project Sync: ob-github-handle is blank by default without hardcoded username', () => {
+  const obHtml = fs.readFileSync(path.join(ROOT, 'onboarding/index.html'), 'utf8');
+  const obJs = fs.readFileSync(path.join(ROOT, 'js/onboarding.js'), 'utf8');
+  const syncJs = fs.readFileSync(path.join(ROOT, 'js/projects-sync.js'), 'utf8');
+
+  // 1. Verify onboarding/index.html does not prefill ssrnov in github handle input
+  assert.ok(!obHtml.includes('id="ob-github-handle" class="form-input" placeholder="ssrnov"'), 'ob-github-handle must not have ssrnov placeholder');
+  assert.ok(!obHtml.includes('id="ob-github-handle" class="form-input" placeholder="username" style="border: none; border-radius: 0;" value="ssrnov"'), 'ob-github-handle must not have ssrnov value');
+  assert.ok(obHtml.includes('id="ob-github-handle" class="form-input" placeholder="username" style="border: none; border-radius: 0;" value=""'), 'ob-github-handle must have empty value');
+
+  // 2. Verify js/onboarding.js initializes github handle to empty string
+  assert.ok(obJs.includes("if (elGithub) elGithub.value = '';"), 'js/onboarding.js must reset elGithub.value to empty string');
+
+  // 3. Verify js/projects-sync.js does not fallback to hardcoded ssrnov
+  assert.ok(!syncJs.includes("currentGitHubUser = 'ssrnov'"), 'js/projects-sync.js must not force ssrnov as default github user');
+});
+
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL REGRESSION TESTS PASSED SUCCESSFULLY! ✓');
