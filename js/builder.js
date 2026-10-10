@@ -5,23 +5,24 @@
  */
 
 import { authService, profileService, portfolioService } from './supabase.js';
+import { getProfile, saveProfile, getPublishSettings, savePublishSettings, getActiveUser } from './profile-data.js';
 
-const DRAFT_KEY = 'ssrnovx_portfolio_draft';
+let activeUser = null;
+let DRAFT_KEY = 'ssrnovx_portfolio_draft';
 
 // Builder State
 let builderState = {
-  displayName: 'Sunny / SSRNovX',
-  headline: 'Engineering Scalable Systems & Modern Web Experiences',
-  bio: 'Software engineer focused on clean architecture, performance optimization, and responsive interface design. Building robust software with native web standards.',
-  location: 'India (IST / UTC+5:30)',
-  template: 'minimal',
-  skillsFrontend: 'JavaScript (ES6+), TypeScript, HTML5, Modern CSS3, Vite',
-  skillsBackend: 'Node.js, Express, REST APIs, Redis, PostgreSQL, WebSockets',
-  githubUrl: 'https://github.com/ssrnov',
-  contactEmail: 'contact@ssrnovx.dev',
+  displayName: '',
+  headline: '',
+  bio: '',
+  location: '',
+  template: 'minimal-professional',
+  skillsFrontend: '',
+  skillsBackend: '',
+  githubUrl: '',
+  contactEmail: '',
 };
 
-let activeUser = null;
 let saveTimeout = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -35,8 +36,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.warn('Builder auth session notice:', err);
   }
 
-  // Load existing draft or profile
+  if (!activeUser) {
+    activeUser = getActiveUser();
+  }
+
+  const uid = activeUser?.id || (activeUser?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'demo');
+  DRAFT_KEY = `profilefolio_user_${uid}_builder_draft`;
+
+  // Load existing draft or user profile
   loadInitialState();
+
+  // Setup preview links and iframe target for this specific user
+  setupUserPreviewFrame();
 
   // Bind all input event listeners for live preview sync
   bindInputListeners();
@@ -63,7 +74,48 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
+function setupUserPreviewFrame() {
+  const profile = getProfile();
+  const username = profile?.username || activeUser?.username || 'user';
+  const previewUrl = `/u/?u=${encodeURIComponent(username)}`;
+
+  // Set Preview Link in top header
+  const previewPageLink = document.getElementById('preview-page-link');
+  if (previewPageLink) {
+    previewPageLink.href = previewUrl;
+  }
+
+  // Set Live iframe source
+  const iframe = document.getElementById('live-preview-frame');
+  if (iframe) {
+    iframe.src = previewUrl;
+  }
+
+  // Set Label above frame
+  const canvasUrl = document.getElementById('preview-canvas-url');
+  if (canvasUrl) {
+    canvasUrl.innerHTML = `Live Preview Canvas &bull; folioryn.dev/u/${username}`;
+  }
+}
+
 function loadInitialState() {
+  const profile = getProfile();
+  const publishSettings = getPublishSettings();
+
+  // Default state seeded from user profile
+  builderState = {
+    displayName: profile.fullName || activeUser?.display_name || 'User',
+    headline: profile.headline || 'Software Engineer & Systems Builder',
+    bio: profile.bio || 'Building scalable applications and interfaces with native web standards.',
+    location: profile.location || 'India',
+    template: publishSettings.templateId || 'minimal-professional',
+    skillsFrontend: 'JavaScript (ESNext), TypeScript, HTML5, CSS3, Vite',
+    skillsBackend: 'Node.js, Express, REST APIs, Databases, WebSockets',
+    githubUrl: profile.githubUrl || (activeUser?.github_handle ? `https://github.com/${activeUser.github_handle}` : ''),
+    contactEmail: profile.email || activeUser?.email || '',
+  };
+
+  // If user has saved draft, merge it
   const savedDraft = localStorage.getItem(DRAFT_KEY);
   if (savedDraft) {
     try {
@@ -191,26 +243,45 @@ function bindPublishButton() {
     publishBtn.innerHTML = '<span>Publishing...</span>';
 
     try {
+      // Save to user-isolated profile and publish settings
+      saveProfile({
+        fullName: builderState.displayName,
+        headline: builderState.headline,
+        bio: builderState.bio,
+        location: builderState.location,
+        githubUrl: builderState.githubUrl,
+        email: builderState.contactEmail,
+      });
+
+      savePublishSettings({
+        isPublished: true,
+        templateId: builderState.template,
+      });
+
       // If user is authenticated, sync to Supabase
       if (activeUser && activeUser.id) {
-        await profileService.updateProfile(activeUser.id, {
-          display_name: builderState.displayName,
-          headline: builderState.headline,
-          bio: builderState.bio,
-          location: builderState.location,
-          github_handle: builderState.githubUrl?.replace('https://github.com/', ''),
-        });
-
-        const userPortfolio = await portfolioService.getUserPortfolio(activeUser.id);
-        if (userPortfolio?.id) {
-          await portfolioService.updatePortfolio(userPortfolio.id, {
-            template_id: builderState.template,
-            is_published: true,
+        try {
+          await profileService.updateProfile(activeUser.id, {
+            display_name: builderState.displayName,
+            headline: builderState.headline,
+            bio: builderState.bio,
+            location: builderState.location,
+            github_handle: builderState.githubUrl?.replace('https://github.com/', ''),
           });
+
+          const userPortfolio = await portfolioService.getUserPortfolio(activeUser.id);
+          if (userPortfolio?.id) {
+            await portfolioService.updatePortfolio(userPortfolio.id, {
+              template_id: builderState.template,
+              is_published: true,
+            });
+          }
+        } catch (syncErr) {
+          console.warn('Remote sync notice:', syncErr);
         }
       }
 
-      // Persist draft
+      // Persist user-scoped draft
       localStorage.setItem(DRAFT_KEY, JSON.stringify(builderState));
 
       publishBtn.disabled = false;

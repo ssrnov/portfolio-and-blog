@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Setup Your Portfolio | BuildLab Onboarding Wizard</title>
-  <meta name="description" content="Complete your profile, add academic credentials, import projects, select a theme, and launch your live portfolio in under 3 minutes." />
+  <title>Setup Your Portfolio — Folioryn Onboarding</title>
+  <meta name="description" content="Complete your profile, select a template, preview your site, and launch your live portfolio in minutes." />
   <meta name="robots" content="noindex, nofollow" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238297FF'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%2308090B' text-anchor='middle'>B</text></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080909' stroke='%23292A2A' stroke-width='2'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%23F5F5F5' text-anchor='middle'>F</text></svg>" />
 
   <!-- Fonts & Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -41,62 +41,65 @@
     .wizard-steps {
       display: flex;
       align-items: center;
-      gap: var(--space-4);
+      gap: var(--space-2);
+      overflow-x: auto;
+      max-width: 680px;
     }
 
     .step-item {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: var(--text-xs);
+      gap: 6px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--text-muted);
       cursor: default;
+      white-space: nowrap;
     }
 
     .step-item.active {
-      color: var(--accent-primary);
-    }
-
-    .step-item.completed {
       color: var(--text-primary);
     }
 
+    .step-item.completed {
+      color: var(--text-secondary);
+    }
+
     .step-badge {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
+      font-size: 10px;
       font-family: var(--font-mono);
       background: var(--bg-secondary);
     }
 
     .step-item.active .step-badge {
-      background: var(--accent-primary);
-      color: #08090b;
-      border-color: var(--accent-primary);
+      background: #F5F5F5;
+      color: #080909;
+      border-color: #F5F5F5;
       font-weight: 700;
     }
 
     .step-item.completed .step-badge {
-      background: rgba(130, 151, 255, 0.15);
-      color: var(--accent-primary);
-      border-color: var(--accent-primary);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      border-color: var(--border-hover);
     }
 
     .step-line {
-      width: 24px;
+      width: 14px;
       height: 1px;
       background-color: var(--border-color);
     }
 
     .onboarding-container {
       flex: 1;
-      max-width: 900px;
+      max-width: 860px;
       width: 100%;
       margin: 0 auto;
       padding: var(--space-8) var(--space-4);
@@ -107,7 +110,7 @@
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
       padding: var(--space-8);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: var(--shadow-lg);
     }
 
     .wizard-step-pane {
@@ -116,7 +119,7 @@
 
     .wizard-step-pane.active {
       display: block;
-      animation: fadeIn 0.3s ease;
+      animation: fadeIn 0.25s ease;
     }
 
     @keyframes fadeIn {
@@ -124,92 +127,96 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .wizard-header {
-      margin-bottom: var(--space-8);
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--space-3);
+      margin-top: var(--space-4);
     }
 
-    .wizard-title {
-      font-size: var(--text-2xl);
-      font-weight: 800;
-      color: var(--text-primary);
-      margin-bottom: var(--space-2);
+    .role-card-choice {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      background-color: var(--bg-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-align: left;
     }
 
-    .wizard-subtitle {
-      color: var(--text-secondary);
-      font-size: var(--text-sm);
+    .role-card-choice:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
     }
 
-    .chip-cloud {
+    .role-card-choice.selected {
+      border-color: #F5F5F5;
+      background-color: var(--bg-elevated);
+    }
+
+    .template-card-choice {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      background-color: var(--bg-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+
+    .template-card-choice:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    .template-card-choice.selected {
+      border-color: #F5F5F5;
+      background-color: var(--bg-elevated);
+    }
+
+    .template-card-choice .check-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #F5F5F5;
+      color: #080909;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .template-card-choice.selected .check-icon {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
     }
 
     .skill-chip-select {
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
       color: var(--text-secondary);
-      padding: 6px 14px;
-      border-radius: 999px;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
       font-size: var(--text-xs);
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all var(--transition-fast);
       user-select: none;
     }
 
     .skill-chip-select:hover {
-      border-color: var(--text-muted);
+      border-color: var(--border-hover);
       color: var(--text-primary);
     }
 
     .skill-chip-select.selected {
-      background: rgba(130, 151, 255, 0.18);
-      border-color: var(--accent-primary);
-      color: var(--accent-primary);
-      font-weight: 600;
-    }
-
-    .template-card-choice {
-      border: 2px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: var(--space-4);
-      background-color: var(--bg-secondary);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-
-    .template-card-choice:hover {
-      border-color: var(--text-muted);
-      transform: translateY(-2px);
-    }
-
-    .template-card-choice.selected {
-      border-color: var(--accent-primary);
-      background: rgba(130, 151, 255, 0.05);
-    }
-
-    .template-card-choice .check-icon {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--accent-primary);
-      color: #08090b;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: bold;
-    }
-
-    .template-card-choice.selected .check-icon {
-      display: flex;
+      background: #F5F5F5;
+      border-color: #F5F5F5;
+      color: #080909;
+      font-weight: 700;
     }
 
     .wizard-footer {
@@ -223,397 +230,379 @@
   </style>
 
   <script>
-    (function () {
-      const storedTheme = localStorage.getItem('theme');
-      if (storedTheme) {
-        document.documentElement.setAttribute('data-theme', storedTheme);
-      } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-      }
-    })();
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
   </script>
 </head>
 <body class="onboarding-page">
 
   <!-- Header Nav -->
   <header class="onboarding-nav">
-    <div style="display: flex; align-items: center; gap: 12px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
       <a href="/" class="brand-link" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-        <span class="gradient-text font-black" style="font-weight: 900; font-size: 1.25rem;">BuildLab</span>
-        <span class="badge" style="font-size: 10px;">Setup Wizard</span>
+        <span style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #F5F5F5; color: #080909; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">F</span>
+        <span style="font-weight: 800; font-size: 1.15rem; color: var(--text-primary);">Folioryn</span>
       </a>
+      <span class="badge" style="font-size: 10px;">Onboarding</span>
     </div>
 
-    <!-- Stepper indicator -->
-    <div class="wizard-steps hide-mobile">
-      <div class="step-item active" data-step="1">
-        <span class="step-badge">1</span>
-        <span>Profile</span>
-      </div>
+    <!-- 8-Step Progress Indicator -->
+    <div class="wizard-steps hide-mobile" id="wizard-steps-indicator">
+      <div class="step-item active" data-step="1"><span class="step-badge">1</span><span>Username</span></div>
       <div class="step-line"></div>
-      <div class="step-item" data-step="2">
-        <span class="step-badge">2</span>
-        <span>Academics</span>
-      </div>
+      <div class="step-item" data-step="2"><span class="step-badge">2</span><span>Role</span></div>
       <div class="step-line"></div>
-      <div class="step-item" data-step="3">
-        <span class="step-badge">3</span>
-        <span>Skills</span>
-      </div>
+      <div class="step-item" data-step="3"><span class="step-badge">3</span><span>Intro</span></div>
       <div class="step-line"></div>
-      <div class="step-item" data-step="4">
-        <span class="step-badge">4</span>
-        <span>Project</span>
-      </div>
+      <div class="step-item" data-step="4"><span class="step-badge">4</span><span>Education</span></div>
       <div class="step-line"></div>
-      <div class="step-item" data-step="5">
-        <span class="step-badge">5</span>
-        <span>Theme</span>
-      </div>
+      <div class="step-item" data-step="5"><span class="step-badge">5</span><span>Projects</span></div>
       <div class="step-line"></div>
-      <div class="step-item" data-step="6">
-        <span class="step-badge">6</span>
-        <span>Launch</span>
-      </div>
+      <div class="step-item" data-step="6"><span class="step-badge">6</span><span>Template</span></div>
+      <div class="step-line"></div>
+      <div class="step-item" data-step="7"><span class="step-badge">7</span><span>Preview</span></div>
+      <div class="step-line"></div>
+      <div class="step-item" data-step="8"><span class="step-badge">8</span><span>Publish</span></div>
     </div>
 
     <div>
-      <a href="/dashboard/" class="btn btn-sm btn-ghost" style="color: var(--text-muted); font-size: 12px;">Skip to Dashboard &rarr;</a>
+      <a href="/dashboard/" class="btn btn-sm btn-secondary" style="font-size: 11px;">Skip to Dashboard &rarr;</a>
     </div>
   </header>
 
-  <!-- Main Container -->
+  <!-- Main Wizard Container -->
   <main class="onboarding-container">
     <div class="wizard-card">
 
-      <!-- STEP 1: Basic Identity & Bio -->
+      <!-- STEP 1: Choose Username -->
       <section class="wizard-step-pane active" id="pane-step-1">
-        <div class="wizard-header">
-          <span class="badge badge-accent" style="margin-bottom: 8px;">Step 1 of 6</span>
-          <h1 class="wizard-title">Let's craft your identity</h1>
-          <p class="wizard-subtitle">Introduce yourself to recruiters, clients, and fellow engineers.</p>
+        <div class="wizard-header" style="margin-bottom: var(--space-6);">
+          <span class="badge" style="margin-bottom: 8px;">Step 1 of 8 &bull; Public URL</span>
+          <h1 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">Claim your unique portfolio handle</h1>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm); margin: 0;">This will be your permanent shareable URL on Folioryn.</p>
         </div>
 
-        <form id="form-step-1" class="dashboard-form" onsubmit="event.preventDefault();">
+        <div class="form-group" style="max-width: 520px;">
+          <label for="ob-username" class="form-label">Your Public Handle *</label>
+          <div style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-secondary);">
+            <span style="padding: 0 12px; font-size: var(--text-xs); color: var(--text-muted); font-family: var(--font-mono); border-right: 1px solid var(--border-color);">
+              folioryn.dev/u/
+            </span>
+            <input type="text" id="ob-username" class="form-input" placeholder="username" style="border: none; border-radius: 0;" required value="sunny" />
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">Letters, numbers, hyphens, and underscores only.</p>
+        </div>
+      </section>
+
+      <!-- STEP 2: Professional Role / Field -->
+      <section class="wizard-step-pane" id="pane-step-2">
+        <div class="wizard-header" style="margin-bottom: var(--space-6);">
+          <span class="badge" style="margin-bottom: 8px;">Step 2 of 8 &bull; Discipline</span>
+          <h2 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">What best describes your role?</h2>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm); margin: 0;">We tailor your template recommendations and default section layouts based on your field.</p>
+        </div>
+
+        <div class="role-grid" id="role-selection-grid">
+          <div class="role-card-choice selected" data-role="Software Engineer">
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">Software Engineer</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Full-stack, backend, frontend, systems</p>
+          </div>
+          <div class="role-card-choice" data-role="Computer Science Student">
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">College / University Student</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Placements, internships, academics, CGPA</p>
+          </div>
+          <div class="role-card-choice" data-role="UI/UX Designer">
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">Designer &amp; Creative</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Product design, UI/UX, visual prototyping</p>
+          </div>
+          <div class="role-card-choice" data-role="Data & AI Engineer">
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">Data &amp; AI Engineer</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Data science, machine learning, analytics</p>
+          </div>
+          <div class="role-card-choice" data-role="Independent Freelancer">
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">Freelancer &amp; Consultant</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Client projects, deliverables, contracts</p>
+          </div>
+          <div class="role-card-choice" data-role="Engineering Manager">
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">Tech Lead &amp; Executive</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Leadership, architecture, strategy</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 3: Short Introduction -->
+      <section class="wizard-step-pane" id="pane-step-3">
+        <div class="wizard-header" style="margin-bottom: var(--space-6);">
+          <span class="badge" style="margin-bottom: 8px;">Step 3 of 8 &bull; Personal Details</span>
+          <h2 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">Personal details and introduction</h2>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm); margin: 0;">Introduce yourself clearly to visitors, recruiters, and collaborators.</p>
+        </div>
+
+        <form id="form-step-intro" onsubmit="event.preventDefault();">
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
             <div class="form-group">
               <label for="ob-full-name" class="form-label">Full Name *</label>
-              <input type="text" id="ob-full-name" class="form-input" placeholder="e.g. Alex Kumar" required value="Sunny" />
+              <input type="text" id="ob-full-name" class="form-input" placeholder="e.g. Sunny Kumar" required value="Sunny" />
             </div>
-
-            <div class="form-group">
-              <label for="ob-username" class="form-label">Claim Your Public URL *</label>
-              <div style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-secondary);">
-                <span style="padding: 0 10px; font-size: var(--text-xs); color: var(--text-muted); font-family: var(--font-mono);">buildlab.dev/u/</span>
-                <input type="text" id="ob-username" class="form-input" placeholder="username" style="border: none; border-radius: 0;" required value="sunny" />
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group" style="margin-top: var(--space-4);">
-            <label for="ob-headline" class="form-label">Professional Headline / Role *</label>
-            <input type="text" id="ob-headline" class="form-input" placeholder="e.g. Full Stack Engineer & Distributed Systems Enthusiast" required value="Full Stack Engineer &amp; Systems Architect" />
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-4);">
             <div class="form-group">
               <label for="ob-location" class="form-label">Location / City</label>
-              <input type="text" id="ob-location" class="form-input" placeholder="e.g. Bengaluru, India" value="Bengaluru, India" />
-            </div>
-
-            <div class="form-group">
-              <label for="ob-github" class="form-label">GitHub Username</label>
-              <input type="text" id="ob-github" class="form-input" placeholder="e.g. ssrnov" value="ssrnov" />
+              <input type="text" id="ob-location" class="form-input" placeholder="e.g. Bangalore, India" value="Bangalore, India" />
             </div>
           </div>
 
           <div class="form-group" style="margin-top: var(--space-4);">
-            <label for="ob-bio" class="form-label">Short Bio (1-2 sentences)</label>
-            <textarea id="ob-bio" class="form-textarea" rows="3" placeholder="Tell visitors what drives your passion and what you're currently building...">Building high-performance web systems and open-source developer tooling. Passionate about fast interfaces and robust distributed architectures.</textarea>
+            <label for="ob-headline" class="form-label">Professional Headline *</label>
+            <input type="text" id="ob-headline" class="form-input" placeholder="e.g. Full-Stack Software Engineer & Systems Builder" required value="Full-Stack Software Engineer &amp; Systems Builder" />
+          </div>
+
+          <div class="form-group" style="margin-top: var(--space-4);">
+            <label for="ob-bio" class="form-label">Short Biography (2-3 sentences)</label>
+            <textarea id="ob-bio" class="form-textarea" rows="3" placeholder="Explain your core focus, technical stack, and what you enjoy building...">Architecting scalable web applications, distributed backend pipelines, and minimalist user interfaces. Focused on native web standards and performance engineering.</textarea>
           </div>
         </form>
       </section>
 
-      <!-- STEP 2: Academics & Education -->
-      <section class="wizard-step-pane" id="pane-step-2">
-        <div class="wizard-header">
-          <span class="badge badge-accent" style="margin-bottom: 8px;">Step 2 of 6</span>
-          <h2 class="wizard-title">Academic Qualifications &amp; Scores</h2>
-          <p class="wizard-subtitle">Recruiters and universities look for educational pedigree and academic standing.</p>
+      <!-- STEP 4: Education & Skills -->
+      <section class="wizard-step-pane" id="pane-step-4">
+        <div class="wizard-header" style="margin-bottom: var(--space-6);">
+          <span class="badge" style="margin-bottom: 8px;">Step 4 of 8 &bull; Academics &amp; Skills</span>
+          <h2 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">Education &amp; Core Technical Skills</h2>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm); margin: 0;">Add your educational qualifications and select primary skills.</p>
         </div>
 
-        <form id="form-step-2" class="dashboard-form" onsubmit="event.preventDefault();">
-          <div class="form-group">
-            <label for="ob-institution" class="form-label">College / University / School *</label>
-            <input type="text" id="ob-institution" class="form-input" placeholder="e.g. SRM Institute of Science and Technology" required value="SRM Institute of Science and Technology" />
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-4);">
-            <div class="form-group">
+        <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-4); background: var(--bg-secondary); margin-bottom: var(--space-6);">
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-3); margin-bottom: var(--space-3);">
+            <div>
+              <label for="ob-institution" class="form-label">College / University *</label>
+              <input type="text" id="ob-institution" class="form-input" placeholder="e.g. SRM Institute of Science and Technology" value="SRM Institute of Science and Technology" />
+            </div>
+            <div>
               <label for="ob-degree" class="form-label">Degree *</label>
-              <input type="text" id="ob-degree" class="form-input" placeholder="e.g. Bachelor of Technology (B.Tech)" required value="Bachelor of Technology (B.Tech)" />
-            </div>
-
-            <div class="form-group">
-              <label for="ob-field" class="form-label">Field of Study / Major *</label>
-              <input type="text" id="ob-field" class="form-input" placeholder="e.g. Computer Science & Engineering" required value="Computer Science & Engineering" />
+              <input type="text" id="ob-degree" class="form-input" placeholder="e.g. B.Tech Computer Science" value="B.Tech Computer Science &amp; Engineering" />
             </div>
           </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-4); margin-top: var(--space-4);">
-            <div class="form-group">
-              <label for="ob-score" class="form-label">CGPA / Score / Grade *</label>
-              <input type="text" id="ob-score" class="form-input" placeholder="e.g. 9.24" required value="9.24" />
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
+            <div>
+              <label for="ob-score" class="form-label">Score (CGPA or %)</label>
+              <input type="text" id="ob-score" class="form-input" placeholder="e.g. 9.24 / 10.0 CGPA" value="9.24 / 10.0" />
             </div>
-
-            <div class="form-group">
-              <label for="ob-scale" class="form-label">Grading Scale</label>
-              <select id="ob-scale" class="form-input">
-                <option value="10.0" selected>Scale of 10.0 (CGPA)</option>
-                <option value="4.0">Scale of 4.0 (US GPA)</option>
-                <option value="100%">Percentage (%)</option>
-                <option value="Grade">Letter Grade (A+ / First Class)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="ob-years" class="form-label">Duration Years</label>
-              <input type="text" id="ob-years" class="form-input" placeholder="e.g. 2022 – 2026" value="2022 – 2026" />
+            <div>
+              <label for="ob-years" class="form-label">Study Duration</label>
+              <input type="text" id="ob-years" class="form-input" placeholder="e.g. 2022 - 2026" value="2022 &ndash; 2026" />
             </div>
           </div>
-
-          <div class="form-group" style="margin-top: var(--space-4);">
-            <label for="ob-coursework" class="form-label">Key Coursework &amp; Academic Honors</label>
-            <input type="text" id="ob-coursework" class="form-input" placeholder="e.g. Data Structures, Distributed Systems, Dean's List Award" value="Data Structures, Algorithms, Distributed Systems, Operating Systems, Dean's Merit Award" />
-          </div>
-        </form>
-      </section>
-
-      <!-- STEP 3: Categorized Skills Matrix -->
-      <section class="wizard-step-pane" id="pane-step-3">
-        <div class="wizard-header">
-          <span class="badge badge-accent" style="margin-bottom: 8px;">Step 3 of 6</span>
-          <h2 class="wizard-title">Select your key technical skills</h2>
-          <p class="wizard-subtitle">Click to toggle the skills and technologies you work with. They'll appear categorized on your site.</p>
         </div>
 
         <div>
-          <div style="margin-bottom: var(--space-4);">
-            <h3 style="font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-primary); font-family: var(--font-mono); margin-bottom: 6px;">Programming Languages</h3>
-            <div class="chip-cloud" id="cloud-languages">
-              <span class="skill-chip-select selected" data-cat="languages" data-skill="JavaScript">JavaScript</span>
-              <span class="skill-chip-select selected" data-cat="languages" data-skill="TypeScript">TypeScript</span>
-              <span class="skill-chip-select selected" data-cat="languages" data-skill="Python">Python</span>
-              <span class="skill-chip-select selected" data-cat="languages" data-skill="Go">Go</span>
-              <span class="skill-chip-select" data-cat="languages" data-skill="Rust">Rust</span>
-              <span class="skill-chip-select selected" data-cat="languages" data-skill="C++">C++</span>
-              <span class="skill-chip-select" data-cat="languages" data-skill="Java">Java</span>
-              <span class="skill-chip-select selected" data-cat="languages" data-skill="SQL">SQL</span>
-            </div>
-          </div>
-
-          <div style="margin-bottom: var(--space-4);">
-            <h3 style="font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-secondary); font-family: var(--font-mono); margin-bottom: 6px;">Frameworks &amp; Libraries</h3>
-            <div class="chip-cloud" id="cloud-frameworks">
-              <span class="skill-chip-select selected" data-cat="frameworks" data-skill="React">React</span>
-              <span class="skill-chip-select selected" data-cat="frameworks" data-skill="Node.js">Node.js</span>
-              <span class="skill-chip-select" data-cat="frameworks" data-skill="Next.js">Next.js</span>
-              <span class="skill-chip-select" data-cat="frameworks" data-skill="Express">Express</span>
-              <span class="skill-chip-select selected" data-cat="frameworks" data-skill="Vite">Vite</span>
-              <span class="skill-chip-select" data-cat="frameworks" data-skill="Vue.js">Vue.js</span>
-              <span class="skill-chip-select selected" data-cat="frameworks" data-skill="Tailwind CSS">Tailwind CSS</span>
-              <span class="skill-chip-select" data-cat="frameworks" data-skill="FastAPI">FastAPI</span>
-            </div>
-          </div>
-
-          <div style="margin-bottom: var(--space-4);">
-            <h3 style="font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em; color: #34d399; font-family: var(--font-mono); margin-bottom: 6px;">Tools, Databases &amp; Cloud</h3>
-            <div class="chip-cloud" id="cloud-tools">
-              <span class="skill-chip-select selected" data-cat="tools" data-skill="PostgreSQL">PostgreSQL</span>
-              <span class="skill-chip-select selected" data-cat="tools" data-skill="Docker">Docker</span>
-              <span class="skill-chip-select selected" data-cat="tools" data-skill="Git &amp; GitHub">Git &amp; GitHub</span>
-              <span class="skill-chip-select selected" data-cat="tools" data-skill="Supabase">Supabase</span>
-              <span class="skill-chip-select" data-cat="tools" data-skill="AWS">AWS</span>
-              <span class="skill-chip-select" data-cat="tools" data-skill="Redis">Redis</span>
-              <span class="skill-chip-select selected" data-cat="tools" data-skill="Vercel">Vercel</span>
-              <span class="skill-chip-select" data-cat="tools" data-skill="Linux">Linux</span>
-            </div>
-          </div>
-
-          <div>
-            <h3 style="font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em; color: #f59e0b; font-family: var(--font-mono); margin-bottom: 6px;">Core Competencies &amp; Concepts</h3>
-            <div class="chip-cloud" id="cloud-concepts">
-              <span class="skill-chip-select selected" data-cat="concepts" data-skill="Data Structures">Data Structures</span>
-              <span class="skill-chip-select selected" data-cat="concepts" data-skill="Distributed Systems">Distributed Systems</span>
-              <span class="skill-chip-select selected" data-cat="concepts" data-skill="RESTful APIs">RESTful APIs</span>
-              <span class="skill-chip-select selected" data-cat="concepts" data-skill="CI/CD Pipelines">CI/CD Pipelines</span>
-              <span class="skill-chip-select" data-cat="concepts" data-skill="System Architecture">System Architecture</span>
-            </div>
+          <label class="form-label" style="margin-bottom: 6px;">Select Technical Skills (Click to select)</label>
+          <div class="chip-cloud" id="skills-chip-container" style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span class="skill-chip-select selected" data-skill="JavaScript">JavaScript</span>
+            <span class="skill-chip-select selected" data-skill="TypeScript">TypeScript</span>
+            <span class="skill-chip-select selected" data-skill="Node.js">Node.js</span>
+            <span class="skill-chip-select selected" data-skill="HTML5 &amp; CSS3">HTML5 &amp; CSS3</span>
+            <span class="skill-chip-select selected" data-skill="PostgreSQL">PostgreSQL</span>
+            <span class="skill-chip-select selected" data-skill="Supabase">Supabase</span>
+            <span class="skill-chip-select" data-skill="Python">Python</span>
+            <span class="skill-chip-select" data-skill="React">React</span>
+            <span class="skill-chip-select" data-skill="Docker">Docker</span>
+            <span class="skill-chip-select" data-skill="Git &amp; GitHub">Git &amp; GitHub</span>
+            <span class="skill-chip-select" data-skill="Redis">Redis</span>
+            <span class="skill-chip-select" data-skill="REST APIs">REST APIs</span>
           </div>
         </div>
       </section>
 
-      <!-- STEP 4: Featured Project / GitHub Quick Sync -->
-      <section class="wizard-step-pane" id="pane-step-4">
-        <div class="wizard-header">
-          <span class="badge badge-accent" style="margin-bottom: 8px;">Step 4 of 6</span>
-          <h2 class="wizard-title">Add your marquee project</h2>
-          <p class="wizard-subtitle">Showcase the project you're most proud of. You can add more anytime from your studio dashboard.</p>
-        </div>
-
-        <form id="form-step-4" class="dashboard-form" onsubmit="event.preventDefault();">
-          <div class="form-group">
-            <label for="ob-proj-title" class="form-label">Project Title *</label>
-            <input type="text" id="ob-proj-title" class="form-input" placeholder="e.g. Distributed Task Queue" required value="Distributed Cache Engine" />
-          </div>
-
-          <div class="form-group" style="margin-top: var(--space-4);">
-            <label for="ob-proj-desc" class="form-label">Project Description *</label>
-            <textarea id="ob-proj-desc" class="form-textarea" rows="3" placeholder="Explain the problem solved, architecture choices, and impact..." required>In-memory key-value cache engine written in Go featuring LRU eviction, Raft consensus for leader election, and sub-millisecond p99 read latencies.</textarea>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-4);">
-            <div class="form-group">
-              <label for="ob-proj-tags" class="form-label">Technologies Used (comma separated)</label>
-              <input type="text" id="ob-proj-tags" class="form-input" placeholder="e.g. Go, Raft, Docker, gRPC" value="Go, Raft, Docker, gRPC" />
-            </div>
-
-            <div class="form-group">
-              <label for="ob-proj-repo" class="form-label">GitHub Repository URL</label>
-              <input type="url" id="ob-proj-repo" class="form-input" placeholder="https://github.com/ssrnov/distributed-cache" value="https://github.com/ssrnov/distributed-cache" />
-            </div>
-          </div>
-        </form>
-      </section>
-
-      <!-- STEP 5: Choose Portfolio Template -->
+      <!-- STEP 5: Projects / GitHub Connection -->
       <section class="wizard-step-pane" id="pane-step-5">
-        <div class="wizard-header">
-          <span class="badge badge-accent" style="margin-bottom: 8px;">Step 5 of 6</span>
-          <h2 class="wizard-title">Choose your portfolio layout theme</h2>
-          <p class="wizard-subtitle">Pick the look and feel that represents your identity. You can change this anytime with 1 click.</p>
+        <div class="wizard-header" style="margin-bottom: var(--space-6);">
+          <span class="badge" style="margin-bottom: 8px;">Step 5 of 8 &bull; Project Showcase</span>
+          <h2 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">Add a project or connect GitHub</h2>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm); margin: 0;">Feature your best project or provide your GitHub username to sync repositories.</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-4);" id="template-selector-grid">
-          
-          <div class="template-card-choice selected" data-template="minimal-developer">
-            <div class="check-icon">&check;</div>
-            <span class="badge badge-accent" style="font-size: 10px; margin-bottom: 6px; display: inline-block;">Default &bull; Popular</span>
-            <h4 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">Minimal Developer</h4>
-            <p style="font-size: var(--text-xs); color: var(--text-secondary); margin: 0; line-height: 1.4;">
-              Pure dark mode, monochrome elegance, typographic focus, and clean section hierarchies.
-            </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+          <div>
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 var(--space-3) 0;">Option A: Feature a Project</h3>
+            <div class="form-group" style="margin-bottom: var(--space-3);">
+              <label for="ob-proj-title" class="form-label">Project Title</label>
+              <input type="text" id="ob-proj-title" class="form-input" placeholder="e.g. Folioryn SaaS Engine" value="Folioryn SaaS Engine" />
+            </div>
+            <div class="form-group" style="margin-bottom: var(--space-3);">
+              <label for="ob-proj-desc" class="form-label">Short Description</label>
+              <textarea id="ob-proj-desc" class="form-textarea" rows="3" placeholder="What does this project do?">Multi-tenant portfolio builder with 0ms live preview synchronization, ATS resume generation, and verified data persistence.</textarea>
+            </div>
+            <div class="form-group">
+              <label for="ob-proj-tags" class="form-label">Tech Stack (comma-separated)</label>
+              <input type="text" id="ob-proj-tags" class="form-input" placeholder="JavaScript, Supabase, Vite" value="JavaScript, Supabase, Vite" />
+            </div>
           </div>
 
-          <div class="template-card-choice" data-template="academic-scholar">
-            <div class="check-icon">&check;</div>
-            <span class="badge" style="font-size: 10px; margin-bottom: 6px; display: inline-block;">Education &bull; Research</span>
-            <h4 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">Academic Scholar</h4>
-            <p style="font-size: var(--text-xs); color: var(--text-secondary); margin: 0; line-height: 1.4;">
-              Front-and-center CGPA, coursework, research papers, conferences, and formal honors.
+          <div style="border-left: 1px solid var(--border-color); padding-left: var(--space-4);">
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 var(--space-3) 0;">Option B: GitHub Sync</h3>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3);">
+              Enter your public GitHub handle to sync repository titles, descriptions, and star counts.
             </p>
+            <div class="form-group" style="margin-bottom: var(--space-3);">
+              <label for="ob-github-handle" class="form-label">GitHub Username</label>
+              <div style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-secondary);">
+                <span style="padding: 0 10px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); border-right: 1px solid var(--border-color);">github.com/</span>
+                <input type="text" id="ob-github-handle" class="form-input" placeholder="ssrnov" style="border: none; border-radius: 0;" value="ssrnov" />
+              </div>
+            </div>
+            <button type="button" id="btn-ob-fetch-github" class="btn btn-secondary btn-sm" style="width: 100%;">
+              <span>Fetch Public Repositories</span>
+            </button>
+            <div id="ob-github-status" style="font-size: 11px; font-family: var(--font-mono); margin-top: 8px; color: var(--text-muted);"></div>
           </div>
-
-          <div class="template-card-choice" data-template="modern-engineering">
-            <div class="check-icon">&check;</div>
-            <span class="badge" style="font-size: 10px; margin-bottom: 6px; display: inline-block;">SaaS &bull; Full-Stack</span>
-            <h4 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">Modern Engineering</h4>
-            <p style="font-size: var(--text-xs); color: var(--text-secondary); margin: 0; line-height: 1.4;">
-              High-tech cyan accents, system metrics, GitHub commit stats, and deep architecture breakdowns.
-            </p>
-          </div>
-
-          <div class="template-card-choice" data-template="clean-bento">
-            <div class="check-icon">&check;</div>
-            <span class="badge" style="font-size: 10px; margin-bottom: 6px; display: inline-block;">Modern Bento</span>
-            <h4 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">Clean Bento</h4>
-            <p style="font-size: var(--text-xs); color: var(--text-secondary); margin: 0; line-height: 1.4;">
-              Apple-style bento grid presentation, sleek borders, and interactive metric counters.
-            </p>
-          </div>
-
-          <div class="template-card-choice" data-template="creative-visual">
-            <div class="check-icon">&check;</div>
-            <span class="badge" style="font-size: 10px; margin-bottom: 6px; display: inline-block;">Design &bull; Frontend</span>
-            <h4 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">Creative Visual</h4>
-            <p style="font-size: var(--text-xs); color: var(--text-secondary); margin: 0; line-height: 1.4;">
-              Vibrant gradient highlights, project hero cards, interactive micro-animations.
-            </p>
-          </div>
-
-          <div class="template-card-choice" data-template="terminal-hacker">
-            <div class="check-icon">&check;</div>
-            <span class="badge" style="font-size: 10px; margin-bottom: 6px; display: inline-block;">Retro Geek</span>
-            <h4 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;">Terminal Hacker</h4>
-            <p style="font-size: var(--text-xs); color: var(--text-secondary); margin: 0; line-height: 1.4;">
-              Monospace phosphor CRT aesthetic, CLI commands, and retro developer flair.
-            </p>
-          </div>
-
         </div>
       </section>
 
-      <!-- STEP 6: Confirmation & Instant Launch -->
+      <!-- STEP 6: Select Portfolio Template -->
       <section class="wizard-step-pane" id="pane-step-6">
-        <div style="text-align: center; padding: var(--space-8) var(--space-4);">
-          <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(34, 197, 94, 0.15); border: 2px solid #22c55e; color: #22c55e; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto var(--space-4) auto;">
-            &check;
+        <div class="wizard-header" style="margin-bottom: var(--space-6);">
+          <span class="badge" style="margin-bottom: 8px;">Step 6 of 8 &bull; Template Archetype</span>
+          <h2 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">Select your portfolio template</h2>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm); margin: 0;">You can change your template anytime from your dashboard with zero data loss.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-3);" id="onboarding-templates-grid">
+          <div class="template-card-choice selected" data-template="minimal-professional">
+            <span class="check-icon">&check;</span>
+            <span class="badge" style="font-size: 9px; margin-bottom: 4px;">Minimal</span>
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">1. Minimal Professional</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Understated typography, generous whitespace.</p>
           </div>
 
-          <span class="badge badge-accent" style="margin-bottom: 8px;">Ready for Launch</span>
-          <h2 class="wizard-title" style="margin-bottom: 8px;">Your portfolio is ready!</h2>
-          <p class="wizard-subtitle" style="max-width: 500px; margin: 0 auto var(--space-6) auto;">
-            Your academic credentials, project showcases, and categorized skills have been compiled and published.
-          </p>
-
-          <!-- Live URL Box -->
-          <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-4) var(--space-6); display: inline-flex; align-items: center; gap: 12px; margin-bottom: var(--space-8); max-width: 100%;">
-            <span style="font-family: var(--font-mono); font-size: 13px; color: var(--text-muted);">Public Link:</span>
-            <span id="final-live-url" style="font-family: var(--font-mono); font-size: 14px; font-weight: 700; color: var(--accent-primary);">https://buildlab.dev/u/sunny</span>
-            <button type="button" id="btn-copy-final-url" class="btn btn-sm btn-ghost" style="padding: 4px 8px; font-size: 11px;">Copy</button>
+          <div class="template-card-choice" data-template="developer-portfolio">
+            <span class="check-icon">&check;</span>
+            <span class="badge" style="font-size: 9px; margin-bottom: 4px;">Developer</span>
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">2. Developer Portfolio</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Terminal aesthetics, shell prompt hierarchy.</p>
           </div>
 
-          <!-- Action buttons -->
-          <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
-            <a href="/u/sunny" id="btn-view-live-portfolio" target="_blank" class="btn btn-primary" style="padding: 12px 28px;">
-              <span>View Live Portfolio</span>
-              <span aria-hidden="true">&nearr;</span>
-            </a>
-            <a href="/dashboard/" class="btn btn-secondary" style="padding: 12px 28px;">
-              <span>Go to Studio Dashboard</span>
-              <span aria-hidden="true">&rarr;</span>
-            </a>
-            <a href="/dashboard/resume/" class="btn btn-secondary" style="padding: 12px 28px;">
-              <span>ATS Resume Builder</span>
-              <span aria-hidden="true">&rarr;</span>
-            </a>
+          <div class="template-card-choice" data-template="student-portfolio">
+            <span class="check-icon">&check;</span>
+            <span class="badge" style="font-size: 9px; margin-bottom: 4px;">Student</span>
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">3. Student Portfolio</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Education, CGPA, and coursework forward.</p>
+          </div>
+
+          <div class="template-card-choice" data-template="creative-portfolio">
+            <span class="check-icon">&check;</span>
+            <span class="badge" style="font-size: 9px; margin-bottom: 4px;">Creative</span>
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">4. Creative Portfolio</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Visual asset frames and design surfaces.</p>
+          </div>
+
+          <div class="template-card-choice" data-template="editorial-portfolio">
+            <span class="check-icon">&check;</span>
+            <span class="badge" style="font-size: 9px; margin-bottom: 4px;">Editorial</span>
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">5. Editorial Portfolio</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">High-density narrative flow and articles.</p>
+          </div>
+
+          <div class="template-card-choice" data-template="experience-focused">
+            <span class="check-icon">&check;</span>
+            <span class="badge" style="font-size: 9px; margin-bottom: 4px;">Experience</span>
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">6. Experience-Focused</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Career milestones, timeline, and impact.</p>
           </div>
         </div>
       </section>
 
-      <!-- Navigation Footer -->
-      <footer class="wizard-footer" id="wizard-navigation-footer">
+      <!-- STEP 7: Live Portfolio Preview -->
+      <section class="wizard-step-pane" id="pane-step-7">
+        <div class="wizard-header" style="margin-bottom: var(--space-6);">
+          <span class="badge" style="margin-bottom: 8px;">Step 7 of 8 &bull; Preview</span>
+          <h2 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">Preview your portfolio</h2>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm); margin: 0;">Here is how your public portfolio will look to recruiters and visitors.</p>
+        </div>
+
+        <!-- Rendered Card Mockup -->
+        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-6);">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: var(--space-4); margin-bottom: var(--space-4);">
+            <div>
+              <span id="preview-template-badge" class="badge" style="font-size: 10px; margin-bottom: 4px;">Minimal Professional</span>
+              <h3 id="preview-name" style="font-size: var(--text-lg); font-weight: 800; color: var(--text-primary); margin: 0;">Sunny</h3>
+              <p id="preview-headline" style="font-size: var(--text-xs); color: var(--text-secondary); margin: 2px 0 0 0;">Full-Stack Software Engineer &amp; Systems Builder</p>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);" id="preview-url-text">
+              folioryn.dev/u/sunny
+            </div>
+          </div>
+
+          <div style="margin-bottom: var(--space-4);">
+            <h4 style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">About</h4>
+            <p id="preview-bio" style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+              Architecting scalable web applications, distributed backend pipelines, and minimalist user interfaces.
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+            <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: var(--space-3);">
+              <span style="font-size: 10px; font-family: var(--font-mono); color: var(--text-muted);">EDUCATION</span>
+              <h5 id="preview-education" style="font-size: var(--text-xs); font-weight: 700; color: var(--text-primary); margin: 2px 0 0 0;">SRM Institute &bull; CGPA 9.24</h5>
+            </div>
+            <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: var(--space-3);">
+              <span style="font-size: 10px; font-family: var(--font-mono); color: var(--text-muted);">FEATURED PROJECT</span>
+              <h5 id="preview-project" style="font-size: var(--text-xs); font-weight: 700; color: var(--text-primary); margin: 2px 0 0 0;">Folioryn SaaS Engine</h5>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 8: Save Draft & Publish -->
+      <section class="wizard-step-pane" id="pane-step-8">
+        <div class="wizard-header" style="text-align: center; margin-bottom: var(--space-6);">
+          <span class="badge" style="margin-bottom: 8px;">Step 8 of 8 &bull; Ready to Launch</span>
+          <h2 style="font-size: var(--text-3xl); font-weight: 900; color: var(--text-primary); margin: 0 0 8px 0; letter-spacing: -0.03em;">Your portfolio is ready!</h2>
+          <p style="color: var(--text-secondary); font-size: var(--text-base); margin: 0 auto; max-width: 520px;">
+            Choose whether to publish your website immediately at your unique URL or keep it saved as a private draft.
+          </p>
+        </div>
+
+        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-6); max-width: 540px; margin: 0 auto var(--space-8) auto; text-align: center;">
+          <span style="font-size: var(--text-xs); color: var(--text-muted); font-family: var(--font-mono); display: block; margin-bottom: 4px;">YOUR PERMANENT PORTFOLIO URL</span>
+          <div style="font-family: var(--font-mono); font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-4);" id="final-live-url">
+            https://folioryn.dev/u/sunny
+          </div>
+          <button type="button" id="btn-copy-final-url" class="btn btn-secondary btn-sm">
+            <span>Copy URL</span>
+          </button>
+        </div>
+
+        <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+          <button type="button" id="btn-launch-publish" class="btn btn-primary btn-lg" style="padding: 12px 28px;">
+            <span>Publish Live Now</span>
+            <span aria-hidden="true">&rarr;</span>
+          </button>
+          <button type="button" id="btn-launch-draft" class="btn btn-secondary btn-lg" style="padding: 12px 24px;">
+            <span>Save as Private Draft</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Navigation Controls Footer -->
+      <div class="wizard-footer" id="wizard-navigation-footer">
         <button type="button" id="btn-wizard-prev" class="btn btn-secondary" style="visibility: hidden;">
           <span aria-hidden="true">&larr;</span>
-          <span>Previous Step</span>
+          <span>Previous</span>
         </button>
 
-        <div style="font-size: var(--text-xs); color: var(--text-muted); font-family: var(--font-mono);">
-          <span id="step-indicator-text">Step 1 of 6</span>
-        </div>
+        <span id="step-indicator-text" style="font-size: var(--text-xs); color: var(--text-muted); font-family: var(--font-mono);">
+          Step 1 of 8
+        </span>
 
         <button type="button" id="btn-wizard-next" class="btn btn-primary">
           <span>Continue</span>
           <span aria-hidden="true">&rarr;</span>
         </button>
-      </footer>
+      </div>
 
     </div>
   </main>
 
   <script type="module" src="/js/main.js"></script>
-  <script type="module" src="/js/profile-data.js"></script>
   <script type="module" src="/js/onboarding.js"></script>
 </body>
 </html>

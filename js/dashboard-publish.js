@@ -59,7 +59,7 @@ function initPublishControls() {
     shareLinkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(fullUrl)}`;
   }
   if (shareTwitter) {
-    shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent('Check out my professional portfolio and projects on BuildLab: ')}&url=${encodeURIComponent(fullUrl)}`;
+    shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent('Check out my professional portfolio and projects on Folioryn: ')}&url=${encodeURIComponent(fullUrl)}`;
   }
   if (shareWhatsapp) {
     shareWhatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent('Check out my portfolio: ' + fullUrl)}`;

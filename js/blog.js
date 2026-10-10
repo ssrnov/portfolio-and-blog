@@ -10,7 +10,37 @@ let currentTag = 'all';
 let searchQuery = '';
 
 export async function initBlog() {
-  allPosts = await fetchBlogPosts();
+  const fallbackPosts = await fetchBlogPosts();
+
+  // Load published articles from storage
+  let userPosts = [];
+  try {
+    const raw = localStorage.getItem('profilefolio_blog_articles') || localStorage.getItem('ssrnovx_blog_articles');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      userPosts = parsed.filter(a => a.isPublished).map(a => ({
+        id: a.id,
+        title: a.title,
+        slug: a.slug,
+        category: a.category || (a.tags ? a.tags.split(',')[0].trim() : 'Engineering'),
+        date: a.updatedAt ? new Date(a.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently',
+        readTime: a.readTime || '4 min read',
+        excerpt: a.excerpt || (a.content ? a.content.replace(/^[#\s]+[^\n]+/m, '').trim().slice(0, 140) + '...' : ''),
+        tags: a.tags ? a.tags.split(',').map(t => t.trim()) : ['Engineering'],
+        content: a.content
+      }));
+    }
+  } catch (e) {
+    console.warn('Error reading user blog articles:', e);
+  }
+
+  const combined = [...userPosts];
+  fallbackPosts.forEach(fp => {
+    if (!combined.some(cp => cp.slug === fp.slug)) {
+      combined.push(fp);
+    }
+  });
+  allPosts = combined;
 
   // 1. Full Blog Page (/blog)
   const fullGrid = document.getElementById('blog-grid');
@@ -129,8 +159,8 @@ function renderFeaturedBlog(container) {
 }
 
 function buildArticleCardHtml(post) {
-  // Direct link URL: sample article page or slug
-  const articleUrl = '/blog/sample-article/';
+  // Direct link URL: sample article page with slug query param
+  const articleUrl = `/blog/sample-article/?slug=${encodeURIComponent(post.slug)}`;
 
   return `
     <article class="blog-card" data-slug="${escapeHtml(post.slug)}">

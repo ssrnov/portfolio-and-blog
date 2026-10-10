@@ -9,7 +9,8 @@ import {
   getEducation,
   getSkills,
   getExperiences,
-  getCertifications
+  getCertifications,
+  getProjects
 } from './profile-data.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -22,6 +23,7 @@ function initResumeBuilder() {
   const skills = getSkills();
   const experiences = getExperiences();
   const certifications = getCertifications();
+  const projects = getProjects();
 
   // Populate Editor Inputs
   const inputName = document.getElementById('resume-input-name');
@@ -31,12 +33,12 @@ function initResumeBuilder() {
   const inputLocation = document.getElementById('resume-input-location');
   const inputSummary = document.getElementById('resume-input-summary');
 
-  if (inputName) inputName.value = profile.fullName || 'Sunny';
+  if (inputName) inputName.value = profile.fullName || 'Developer';
   if (inputRole) inputRole.value = profile.headline || 'Full-Stack Software Engineer & Systems Architect';
-  if (inputEmail) inputEmail.value = profile.email || 'contact@ssrnovx.dev';
-  if (inputPhone) inputPhone.value = '+91 98765 43210';
-  if (inputLocation) inputLocation.value = profile.location || 'Bengaluru, India';
-  if (inputSummary) inputSummary.value = profile.bio || 'Software Engineer with strong fundamentals in distributed systems, web platform APIs, and database architecture. Proven track record building high-performance web applications with sub-second response times.';
+  if (inputEmail) inputEmail.value = profile.email || '';
+  if (inputPhone) inputPhone.value = profile.phone || '';
+  if (inputLocation) inputLocation.value = profile.location || '';
+  if (inputSummary) inputSummary.value = profile.bio || 'Building software applications, scalable architectures, and modern web interfaces with native web standards.';
 
   // Render Initial Canvas
   renderA4Canvas({
@@ -44,11 +46,12 @@ function initResumeBuilder() {
     education,
     skills,
     experiences,
-    certifications
+    certifications,
+    projects
   });
 
   // Attach Two-Way Input Listeners
-  attachInputListeners();
+  attachInputListeners(profile);
 
   // PDF Print Trigger
   const downloadPdfBtn = document.getElementById('download-pdf-btn');
@@ -58,7 +61,7 @@ function initResumeBuilder() {
   });
 }
 
-function attachInputListeners() {
+function attachInputListeners(profile) {
   const fields = [
     { id: 'resume-input-name', target: 'preview-resume-name' },
     { id: 'resume-input-role', target: 'preview-resume-role' },
@@ -78,71 +81,66 @@ function attachInputListeners() {
   // Re-render contact bar on edit
   const contactInputs = ['resume-input-email', 'resume-input-phone', 'resume-input-location'];
   contactInputs.forEach(id => {
-    document.getElementById(id)?.addEventListener('input', updateContactBar);
+    document.getElementById(id)?.addEventListener('input', () => updateContactBar(profile));
   });
 }
 
-function updateContactBar() {
-  const email = document.getElementById('resume-input-email')?.value || 'contact@ssrnovx.dev';
-  const phone = document.getElementById('resume-input-phone')?.value || '+91 98765 43210';
-  const loc = document.getElementById('resume-input-location')?.value || 'Bengaluru, India';
+function updateContactBar(profile) {
+  const email = document.getElementById('resume-input-email')?.value || profile?.email || '';
+  const phone = document.getElementById('resume-input-phone')?.value || profile?.phone || '';
+  const loc = document.getElementById('resume-input-location')?.value || profile?.location || '';
   const bar = document.getElementById('preview-contact-bar');
 
+  const items = [];
+  if (email) items.push(`<span>${escapeHtml(email)}</span>`);
+  if (phone) items.push(`<span>${escapeHtml(phone)}</span>`);
+  if (loc) items.push(`<span>${escapeHtml(loc)}</span>`);
+  if (profile?.githubUrl) {
+    const cleanGh = profile.githubUrl.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+    items.push(`<span>${escapeHtml(cleanGh)}</span>`);
+  }
+  const username = profile?.username || 'user';
+  items.push(`<span>folioryn.dev/u/${escapeHtml(username)}</span>`);
+
   if (bar) {
-    bar.innerHTML = `
-      <span>${escapeHtml(email)}</span>
-      <span>&bull;</span>
-      <span>${escapeHtml(phone)}</span>
-      <span>&bull;</span>
-      <span>${escapeHtml(loc)}</span>
-      <span>&bull;</span>
-      <span>github.com/ssrnov</span>
-      <span>&bull;</span>
-      <span>buildlab.dev/u/sunny</span>
-    `;
+    bar.innerHTML = items.join(' <span>&bull;</span> ');
   }
 }
 
-function renderA4Canvas({ profile, education, skills, experiences, certifications }) {
+function renderA4Canvas({ profile, education, skills, experiences, certifications, projects }) {
   const canvas = document.getElementById('a4-canvas');
   if (!canvas) return;
 
   // Group skills by category
   const skillsByCategory = {};
-  skills.forEach(s => {
-    const cat = s.category || 'other';
+  (skills || []).forEach(s => {
+    const cat = s.category || 'Competencies';
     if (!skillsByCategory[cat]) skillsByCategory[cat] = [];
     skillsByCategory[cat].push(s.name);
   });
 
-  // Get featured projects from localStorage
-  let projects = [];
-  try {
-    const raw = localStorage.getItem('ssrnovx_projects');
-    projects = raw ? JSON.parse(raw).slice(0, 3) : [];
-  } catch (e) {
-    projects = [];
+  const featuredProjects = (projects || []).slice(0, 3);
+  const contactItems = [];
+  if (profile.email) contactItems.push(`<span>${escapeHtml(profile.email)}</span>`);
+  if (profile.phone) contactItems.push(`<span>${escapeHtml(profile.phone)}</span>`);
+  if (profile.location) contactItems.push(`<span>${escapeHtml(profile.location)}</span>`);
+  if (profile.githubUrl) {
+    const cleanGh = profile.githubUrl.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+    contactItems.push(`<span>${escapeHtml(cleanGh)}</span>`);
   }
+  contactItems.push(`<span>folioryn.dev/u/${escapeHtml(profile.username || 'user')}</span>`);
 
   canvas.innerHTML = `
     <!-- Header -->
     <header class="a4-header" style="text-align: center; border-bottom: 2px solid #111; padding-bottom: 12px; margin-bottom: 16px;">
       <h2 class="a4-name" id="preview-resume-name" style="font-size: 24px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 4px 0; color: #000;">
-        ${escapeHtml(profile.fullName || 'Sunny')}
+        ${escapeHtml(profile.fullName || 'Developer')}
       </h2>
       <div id="preview-resume-role" style="font-size: 13px; font-weight: 600; color: #333; margin-bottom: 6px;">
         ${escapeHtml(profile.headline || 'Software Engineer — Full-Stack & Systems')}
       </div>
       <div class="a4-contact-bar" id="preview-contact-bar" style="font-size: 10px; color: #555; display: flex; justify-content: center; flex-wrap: wrap; gap: 6px;">
-        <span>${escapeHtml(profile.email || 'contact@ssrnovx.dev')}</span>
-        <span>&bull;</span>
-        <span>+91 98765 43210</span>
-        <span>&bull;</span>
-        <span>${escapeHtml(profile.location || 'Bengaluru, India')}</span>
-        <span>&bull;</span>
-        <span>github.com/ssrnov</span>
-        <span>&bull;</span>
-        <span>buildlab.dev/u/${escapeHtml(profile.username || 'sunny')}</span>
+        ${contactItems.join(' <span>&bull;</span> ')}
       </div>
     </header>
 
@@ -152,7 +150,7 @@ function renderA4Canvas({ profile, education, skills, experiences, certification
         Professional Summary
       </h3>
       <p id="preview-resume-summary" style="font-size: 10.5px; line-height: 1.5; color: #222; margin: 0;">
-        ${escapeHtml(profile.bio || 'Software Engineer with strong fundamentals in distributed systems, web platform APIs, and database architecture. Proven track record building high-performance web applications with sub-second response times.')}
+        ${escapeHtml(profile.bio || 'Building software applications, scalable architectures, and modern web interfaces with native web standards.')}
       </p>
     </section>
 
@@ -161,7 +159,7 @@ function renderA4Canvas({ profile, education, skills, experiences, certification
       <h3 class="a4-section-title" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; padding-bottom: 3px; margin-bottom: 6px; color: #111;">
         Education &amp; Academic Qualifications
       </h3>
-      ${education.map(edu => `
+      ${(education && education.length > 0) ? education.map(edu => `
         <div style="margin-bottom: 8px;">
           <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #000;">
             <span>${escapeHtml(edu.institution)}</span>
@@ -169,7 +167,7 @@ function renderA4Canvas({ profile, education, skills, experiences, certification
           </div>
           <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: #333; font-weight: 600; margin-top: 2px;">
             <span>${escapeHtml(edu.qualification)} in ${escapeHtml(edu.fieldOfStudy)}</span>
-            <span style="font-weight: 700; color: #111;">${escapeHtml(edu.gradeType)}: ${escapeHtml(edu.gradeValue)} / ${escapeHtml(edu.gradeScale)}</span>
+            ${edu.gradeValue ? `<span style="font-weight: 700; color: #111;">${escapeHtml(edu.gradeType || 'CGPA')}: ${escapeHtml(edu.gradeValue)} ${edu.gradeScale ? `/ ${escapeHtml(edu.gradeScale)}` : ''}</span>` : ''}
           </div>
           ${edu.coursework ? `
             <p style="font-size: 9.5px; color: #444; line-height: 1.4; margin: 3px 0 0 0;">
@@ -178,26 +176,31 @@ function renderA4Canvas({ profile, education, skills, experiences, certification
           ` : ''}
           ${edu.achievements ? `
             <p style="font-size: 9.5px; color: #444; line-height: 1.4; margin: 2px 0 0 0;">
-              <strong>Honors:</strong> ${edu.achievements}
+              <strong>Honors:</strong> ${escapeHtml(edu.achievements)}
             </p>
           ` : ''}
         </div>
-      `).join('')}
+      `).join('') : `
+        <p style="font-size: 10px; color: #666; font-style: italic; margin: 0;">No education records added yet. Add them in the Education manager.</p>
+      `}
     </section>
 
     <!-- Technical Competencies -->
     <section style="margin-bottom: 14px;">
       <h3 class="a4-section-title" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; padding-bottom: 3px; margin-bottom: 6px; color: #111;">
-        Technical Competencies
+        Technical Skills &amp; Competencies
       </h3>
-      <ul class="a4-bullets" style="margin: 0; padding-left: 16px; font-size: 10px; line-height: 1.5; color: #222;">
-        ${Object.keys(skillsByCategory).map(cat => `
-          <li style="margin-bottom: 2px;">
-            <strong style="text-transform: capitalize;">${escapeHtml(cat)}:</strong>
-            ${escapeHtml(skillsByCategory[cat].join(', '))}
-          </li>
-        `).join('')}
-      </ul>
+      ${Object.keys(skillsByCategory).length > 0 ? `
+        <ul class="a4-bullets" style="margin: 0; padding-left: 16px; font-size: 10px; line-height: 1.6; color: #222;">
+          ${Object.entries(skillsByCategory).map(([cat, list]) => `
+            <li style="margin-bottom: 2px;">
+              <strong style="text-transform: capitalize;">${escapeHtml(cat)}:</strong> ${escapeHtml(list.join(', '))}
+            </li>
+          `).join('')}
+        </ul>
+      ` : `
+        <p style="font-size: 10px; color: #666; font-style: italic; margin: 0;">No technical competencies added yet. Add them in the Skills manager.</p>
+      `}
     </section>
 
     <!-- Work & Engineering Experience -->
@@ -205,7 +208,7 @@ function renderA4Canvas({ profile, education, skills, experiences, certification
       <h3 class="a4-section-title" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; padding-bottom: 3px; margin-bottom: 6px; color: #111;">
         Engineering Experience
       </h3>
-      ${experiences.map(exp => `
+      ${(experiences && experiences.length > 0) ? experiences.map(exp => `
         <div style="margin-bottom: 8px;">
           <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #000;">
             <span>${escapeHtml(exp.organization)}</span>
@@ -218,7 +221,9 @@ function renderA4Canvas({ profile, education, skills, experiences, certification
             ${escapeHtml(exp.description)}
           </p>
         </div>
-      `).join('')}
+      `).join('') : `
+        <p style="font-size: 10px; color: #666; font-style: italic; margin: 0;">No work experience entries added yet. Add them in the Experience manager.</p>
+      `}
     </section>
 
     <!-- Featured Projects -->
@@ -226,24 +231,11 @@ function renderA4Canvas({ profile, education, skills, experiences, certification
       <h3 class="a4-section-title" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; padding-bottom: 3px; margin-bottom: 6px; color: #111;">
         Selected Projects
       </h3>
-      ${(projects.length > 0 ? projects : [
-        {
-          title: "Distributed Cache & Consensus Engine",
-          githubUrl: "https://github.com/ssrnov/distributed-cache",
-          tags: ["Go", "Raft", "Docker", "gRPC"],
-          description: "Engineered high-throughput in-memory key-value cache engine with LRU eviction and Raft consensus achieving sub-millisecond p99 latencies."
-        },
-        {
-          title: "Real-Time Telemetry & Observability Pipeline",
-          githubUrl: "https://github.com/ssrnov/telemetry-pipeline",
-          tags: ["TypeScript", "WebSockets", "TimescaleDB", "PostgreSQL"],
-          description: "Architected distributed stream ingestion pipeline processing over 12,000 metrics events/sec with sub-50ms dashboard visualization updates."
-        }
-      ]).map(proj => `
+      ${featuredProjects.length > 0 ? featuredProjects.map(proj => `
         <div style="margin-bottom: 8px;">
           <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #000;">
             <span>${escapeHtml(proj.title)}</span>
-            <span style="font-family: monospace; font-size: 9.5px; color: #444;">${escapeHtml(proj.githubUrl?.replace('https://', '') || '')}</span>
+            <span style="font-family: monospace; font-size: 9.5px; color: #444;">${escapeHtml(proj.repo_url?.replace('https://', '') || '')}</span>
           </div>
           ${proj.tags && proj.tags.length ? `
             <div style="font-size: 9.5px; color: #555; margin-bottom: 2px;">
@@ -251,14 +243,16 @@ function renderA4Canvas({ profile, education, skills, experiences, certification
             </div>
           ` : ''}
           <p style="font-size: 10px; line-height: 1.4; color: #222; margin: 0;">
-            ${escapeHtml(proj.description)}
+            ${escapeHtml(proj.description || '')}
           </p>
         </div>
-      `).join('')}
+      `).join('') : `
+        <p style="font-size: 10px; color: #666; font-style: italic; margin: 0;">No showcase projects added yet. Add them in the Projects manager.</p>
+      `}
     </section>
 
     <!-- Certifications -->
-    ${certifications.length > 0 ? `
+    ${(certifications && certifications.length > 0) ? `
       <section>
         <h3 class="a4-section-title" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; padding-bottom: 3px; margin-bottom: 6px; color: #111;">
           Certifications &amp; Credentials
@@ -266,7 +260,7 @@ function renderA4Canvas({ profile, education, skills, experiences, certification
         <ul class="a4-bullets" style="margin: 0; padding-left: 16px; font-size: 10px; line-height: 1.5; color: #222;">
           ${certifications.map(c => `
             <li>
-              <strong>${escapeHtml(c.title)}</strong> &ndash; ${escapeHtml(c.issuer)} (${escapeHtml(c.issueDate)})
+              <strong>${escapeHtml(c.title)}</strong> &ndash; ${escapeHtml(c.issuer)} (${escapeHtml(c.issueDate || 'Verified')})
             </li>
           `).join('')}
         </ul>

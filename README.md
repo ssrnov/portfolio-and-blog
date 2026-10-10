@@ -1,13 +1,15 @@
-# SSRNovX — Personal Portfolio & Blog
+# Folioryn — Multi-User Portfolio Builder & Publishing Platform
 
-Personal developer portfolio and engineering blog for **SSRNovX**, created for **TechSpace BuildLab '26** (Project: Personal Portfolio & Blog, Team: SSRNovX).
+**Your Identity. Your Portfolio. Your Story.**
 
-## Live Project Overview & Architecture
-- **Core Technologies:** Semantic HTML5, Modern CSS3, Vanilla JavaScript (ES Modules)
-- **Bundler & Tooling:** [Vite](https://vitejs.dev/)
-- **Design Aesthetic:** Clean, modern, predominantly black-and-white monochrome aesthetic with high-contrast accessibility (WCAG compliant)
-- **Theme Support:** Native Dark & Light theme switcher with `localStorage` persistence and system color scheme auto-detection
-- **Deployment Platform:** [Vercel](https://vercel.com/) (configured via `vercel.json`)
+Folioryn is a modern, high-performance multi-user portfolio builder and personal publishing platform designed for students, developers, designers, freelancers, and professionals.
+
+## Core Platform Overview & Architecture
+- **Framework & Bundler:** Vite 6 Multi-Page Application (MPA)
+- **Frontend Stack:** Semantic HTML5, Vanilla CSS3 Design System (`#080909`), Vanilla JavaScript (ES Modules)
+- **Multi-User Architecture:** User-scoped namespaces (`profilefolio_user_{userId}_*`) with client-side session management and Supabase data access layer parity.
+- **Design Aesthetic:** Focused monochromatic developer-tool design system (`#080909`, `#101111`, `#141515`, `#F5F5F5`, `#A3A3A3`, `#292A2A`).
+- **Deployment Platform:** [Vercel](https://vercel.com/) (configured with multi-page entry points via `vercel.json`)
 
 ---
 

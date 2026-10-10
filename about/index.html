@@ -4,19 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>About Me | SSRNovX — Personal Portfolio &amp; Blog</title>
-  <meta name="description" content="Learn more about SSRNovX: engineering background, academic education timeline at SRM University, technical competencies, and software philosophy." />
-  <meta name="author" content="SSRNovX" />
+  <title>About Me | Folioryn</title>
+  <meta name="description" content="Learn more about Folioryn: engineering background, academic education timeline at SRM University, technical competencies, and software philosophy." />
+  <meta name="author" content="Folioryn" />
   <meta name="robots" content="index, follow" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="profile" />
   <meta property="og:url" content="https://github.com/ssrnov/portfolio-and-blog" />
-  <meta property="og:title" content="About Me | SSRNovX" />
+  <meta property="og:title" content="About Me | Folioryn" />
   <meta property="og:description" content="Engineering background, academic education timeline at SRM University, technical competencies, and software philosophy." />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080909'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%23F5F5F5' text-anchor='middle'>F</text></svg>" />
 
   <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,13 +31,7 @@
   <!-- Early Theme Init -->
   <script>
     (function () {
-      const storedTheme = localStorage.getItem('theme');
-      if (storedTheme) {
-        document.documentElement.setAttribute('data-theme', storedTheme);
-      } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-      }
+      document.documentElement.setAttribute('data-theme', 'dark');
     })();
   </script>
 </head>
@@ -48,48 +42,36 @@
   <!-- Header -->
   <header class="site-header" role="banner">
     <div class="container nav-container">
-      <a href="/" class="brand-logo" aria-label="SSRNovX Home">
-        <span>SSRNovX</span>
-        <span class="brand-badge">BuildLab</span>
+      <a href="/" class="brand-logo" aria-label="Folioryn Home" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+        <span style="width: 28px; height: 28px; border-radius: var(--radius-sm); background: #F5F5F5; color: #080909; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px;">F</span>
+        <span style="font-weight: 800; font-size: 1.25rem; color: var(--text-primary); letter-spacing: -0.02em;">Folioryn</span>
       </a>
 
       <div class="nav-right">
         <nav class="site-nav" role="navigation" aria-label="Main Navigation">
           <ul class="nav-links" id="nav-menu">
-            <li><a href="/" class="nav-link" data-page="home">Home</a></li>
-            <li><a href="/about" class="nav-link active" data-page="about">About</a></li>
-            <li><a href="/projects" class="nav-link" data-page="projects">Projects</a></li>
-            <li><a href="/blog" class="nav-link" data-page="blog">Blog</a></li>
-            <li><a href="/contact" class="nav-link" data-page="contact">Contact</a></li>
+            <li><a href="/" class="nav-link">Home</a></li>
+            <li><a href="/features/" class="nav-link">Features</a></li>
+            <li><a href="/templates/" class="nav-link">Templates</a></li>
+            <li><a href="/explore/" class="nav-link">Explore</a></li>
+            <li><a href="/blog/" class="nav-link">Blog</a></li>
+            <li><a href="/about/" class="nav-link active">About</a></li>
           </ul>
         </nav>
 
-        <!-- Theme Toggle -->
-        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">
-          <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="4"></circle>
-            <path d="M12 2v2"></path>
-            <path d="M12 20v2"></path>
-            <path d="m4.93 4.93 1.41 1.41"></path>
-            <path d="m17.66 17.66 1.41 1.41"></path>
-            <path d="M2 12h2"></path>
-            <path d="M20 12h2"></path>
-            <path d="m6.34 17.66-1.41 1.41"></path>
-            <path d="m19.07 4.93-1.41 1.41"></path>
-          </svg>
-          <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-          </svg>
-        </button>
+        <div style="display: flex; align-items: center; gap: var(--space-3);">
+          <a href="/login/" class="btn btn-secondary btn-sm">Sign In</a>
+          <a href="/signup/" class="btn btn-primary btn-sm">Get Started</a>
 
-        <!-- Mobile Toggle -->
-        <button id="mobile-menu-toggle" class="mobile-toggle-btn" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open navigation menu">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
+          <!-- Mobile Toggle -->
+          <button id="mobile-menu-toggle" class="mobile-toggle-btn" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -130,7 +112,7 @@
               </div>
 
               <div>
-                <h2 class="profile-name">SSRNovX</h2>
+                <h2 class="profile-name">Folioryn</h2>
                 <p class="profile-title">Software Engineer &bull; Full-Stack</p>
                 <div class="status-badge-live">
                   <span class="pulse-dot" aria-hidden="true"></span>
@@ -139,7 +121,7 @@
               </div>
 
               <div style="width: 100%; border-top: 1px solid var(--border-subtle); padding-top: var(--space-4);">
-                <a href="/assets/resume/SSRNovX_Resume.pdf" download="SSRNovX_Resume.pdf" class="btn btn-secondary btn-card" style="width: 100%;">
+                <a href="/assets/resume/Folioryn_Resume.pdf" download="Folioryn_Resume.pdf" class="btn btn-secondary btn-card" style="width: 100%;">
                   <span>Download Full CV (PDF)</span>
                   <span aria-hidden="true">&darr;</span>
                 </a>
@@ -178,7 +160,7 @@
               Throughout my academic studies and competitive engineering labs, I have focused on the delicate balance between developer velocity and long-term system maintainability. I prioritize low memory footprints, sub-second build times, and high accessibility standards (WCAG AAA).
             </p>
             <p>
-              Currently participating in <strong>TechSpace BuildLab '26</strong>, developing robust web applications with zero unnecessary runtime overhead and strict architecture constraints.
+              Currently participating in <strong>TechSpace Folioryn '26</strong>, developing robust web applications with zero unnecessary runtime overhead and strict architecture constraints.
             </p>
             
             <div style="margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--border-subtle);">
@@ -393,18 +375,69 @@
 
   </main>
 
-  <!-- Site Footer -->
-  <footer class="site-footer" role="contentinfo">
-    <div class="container footer-container">
-      <p>&copy; 2026 SSRNovX. Built for TechSpace BuildLab '26 (BuildLab B04).</p>
-      <div class="footer-links">
-        <a href="/" class="footer-link">Home</a>
-        <a href="/about" class="footer-link">About</a>
-        <a href="/projects" class="footer-link">Projects</a>
-        <a href="/blog" class="footer-link">Blog</a>
-        <a href="/contact" class="footer-link">Contact</a>
-        <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
+  <!-- Complete Platform Footer -->
+  <footer class="site-footer" role="contentinfo" style="border-top: 1px solid var(--border-color); background-color: var(--bg-primary); padding-top: var(--space-12); padding-bottom: var(--space-8);">
+    <div class="container">
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-8); margin-bottom: var(--space-12);">
+        
+        <!-- Brand Summary -->
+        <div style="grid-column: span 1.5;">
+          <a href="/" class="brand-logo" style="margin-bottom: var(--space-3); display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
+            <span style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #F5F5F5; color: #080909; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">F</span>
+            <span style="font-weight: 800; font-size: 1.15rem; color: var(--text-primary);">Folioryn</span>
+          </a>
+          <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); max-width: 280px; margin-bottom: var(--space-3);">
+            YOUR IDENTITY. YOUR PORTFOLIO. YOUR STORY.
+          </p>
+          <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+            Multi-User Portfolio Builder &amp; Blog Platform
+          </div>
+        </div>
+
+        <!-- Product Links -->
+        <div>
+          <h4 style="font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-primary); text-transform: uppercase; margin-bottom: var(--space-3);">Product</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-xs);">
+            <li><a href="/features/" class="footer-link">Features</a></li>
+            <li><a href="/templates/" class="footer-link">Template Gallery</a></li>
+            <li><a href="/dashboard/resume/" class="footer-link">Resume Builder</a></li>
+            <li><a href="/dashboard/builder/" class="footer-link">Portfolio Editor</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources Links -->
+        <div>
+          <h4 style="font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-primary); text-transform: uppercase; margin-bottom: var(--space-3);">Resources</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-xs);">
+            <li><a href="/blog/" class="footer-link">Articles &amp; Stories</a></li>
+            <li><a href="/u/sunny/" class="footer-link">Sample Portfolio</a></li>
+            <li><a href="/explore/" class="footer-link">Explore Profiles</a></li>
+          </ul>
+        </div>
+
+        <!-- Company & Legal Links -->
+        <div>
+          <h4 style="font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-primary); text-transform: uppercase; margin-bottom: var(--space-3);">Legal &amp; Support</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-xs);">
+            <li><a href="/about/" class="footer-link">About</a></li>
+            <li><a href="/contact/" class="footer-link">Contact</a></li>
+            <li><a href="/privacy/" class="footer-link">Privacy Policy</a></li>
+            <li><a href="/terms/" class="footer-link">Terms of Service</a></li>
+          </ul>
+        </div>
+
       </div>
+
+      <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-6); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); font-size: var(--text-xs); color: var(--text-muted);">
+        <p style="margin: 0;">&copy; 2026 Folioryn. All rights reserved.</p>
+        <div style="display: flex; gap: var(--space-4);">
+          <a href="/privacy/" class="footer-link">Privacy</a>
+          <a href="/terms/" class="footer-link">Terms</a>
+          <a href="/contact/" class="footer-link">Support</a>
+        </div>
+      </div>
+
     </div>
   </footer>
 

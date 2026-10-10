@@ -1,8 +1,9 @@
 /**
- * SSRNovX Portfolio & Blog — Contact Form Module
- * Client-side validation, accessible feedback states, and visual design preview
- * TechSpace BuildLab B04
+ * ProfileFolio — Contact Form Controller
+ * Client-side validation, accessible feedback states, and message persistence.
  */
+
+import { contactService } from './supabase.js';
 
 export function initContact() {
   const form = document.getElementById('contact-form');
@@ -60,23 +61,25 @@ export function initContact() {
 
     if (!isValid) return;
 
-    // Simulate sending with loading state
     setLoadingState(true);
 
     try {
-      // Realistic simulation delay for review
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      await contactService.submitMessage('platform_inquiry', {
+        senderName: nameInput.value.trim(),
+        senderEmail: emailInput.value.trim(),
+        subject: subjectInput.value.trim(),
+        message: messageInput.value.trim()
+      });
 
-      // Display explicit Phase 2 design preview message
       showStatus(
-        'Validation passed: Form design simulation verified. Live backend transmission will be connected in Phase 3.',
+        'Thank you for reaching out! Your message has been received and our team will get back to you shortly.',
         'success'
       );
       form.reset();
     } catch (err) {
-      console.error('Contact Form Simulation Error:', err);
+      console.error('Contact Form Submission Error:', err);
       showStatus(
-        'An error occurred during form submission simulation. Please try again.',
+        'An error occurred while transmitting your message. Please try again.',
         'error'
       );
     } finally {
@@ -100,26 +103,30 @@ export function initContact() {
       el.removeAttribute('aria-invalid');
     });
     form.querySelectorAll('.error-message').forEach((el) => {
-      el.textContent = '';
       el.classList.remove('is-visible');
+      el.textContent = '';
     });
     if (statusBanner) {
-      statusBanner.className = 'form-status';
+      statusBanner.classList.remove('is-visible', 'status-success', 'status-error');
       statusBanner.textContent = '';
+    }
+  }
+
+  function setLoadingState(isLoading) {
+    if (!submitBtn) return;
+    submitBtn.disabled = isLoading;
+    if (isLoading) {
+      submitBtn.dataset.originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<span>Sending Message...</span>';
+    } else if (submitBtn.dataset.originalText) {
+      submitBtn.innerHTML = submitBtn.dataset.originalText;
     }
   }
 
   function showStatus(message, type) {
     if (!statusBanner) return;
-    statusBanner.className = `form-status is-${type}`;
     statusBanner.textContent = message;
-  }
-
-  function setLoadingState(loading) {
-    if (!submitBtn) return;
-    submitBtn.disabled = loading;
-    submitBtn.innerHTML = loading
-      ? '<span class="pulse-dot" style="display:inline-block; margin-right:6px;"></span> Simulating Send...'
-      : 'Send Message';
+    statusBanner.className = `form-status is-visible status-${type}`;
+    statusBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 }

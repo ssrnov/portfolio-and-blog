@@ -1473,35 +1473,115 @@
   gap: var(--space-2);
   padding: 4px 12px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(130, 151, 255, 0.3);
-  background: rgba(130, 151, 255, 0.08);
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  color: var(--accent-primary);
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 /* Hero Floating Component Composition */
 .hero-floating-composition {
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-4);
-  padding: var(--space-4);
+  width: 100%;
 }
 
 .floating-card {
+  box-sizing: border-box;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  padding: 20px;
+  min-width: 0;
   box-shadow: var(--shadow-md);
   transition: transform var(--transition-base), border-color var(--transition-base);
 }
 
 .floating-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  border-color: var(--border-hover);
+}
+
+/* Featured Case Study Card - Specifically tuned breathing room & wrapping */
+.case-study-card {
+  box-sizing: border-box;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 22px 24px;
+  min-width: 0;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-base), border-color var(--transition-base);
+}
+
+.case-study-card:hover {
+  border-color: var(--border-hover);
+}
+
+.case-study-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.case-study-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.case-study-title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--leading-tight);
+  overflow-wrap: anywhere;
+}
+
+.case-study-description {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.case-study-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+/* Education & GitHub split row */
+.education-github-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .case-study-card {
+    padding: 16px;
+    border-radius: var(--radius-md);
+  }
+  .floating-card {
+    padding: 16px;
+  }
+  .education-github-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Feature Bento Grid */
@@ -1530,21 +1610,21 @@
 }
 
 .bento-card-highlight {
-  border-color: rgba(130, 151, 255, 0.4);
-  background: linear-gradient(180deg, rgba(130, 151, 255, 0.04) 0%, var(--bg-surface) 100%);
+  border-color: var(--border-hover);
+  background: var(--bg-surface);
 }
 
 .bento-card-icon {
   width: 44px;
   height: 44px;
   border-radius: var(--radius-md);
-  background-color: var(--accent-subtle);
-  border: 1px solid rgba(130, 151, 255, 0.2);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: var(--space-4);
-  color: var(--accent-primary);
+  color: var(--text-primary);
 }
 
 .bento-card-title {
@@ -1782,10 +1862,10 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 3px 10px;
-  background: rgba(130, 151, 255, 0.08);
-  border: 1px solid rgba(130, 151, 255, 0.25);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-full);
-  color: var(--accent-primary);
+  color: var(--text-primary);
 }
 
 .pulsing-dot {

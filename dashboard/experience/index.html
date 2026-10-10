@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Experience &amp; Certifications | BuildLab Studio</title>
+  <title>Experience &amp; Certifications | Folioryn</title>
   <meta name="description" content="Manage your full-time jobs, internships, hackathons, and certifications." />
   <meta name="robots" content="noindex, nofollow" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238297FF'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%2308090B' text-anchor='middle'>B</text></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080909' stroke='%23292A2A' stroke-width='2'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%23F5F5F5' text-anchor='middle'>F</text></svg>" />
 
   <!-- Fonts & Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -35,69 +35,83 @@
 <body class="dashboard-shell">
 
   <!-- Left Sidebar -->
-  <aside class="dashboard-sidebar" role="navigation">
+    <!-- Left Platform Sidebar -->
+  <aside class="dashboard-sidebar" role="navigation" aria-label="Folioryn Navigation">
     <div>
-      <div class="sidebar-header">
-        <a href="/" class="brand-logo" aria-label="BuildLab Home">
-          <span class="gradient-text font-black" style="font-weight: 800; font-size: 1.25rem;">BuildLab</span>
-          <span class="brand-badge">Studio</span>
+      <div class="sidebar-header" style="padding: var(--space-6) var(--space-6); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+        <a href="/" class="brand-logo" aria-label="Folioryn Home" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+          <span style="width: 26px; height: 26px; border-radius: var(--radius-sm); background: #F5F5F5; color: #080909; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px;">F</span>
+          <span style="font-weight: 800; font-size: 1.15rem; color: var(--text-primary); letter-spacing: -0.02em;">Folioryn</span>
         </a>
       </div>
 
-      <nav class="sidebar-nav">
+      <nav class="sidebar-nav" style="padding: var(--space-4) var(--space-3);">
         <a href="/dashboard/" class="sidebar-link">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-          <span>Overview</span>
+          <span>Dashboard</span>
         </a>
+
+        <a href="/dashboard/builder/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+          <span>Portfolio Editor</span>
+          <span class="sidebar-link-badge">Live</span>
+        </a>
+
         <a href="/dashboard/education/" class="sidebar-link">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
           <span>Education</span>
         </a>
+
         <a href="/dashboard/skills/" class="sidebar-link">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
           <span>Skills Matrix</span>
         </a>
+
         <a href="/dashboard/projects/" class="sidebar-link">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
           <span>Projects &amp; GitHub</span>
         </a>
-        <a href="/dashboard/experience/" class="sidebar-link active">
+
+        <a href="/dashboard/experience/" class="sidebar-link">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-          <span>Experience &amp; Honors</span>
-          <span class="sidebar-link-badge">Roles</span>
+          <span>Experience</span>
         </a>
-        <a href="/dashboard/builder/" class="sidebar-link">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-          <span>Portfolio Designer</span>
-        </a>
+
         <a href="/dashboard/resume/" class="sidebar-link">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-          <span>ATS Resume</span>
+          <span>Resume Builder</span>
           <span class="sidebar-link-badge">PDF</span>
         </a>
+
+        <a href="/dashboard/blog/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <span>Blog Articles</span>
+        </a>
+
         <a href="/dashboard/publish/" class="sidebar-link">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
           <span>Publish &amp; Share</span>
         </a>
-        <a href="/dashboard/analytics/" class="sidebar-link">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-          <span>Analytics</span>
-        </a>
+
         <a href="/dashboard/settings/" class="sidebar-link">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-          <span>Settings</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Account Settings</span>
         </a>
       </nav>
     </div>
 
-    <div class="sidebar-footer">
-      <div class="user-snippet">
-        <div class="user-avatar-small">B</div>
-        <div class="user-info-text">
-          <h4>Sunny</h4>
-          <p>/u/sunny</p>
+    <!-- Sidebar User Footer -->
+    <div class="sidebar-footer" style="padding: var(--space-4); border-top: 1px solid var(--border-color); background-color: var(--bg-surface);">
+      <div class="user-snippet" style="display: flex; align-items: center; gap: 10px;">
+        <div class="user-avatar-small" id="sidebar-avatar" style="width: 32px; height: 32px; border-radius: var(--radius-sm); background: #191A1A; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: var(--font-mono); color: var(--text-primary); font-size: 12px;">P</div>
+        <div class="user-info-text" style="flex: 1; min-width: 0;">
+          <h4 id="sidebar-display-name" style="margin: 0; font-size: var(--text-xs); font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">User</h4>
+          <p id="sidebar-username-handle" style="margin: 0; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">/u/handle</p>
         </div>
       </div>
+      <button type="button" id="signout-btn" class="btn btn-secondary btn-sm" style="width: 100%; margin-top: 10px; font-size: 11px; padding: 6px 12px;">
+        <span>Sign Out</span>
+      </button>
     </div>
   </aside>
 
@@ -105,7 +119,7 @@
   <main class="dashboard-main">
     <header class="dashboard-topbar">
       <div class="topbar-breadcrumbs">
-        <a href="/dashboard/" style="color: inherit; text-decoration: none;">Studio</a>
+        <a href="/dashboard/" style="color: inherit; text-decoration: none;">Dashboard</a>
         <span>/</span>
         <strong>Experience &amp; Certifications</strong>
       </div>

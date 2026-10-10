@@ -1,7 +1,53 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 
+function foliorynRouterPlugin() {
+  return {
+    name: 'folioryn-router-plugin',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (!req.url) return next();
+        try {
+          const urlObj = new URL(req.url, 'http://localhost');
+          const pathname = urlObj.pathname.replace(/\/+$/, '') || '/';
+
+          // 1. Rewrite /u/:slug (except /u/sunny and assets) to /u/index.html?u=:slug
+          if (pathname.startsWith('/u/') && pathname !== '/u/sunny' && !pathname.includes('.')) {
+            const slug = pathname.replace('/u/', '');
+            if (slug && slug !== 'index.html') {
+              req.url = `/u/index.html?u=${encodeURIComponent(slug)}` + (urlObj.search ? '&' + urlObj.search.slice(1) : '');
+              return next();
+            }
+          }
+
+          // 2. Rewrite root routes without trailing slashes
+          const routes = ['about', 'projects', 'blog', 'contact', 'login', 'signup', 'onboarding', 'templates', 'dashboard', 'features', 'explore', 'privacy', 'terms'];
+          const matched = routes.find(r => pathname === `/${r}`);
+          if (matched) {
+            req.url = `/${matched}/index.html` + urlObj.search;
+            return next();
+          }
+
+          // 3. Rewrite dashboard subroutes without trailing slashes
+          if (pathname.startsWith('/dashboard/')) {
+            const sub = pathname.replace('/dashboard/', '');
+            const subs = ['builder', 'projects', 'resume', 'settings', 'blog', 'education', 'skills', 'experience', 'publish', 'analytics'];
+            if (subs.includes(sub)) {
+              req.url = `/dashboard/${sub}/index.html` + urlObj.search;
+              return next();
+            }
+          }
+        } catch {
+          // Pass-through on malformed URL
+        }
+        next();
+      });
+    }
+  };
+}
+
 export default defineConfig({
+  plugins: [foliorynRouterPlugin()],
   build: {
     rollupOptions: {
       input: {
