@@ -154,6 +154,11 @@
    2. MOBILE HAMBURGER & INTERACTIVE DRAWER MENU
    -------------------------------------------------------------------------- */
 
+/* Drawer Mobile Action CTA Buttons (Strictly hidden on desktop) */
+.mobile-drawer-actions {
+  display: none !important;
+}
+
 .mobile-toggle-btn {
   display: none;
   align-items: center;

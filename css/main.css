@@ -207,7 +207,11 @@ body {
   display: none;
 }
 
-/* Mobile Menu Toggle Button */
+/* Mobile Menu Toggle Button & Drawer Actions (Desktop Safe) */
+.mobile-drawer-actions {
+  display: none !important;
+}
+
 .mobile-toggle-btn {
   display: none;
   background: transparent;
