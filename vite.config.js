@@ -28,6 +28,11 @@ function foliorynRouterPlugin() {
             return next();
           }
 
+          if (pathname === '/templates/demo') {
+            req.url = '/templates/demo.html' + urlObj.search;
+            return next();
+          }
+
           // 3. Rewrite dashboard subroutes without trailing slashes
           if (pathname.startsWith('/dashboard/')) {
             const sub = pathname.replace('/dashboard/', '');
@@ -62,6 +67,7 @@ export default defineConfig({
         signup: resolve(__dirname, 'signup/index.html'),
         onboarding: resolve(__dirname, 'onboarding/index.html'),
         templates: resolve(__dirname, 'templates/index.html'),
+        templatesDemo: resolve(__dirname, 'templates/demo.html'),
         dashboard: resolve(__dirname, 'dashboard/index.html'),
         dashboardBuilder: resolve(__dirname, 'dashboard/builder/index.html'),
         dashboardProjects: resolve(__dirname, 'dashboard/projects/index.html'),

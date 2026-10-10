@@ -795,8 +795,10 @@
   }
 
   .a4-preview-canvas a {
-    text-decoration: none !important;
+    text-decoration: underline !important;
     color: #000000 !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
   }
 }
 

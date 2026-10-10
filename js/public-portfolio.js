@@ -111,7 +111,7 @@ function extractUsernameSlug() {
   const activeUser = getActiveUser();
   if (activeUser?.username) return activeUser.username.toLowerCase();
 
-  return 'sunny';
+  return null;
 }
 
 function renderPortfolio(data, username, templateId) {

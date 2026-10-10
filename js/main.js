@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initDashboardSidebar();
   }
 
-  // Make template showroom preview links user-aware if logged in
-  initTemplatePreviews();
+  // Update navbar actions if user is signed in (without replacing homepage)
+  initPublicNavbarAuth();
 
   initConsoleBanner();
 });
@@ -560,20 +560,31 @@ function initConsoleBanner() {
 }
 
 /**
- * Hydrates template showroom preview links to point to active user's portfolio
+ * Updates public navbar actions if a user session is active,
+ * giving quick access to Dashboard without replacing the public platform homepage.
  */
-function initTemplatePreviews() {
+function initPublicNavbarAuth() {
   try {
-    const user = getActiveUser();
-    if (!user?.username) return;
-    const username = encodeURIComponent(user.username.toLowerCase());
+    const rawSession = localStorage.getItem('profilefolio_session') || localStorage.getItem('ssrnovx_mock_session');
+    if (!rawSession) return;
+    const user = JSON.parse(rawSession);
+    if (!user || !user.username) return;
 
-    document.querySelectorAll('a[href*="/u/sunny?template="]').forEach((link) => {
-      const currentHref = link.getAttribute('href');
-      link.href = currentHref.replace('/u/sunny', `/u/${username}`);
+    // Check if on a public page with sign in / sign up buttons
+    const signinLinks = document.querySelectorAll('a[href="/login/"], a[href="/login"]');
+    signinLinks.forEach(link => {
+      link.href = '/dashboard/';
+      link.textContent = 'Dashboard';
+    });
+
+    const signupLinks = document.querySelectorAll('header .btn-primary[href="/signup/"], header .btn-primary[href="/signup"]');
+    signupLinks.forEach(link => {
+      link.href = '/dashboard/builder/';
+      link.textContent = 'Edit Portfolio →';
     });
   } catch (e) {
-    console.warn('Template preview hydration notice:', e);
+    // Non-blocking
   }
 }
+
 
