@@ -8,12 +8,39 @@
 import { authService } from './supabase.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Check if user is already authenticated
+  // Check if user is already authenticated & enforce single active session gate
   try {
     const session = await authService.getSession();
     if (session && session.user) {
+      const activeGate = document.getElementById('active-session-gate');
+      const loginForm = document.getElementById('login-form');
+      const signupForm = document.getElementById('signup-form');
+      const footerEl = document.querySelector('.auth-footer');
+      const userNameEl = document.getElementById('active-session-user-name');
+      const logoutBtn = document.getElementById('active-session-logout-btn');
+
+      const displayName = session.user.display_name || session.user.username || 'User';
+      const cleanName = displayName.replace(/[<>&"]/g, '');
+      const cleanEmail = (session.user.email || session.user.username || '').replace(/[<>&"]/g, '');
+
+      if (activeGate) {
+        activeGate.style.display = 'block';
+        if (loginForm) loginForm.style.display = 'none';
+        if (signupForm) signupForm.style.display = 'none';
+        if (footerEl) footerEl.style.display = 'none';
+
+        if (userNameEl) {
+          userNameEl.textContent = `${cleanName} (${cleanEmail})`;
+        }
+
+        logoutBtn?.addEventListener('click', async () => {
+          await authService.signOut();
+        });
+      }
+
+      // Also support legacy banner if present
       const alertBox = document.getElementById('auth-alert-box');
-      if (alertBox) {
+      if (alertBox && !activeGate) {
         alertBox.style.display = 'flex';
         alertBox.style.padding = '12px 14px';
         alertBox.style.borderRadius = 'var(--radius-sm)';
@@ -26,9 +53,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         alertBox.style.backgroundColor = 'rgba(255, 255, 255, 0.04)';
         alertBox.style.border = '1px solid var(--border-color)';
         alertBox.style.color = 'var(--text-secondary)';
-
-        const displayName = session.user.display_name || session.user.username || 'User';
-        const cleanName = displayName.replace(/[<>&"]/g, '');
 
         alertBox.innerHTML = `
           <span>Signed in as <strong style="color: var(--text-primary);">${cleanName}</strong></span>
@@ -45,6 +69,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   } catch (err) {
     console.warn('Session verification notice:', err);
+  }
+
+  // Check URL params for auth requirement banner
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('auth') === 'required') {
+    showAuthAlert('Authentication required: Please sign in to access your dashboard.', 'error');
   }
 
   // Setup Password Visibility Toggles
@@ -97,28 +127,264 @@ function setupPasswordToggles() {
 }
 
 /**
- * Handle password reset modal / trigger
+ * Handle password recovery modal (Security Question OR Date of Birth verification)
  */
 function setupForgotPassword() {
   const forgotBtn = document.getElementById('forgot-password-btn');
-  if (!forgotBtn) return;
+  const modal = document.getElementById('forgot-password-modal');
+  if (!forgotBtn || !modal) return;
 
-  forgotBtn.addEventListener('click', async () => {
-    const emailInput = document.getElementById('login-email');
-    const email = emailInput?.value.trim();
+  const closeBtn = document.getElementById('close-recovery-modal-btn');
+  const alertEl = document.getElementById('recovery-alert');
 
-    if (!email) {
-      showAuthAlert('Please enter your email address in the field above first.', 'error');
-      emailInput?.focus();
+  // Step containers
+  const step1 = document.getElementById('recovery-step-1');
+  const step2 = document.getElementById('recovery-step-2');
+  const step3 = document.getElementById('recovery-step-3');
+
+  // Step 1 controls
+  const identifierInput = document.getElementById('recovery-identifier');
+  const findAccountBtn = document.getElementById('recovery-find-account-btn');
+
+  // Step 2 controls
+  const userTargetEl = document.getElementById('recovery-user-target');
+  const tabQuestion = document.getElementById('tab-recovery-question');
+  const tabDob = document.getElementById('tab-recovery-dob');
+  const panelQuestion = document.getElementById('panel-recovery-question');
+  const panelDob = document.getElementById('panel-recovery-dob');
+  const displayQuestionEl = document.getElementById('display-security-question');
+  const answerInput = document.getElementById('recovery-security-answer');
+  const verifyQuestionBtn = document.getElementById('recovery-verify-question-btn');
+  const dobInput = document.getElementById('recovery-dob-input');
+  const verifyDobBtn = document.getElementById('recovery-verify-dob-btn');
+  const backToStep1Btn = document.getElementById('recovery-back-to-step1');
+
+  // Step 3 controls
+  const newPasswordInput = document.getElementById('recovery-new-password');
+  const confirmPasswordInput = document.getElementById('recovery-confirm-password');
+  const submitNewPasswordBtn = document.getElementById('recovery-submit-new-password-btn');
+
+  let currentTargetIdentifier = '';
+  let verifiedAccount = null;
+
+  function setAlert(msg, type = 'error') {
+    if (!alertEl) return;
+    alertEl.style.display = 'block';
+    if (type === 'error') {
+      alertEl.style.background = 'rgba(239, 68, 68, 0.1)';
+      alertEl.style.border = '1px solid #ef4444';
+      alertEl.style.color = '#ef4444';
+      alertEl.textContent = msg;
+    } else {
+      alertEl.style.background = 'rgba(34, 197, 94, 0.1)';
+      alertEl.style.border = '1px solid #22c55e';
+      alertEl.style.color = '#22c55e';
+      alertEl.textContent = msg;
+    }
+  }
+
+  function clearAlert() {
+    if (alertEl) {
+      alertEl.style.display = 'none';
+      alertEl.textContent = '';
+    }
+  }
+
+  function resetModal() {
+    clearAlert();
+    if (step1) step1.style.display = 'block';
+    if (step2) step2.style.display = 'none';
+    if (step3) step3.style.display = 'none';
+    if (panelQuestion) panelQuestion.style.display = 'block';
+    if (panelDob) panelDob.style.display = 'none';
+    if (answerInput) answerInput.value = '';
+    if (dobInput) dobInput.value = '';
+    if (newPasswordInput) newPasswordInput.value = '';
+    if (confirmPasswordInput) confirmPasswordInput.value = '';
+    currentTargetIdentifier = '';
+    verifiedAccount = null;
+
+    if (tabQuestion) {
+      tabQuestion.style.background = 'var(--bg-surface)';
+      tabQuestion.style.color = 'var(--text-primary)';
+      tabQuestion.style.borderColor = 'var(--border-color)';
+    }
+    if (tabDob) {
+      tabDob.style.background = 'transparent';
+      tabDob.style.color = 'var(--text-secondary)';
+      tabDob.style.borderColor = 'transparent';
+    }
+  }
+
+  forgotBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    resetModal();
+    const loginEmail = document.getElementById('login-email')?.value.trim();
+    if (loginEmail && identifierInput) {
+      identifierInput.value = loginEmail;
+    }
+    if (typeof modal.showModal === 'function') {
+      modal.showModal();
+    } else {
+      modal.style.display = 'block';
+    }
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    if (typeof modal.close === 'function') modal.close();
+    else modal.style.display = 'none';
+  });
+
+  // Tab switching: Security Question vs Date of Birth
+  tabQuestion?.addEventListener('click', () => {
+    clearAlert();
+    if (panelQuestion) panelQuestion.style.display = 'block';
+    if (panelDob) panelDob.style.display = 'none';
+    tabQuestion.style.background = 'var(--bg-surface)';
+    tabQuestion.style.color = 'var(--text-primary)';
+    tabQuestion.style.borderColor = 'var(--border-color)';
+    if (tabDob) {
+      tabDob.style.background = 'transparent';
+      tabDob.style.color = 'var(--text-secondary)';
+      tabDob.style.borderColor = 'transparent';
+    }
+  });
+
+  tabDob?.addEventListener('click', () => {
+    clearAlert();
+    if (panelQuestion) panelQuestion.style.display = 'none';
+    if (panelDob) panelDob.style.display = 'block';
+    tabDob.style.background = 'var(--bg-surface)';
+    tabDob.style.color = 'var(--text-primary)';
+    tabDob.style.borderColor = 'var(--border-color)';
+    if (tabQuestion) {
+      tabQuestion.style.background = 'transparent';
+      tabQuestion.style.color = 'var(--text-secondary)';
+      tabQuestion.style.borderColor = 'transparent';
+    }
+  });
+
+  // Step 1: Find Account
+  findAccountBtn?.addEventListener('click', async () => {
+    clearAlert();
+    const val = identifierInput?.value.trim();
+    if (!val) {
+      setAlert('Please enter your email address or username.', 'error');
       return;
     }
 
     try {
-      showAuthAlert('Sending password reset instructions...', 'success');
-      await authService.resetPasswordForEmail(email);
-      showAuthAlert(`Password reset link sent to ${email}. Please check your inbox.`, 'success');
+      findAccountBtn.disabled = true;
+      findAccountBtn.textContent = 'Searching...';
+      const details = await authService.getUserSecurityDetails(val);
+      currentTargetIdentifier = val;
+      verifiedAccount = details;
+
+      if (userTargetEl) userTargetEl.textContent = `${details.username} (${details.email})`;
+      if (displayQuestionEl) displayQuestionEl.textContent = details.securityQuestion || 'What was the name of your first school?';
+
+      step1.style.display = 'none';
+      step2.style.display = 'block';
     } catch (err) {
-      showAuthAlert(err.message || 'Failed to send reset link. Try again later.', 'error');
+      setAlert(err.message || 'Account not found.', 'error');
+    } finally {
+      findAccountBtn.disabled = false;
+      findAccountBtn.textContent = 'Find Account →';
+    }
+  });
+
+  backToStep1Btn?.addEventListener('click', () => {
+    resetModal();
+  });
+
+  // Step 2A: Verify Security Question
+  verifyQuestionBtn?.addEventListener('click', async () => {
+    clearAlert();
+    const answer = answerInput?.value.trim();
+    if (!answer) {
+      setAlert('Please enter your security answer.', 'error');
+      return;
+    }
+
+    try {
+      verifyQuestionBtn.disabled = true;
+      verifyQuestionBtn.textContent = 'Verifying...';
+      await authService.verifySecurityQuestion(currentTargetIdentifier, answer);
+      step2.style.display = 'none';
+      step3.style.display = 'block';
+      clearAlert();
+    } catch (err) {
+      setAlert(err.message || 'Incorrect security answer.', 'error');
+    } finally {
+      verifyQuestionBtn.disabled = false;
+      verifyQuestionBtn.textContent = 'Verify Security Question →';
+    }
+  });
+
+  // Step 2B: Verify Date of Birth
+  verifyDobBtn?.addEventListener('click', async () => {
+    clearAlert();
+    const dob = dobInput?.value.trim();
+    if (!dob) {
+      setAlert('Please enter your Date of Birth.', 'error');
+      return;
+    }
+
+    try {
+      verifyDobBtn.disabled = true;
+      verifyDobBtn.textContent = 'Verifying...';
+      await authService.verifyDateOfBirth(currentTargetIdentifier, dob);
+      step2.style.display = 'none';
+      step3.style.display = 'block';
+      clearAlert();
+    } catch (err) {
+      setAlert(err.message || 'Date of Birth does not match account records.', 'error');
+    } finally {
+      verifyDobBtn.disabled = false;
+      verifyDobBtn.textContent = 'Verify Date of Birth →';
+    }
+  });
+
+  // Step 3: Save New Password
+  submitNewPasswordBtn?.addEventListener('click', async () => {
+    clearAlert();
+    const newPwd = newPasswordInput?.value || '';
+    const confirmPwd = confirmPasswordInput?.value || '';
+
+    if (!newPwd || newPwd.length < 8) {
+      setAlert('New password must be at least 8 characters long.', 'error');
+      return;
+    }
+    if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(newPwd)) {
+      setAlert('New password must contain both letters and numbers.', 'error');
+      return;
+    }
+    if (newPwd !== confirmPwd) {
+      setAlert('Passwords do not match. Please re-enter identical passwords.', 'error');
+      return;
+    }
+
+    try {
+      submitNewPasswordBtn.disabled = true;
+      submitNewPasswordBtn.textContent = 'Updating password...';
+      await authService.resetPasswordWithVerification(currentTargetIdentifier, newPwd);
+
+      if (typeof modal.close === 'function') modal.close();
+      else modal.style.display = 'none';
+
+      // Pre-fill email on login page
+      const emailField = document.getElementById('login-email');
+      if (emailField && verifiedAccount) {
+        emailField.value = verifiedAccount.email || verifiedAccount.username;
+      }
+      document.getElementById('login-password')?.focus();
+
+      showAuthAlert('Password reset successfully! You can now sign in with your new password.', 'success');
+    } catch (err) {
+      setAlert(err.message || 'Failed to update password.', 'error');
+    } finally {
+      submitNewPasswordBtn.disabled = false;
+      submitNewPasswordBtn.textContent = 'Save Password & Sign In';
     }
   });
 }
@@ -147,9 +413,22 @@ function initLoginForm(form) {
       }
 
       await authService.signInWithPassword(email, password);
-      showAuthAlert('Signed in successfully! Redirecting to Dashboard...', 'success');
+      showAuthAlert('Signed in successfully! Redirecting...', 'success');
+      const params = new URLSearchParams(window.location.search);
+      const redirectParam = params.get('redirect');
+      let target = '/dashboard/';
+      if (redirectParam) {
+        try {
+          const decoded = decodeURIComponent(redirectParam);
+          if (decoded.startsWith('/') && !decoded.startsWith('//')) {
+            target = decoded;
+          }
+        } catch (e) {
+          target = '/dashboard/';
+        }
+      }
       setTimeout(() => {
-        window.location.href = '/dashboard/';
+        window.location.href = target;
       }, 500);
     } catch (err) {
       showAuthAlert(err.message || 'Invalid email or password. Please try again.', 'error');
@@ -170,6 +449,9 @@ function initSignupForm(form) {
   const emailInput = document.getElementById('signup-email');
   const passwordInput = document.getElementById('signup-password');
   const confirmPasswordInput = document.getElementById('signup-confirm-password');
+  const dobInput = document.getElementById('signup-dob');
+  const securityQuestionInput = document.getElementById('signup-security-question');
+  const securityAnswerInput = document.getElementById('signup-security-answer');
   const termsCheckbox = document.getElementById('signup-terms');
   const submitBtn = document.getElementById('signup-submit-btn');
   const submitText = document.getElementById('signup-btn-text');
@@ -271,6 +553,8 @@ function initSignupForm(form) {
   // 4. Clear input errors on user interaction
   nameInput?.addEventListener('input', () => clearFieldError('name'));
   emailInput?.addEventListener('input', () => clearFieldError('email'));
+  dobInput?.addEventListener('input', () => clearFieldError('dob'));
+  securityAnswerInput?.addEventListener('input', () => clearFieldError('security-answer'));
   termsCheckbox?.addEventListener('change', () => clearFieldError('terms'));
 
   // 5. Submit Handler
@@ -283,6 +567,9 @@ function initSignupForm(form) {
     const email = emailInput?.value.trim().toLowerCase() || '';
     const password = passwordInput?.value || '';
     const confirmPassword = confirmPasswordInput?.value || '';
+    const dob = dobInput?.value.trim() || '';
+    const securityQuestion = securityQuestionInput?.value.trim() || '';
+    const securityAnswer = securityAnswerInput?.value.trim() || '';
     const termsAccepted = termsCheckbox?.checked;
 
     let hasErrors = false;
@@ -344,6 +631,20 @@ function initSignupForm(form) {
       hasErrors = true;
     }
 
+    // Validate Date of Birth
+    if (!dob) {
+      setFieldError('dob', 'Please select your Date of Birth for identity verification.');
+      if (!hasErrors) dobInput?.focus();
+      hasErrors = true;
+    }
+
+    // Validate Security Answer
+    if (!securityAnswer || securityAnswer.length < 2) {
+      setFieldError('security-answer', 'Please enter a security answer (at least 2 characters).');
+      if (!hasErrors) securityAnswerInput?.focus();
+      hasErrors = true;
+    }
+
     // Validate Terms Acceptance
     if (!termsAccepted) {
       setFieldError('terms', 'You must agree to the Terms of Service and Privacy Policy to continue.');
@@ -379,12 +680,19 @@ function initSignupForm(form) {
       const initialProfile = {
         fullName,
         username,
-        email
+        email,
+        dob
       };
       localStorage.setItem('folioryn_user_profile', JSON.stringify(initialProfile));
       localStorage.setItem('profilefolio_user_profile', JSON.stringify(initialProfile));
 
-      await authService.signUp(email, password, { username, fullName });
+      await authService.signUp(email, password, {
+        username,
+        fullName,
+        dob,
+        securityQuestion,
+        securityAnswer
+      });
 
       showAuthAlert('Account created successfully! Preparing your onboarding guide...', 'success');
       setTimeout(() => {
@@ -491,7 +799,15 @@ function clearFieldError(fieldId) {
  */
 function showAuthAlert(message, type = 'error') {
   clearAuthAlert();
-  const alert = document.getElementById('auth-alert-box');
+  let alert = document.getElementById('auth-alert-box');
+  if (!alert) {
+    alert = document.createElement('div');
+    alert.id = 'auth-alert-box';
+    const form = document.getElementById('login-form') || document.getElementById('signup-form') || document.querySelector('form');
+    if (form && form.parentNode) {
+      form.parentNode.insertBefore(alert, form);
+    }
+  }
   if (!alert) return;
 
   alert.style.display = 'flex';

@@ -94,9 +94,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!currentGitHubUser && user?.github_handle) {
     currentGitHubUser = extractGitHubUsername(user.github_handle);
   }
-  if (!currentGitHubUser && profile?.username === 'sunny') {
-    currentGitHubUser = 'ssrnov';
-  }
 
   const handleInput = document.getElementById('github-handle-input');
   if (handleInput && currentGitHubUser) {

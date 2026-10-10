@@ -103,6 +103,26 @@
       <!-- Live Server / Form Alert Box -->
       <div id="auth-alert-box" style="display: none;" role="alert"></div>
 
+      <!-- Active Session Gate (Displayed when a user is already signed in) -->
+      <div id="active-session-gate" style="display: none; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-6); text-align: center; margin-bottom: var(--space-4);">
+        <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; color: var(--accent-primary);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <h2 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Active Session Detected</h2>
+        <p style="font-size: var(--text-xs); color: var(--text-secondary); margin: 0 0 16px 0;">
+          You are currently signed in as <strong id="active-session-user-name" style="color: var(--text-primary);">User</strong>. Another account cannot be registered while this session is active.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <a href="/dashboard/" class="btn btn-primary" style="justify-content: center; font-weight: 600; text-decoration: none;">
+            <span>Continue to Dashboard</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+          <button type="button" id="active-session-logout-btn" class="btn btn-secondary" style="justify-content: center; font-weight: 600;">
+            Sign Out to Create New Account
+          </button>
+        </div>
+      </div>
+
       <!-- Registration Form -->
       <form id="signup-form" novalidate autocomplete="on">
         
@@ -235,7 +255,49 @@
           <div class="field-error-msg" id="confirm-password-error" role="alert"></div>
         </div>
 
-        <!-- 6. Terms Checkbox -->
+        <!-- 6. Date of Birth (Account Recovery) -->
+        <div class="form-group-compact">
+          <label for="signup-dob" class="form-label">Date of birth <span style="font-size: 11px; color: var(--text-muted);">(for account recovery)</span></label>
+          <input
+            type="date"
+            id="signup-dob"
+            name="dob"
+            class="form-input"
+            required
+            aria-describedby="dob-error"
+          />
+          <div class="field-error-msg" id="dob-error" role="alert"></div>
+        </div>
+
+        <!-- 7. Security Question -->
+        <div class="form-group-compact">
+          <label for="signup-security-question" class="form-label">Security question <span style="font-size: 11px; color: var(--text-muted);">(for account recovery)</span></label>
+          <select id="signup-security-question" name="securityQuestion" class="form-input" style="cursor: pointer; background: var(--bg-surface); color: var(--text-primary);">
+            <option value="What was the name of your first school?">What was the name of your first school?</option>
+            <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+            <option value="What was the make of your first car or bike?">What was the make of your first car or bike?</option>
+            <option value="In what city or town were you born?">In what city or town were you born?</option>
+            <option value="What was the name of your first childhood pet?">What was the name of your first childhood pet?</option>
+          </select>
+        </div>
+
+        <!-- 8. Security Answer -->
+        <div class="form-group-compact">
+          <label for="signup-security-answer" class="form-label">Security answer</label>
+          <input
+            type="text"
+            id="signup-security-answer"
+            name="securityAnswer"
+            class="form-input"
+            placeholder="Your secret answer"
+            required
+            autocomplete="off"
+            aria-describedby="security-answer-error"
+          />
+          <div class="field-error-msg" id="security-answer-error" role="alert"></div>
+        </div>
+
+        <!-- 9. Terms Checkbox -->
         <div class="form-group-compact" style="margin-bottom: var(--space-5);">
           <label class="auth-checkbox-label">
             <input type="checkbox" id="signup-terms" name="terms" required aria-describedby="terms-error" />

@@ -13,7 +13,9 @@ import {
   getProjects,
   getPublishSettings,
   getBlogArticles,
-  calculateProfileCompletion
+  calculateProfileCompletion,
+  getProfileCompletionDetails,
+  duplicatePortfolio
 } from './profile-data.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -26,6 +28,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   } catch (err) {
     console.warn('Session check in dashboard:', err);
+  }
+
+  // Strictly block entry if not logged in
+  if (!activeUser) {
+    const target = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.replace(`/login/?redirect=${target}&auth=required`);
+    return;
   }
 
   // Load user data from user-scoped storage and backend
@@ -41,6 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   populateRecentArticles();
   setupSignOut();
   setupCopyLink();
+  setupDuplicatePortfolio();
 });
 
 function updateDashboardUI(profile, publishSettings, education, skills, experiences) {
@@ -64,12 +74,24 @@ function updateDashboardUI(profile, publishSettings, education, skills, experien
     welcomeGreeting.textContent = `Welcome back, ${fullName.split(' ')[0]}`;
   }
 
-  // Calculate Real Profile Completion %
-  const percentage = calculateProfileCompletion();
+  // Calculate Real Profile Completion % & Actionable Suggestions (Feature 8)
+  const completionDetails = getProfileCompletionDetails();
+  const percentage = completionDetails.percentage;
   const elPercentage = document.getElementById('completion-percentage');
   const elBar = document.getElementById('completion-progress-bar');
   if (elPercentage) elPercentage.textContent = `${percentage}%`;
   if (elBar) elBar.style.width = `${percentage}%`;
+
+  // Render Actionable Suggestions with Section Jump Links
+  const checklistContainer = document.getElementById('dashboard-checklist-container');
+  if (checklistContainer) {
+    checklistContainer.innerHTML = completionDetails.suggestions.map(s => `
+      <a href="${s.link}" class="badge" style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: var(--radius-sm); border: 1px solid ${s.done ? 'rgba(34, 197, 94, 0.4)' : 'var(--border-color)'}; background: ${s.done ? 'rgba(34, 197, 94, 0.08)' : 'var(--bg-secondary)'}; color: ${s.done ? '#22c55e' : 'var(--text-secondary)'};" title="Click to complete this section">
+        <span>${s.done ? '✓' : '+'}</span>
+        <span>${escapeHtml(s.title)}</span>
+      </a>
+    `).join('');
+  }
 
   // Publish Status
   const isPublished = publishSettings?.isPublished !== false;
@@ -112,50 +134,6 @@ function updateDashboardUI(profile, publishSettings, education, skills, experien
   const copyBtn = document.getElementById('copy-link-btn');
   if (copyBtn) {
     copyBtn.setAttribute('data-slug', username);
-  }
-
-  // Update Dynamic Checklist Pills
-  const pillBio = document.getElementById('pill-bio');
-  if (pillBio) {
-    const hasBio = Boolean(profile?.bio && profile.bio.length > 15);
-    pillBio.innerHTML = hasBio ? '&check; Personal Bio' : '+ Add Bio';
-    pillBio.style.color = hasBio ? 'var(--text-primary)' : 'var(--text-muted)';
-  }
-
-  const pillEdu = document.getElementById('pill-education');
-  if (pillEdu) {
-    const hasEdu = Boolean(education && education.length > 0);
-    pillEdu.innerHTML = hasEdu ? `&check; Education (${education.length})` : '+ Add Education';
-    pillEdu.style.color = hasEdu ? 'var(--text-primary)' : 'var(--text-muted)';
-  }
-
-  const pillSkills = document.getElementById('pill-skills');
-  if (pillSkills) {
-    const hasSkills = Boolean(skills && skills.length > 0);
-    pillSkills.innerHTML = hasSkills ? `&check; Skills Matrix (${skills.length})` : '+ Add Skills';
-    pillSkills.style.color = hasSkills ? 'var(--text-primary)' : 'var(--text-muted)';
-  }
-
-  const pillProj = document.getElementById('pill-projects');
-  if (pillProj) {
-    const projects = getProjects();
-    const hasProj = Boolean(projects && projects.length > 0);
-    pillProj.innerHTML = hasProj ? `&check; Featured Projects (${projects.length})` : '+ Add Projects';
-    pillProj.style.color = hasProj ? 'var(--text-primary)' : 'var(--text-muted)';
-  }
-
-  const pillExp = document.getElementById('pill-experience');
-  if (pillExp) {
-    const hasExp = Boolean(experiences && experiences.length > 0);
-    pillExp.innerHTML = hasExp ? `&check; Experience (${experiences.length})` : '+ Add Experience';
-    pillExp.style.color = hasExp ? 'var(--text-primary)' : 'var(--text-muted)';
-  }
-
-  const pillSocial = document.getElementById('pill-social');
-  if (pillSocial) {
-    const hasSocial = Boolean(profile?.githubUrl || profile?.linkedinUrl || profile?.twitterUrl);
-    pillSocial.innerHTML = hasSocial ? '&check; Social Profiles Connected' : '+ Connect Social Links';
-    pillSocial.style.color = hasSocial ? 'var(--text-primary)' : 'var(--text-muted)';
   }
 
   // Update Dynamic Activity Items
@@ -254,6 +232,33 @@ function setupCopyLink() {
           copyBtn.textContent = 'Copy Link';
         }, 2000);
       });
+    }
+  });
+}
+
+function setupDuplicatePortfolio() {
+  const dupBtn = document.getElementById('duplicate-portfolio-btn');
+  if (!dupBtn) return;
+
+  dupBtn.addEventListener('click', async () => {
+    const confirmed = window.confirm(
+      'Duplicate Portfolio: This will create an independent editable draft copy with a unique URL slug. Proceed?'
+    );
+    if (!confirmed) return;
+
+    dupBtn.disabled = true;
+    dupBtn.textContent = 'Duplicating...';
+
+    try {
+      const result = duplicatePortfolio();
+      alert(`✓ Portfolio successfully duplicated!\n\nNew Draft Copy: /u/${result.slug}\nTitle: ${result.title}`);
+      window.location.reload();
+    } catch (err) {
+      console.error('Portfolio duplication error:', err);
+      alert(err.message || 'Could not duplicate portfolio.');
+    } finally {
+      dupBtn.disabled = false;
+      dupBtn.textContent = 'Duplicate';
     }
   });
 }

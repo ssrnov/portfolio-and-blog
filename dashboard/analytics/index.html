@@ -22,12 +22,20 @@
 
   <script>
     (function () {
-      const storedTheme = localStorage.getItem('theme');
-      if (storedTheme) {
-        document.documentElement.setAttribute('data-theme', storedTheme);
-      } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      try {
+        var raw = localStorage.getItem('profilefolio_session') ||
+                  localStorage.getItem('ssrnovx_mock_session') ||
+                  localStorage.getItem('profilefolio_active_user');
+        var user = raw ? JSON.parse(raw) : null;
+        if (!user || (!user.id && !user.username && !user.email)) {
+          var target = encodeURIComponent(window.location.pathname + window.location.search);
+          window.location.replace('/login/?redirect=' + target + '&auth=required');
+        }
+      } catch (e) {
+        var target = encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.replace('/login/?redirect=' + target + '&auth=required');
       }
     })();
   </script>
@@ -117,46 +125,267 @@
       </div>
     </header>
 
-    <div class="dashboard-content" style="max-width: 900px;">
+    <div class="dashboard-content" style="max-width: 1080px;">
       
-      <div style="margin-bottom: var(--space-6);">
-        <h1 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">Portfolio Analytics &amp; Engagement</h1>
-        <p style="font-size: var(--text-sm); color: var(--text-secondary); margin: 0;">
-          Privacy-friendly telemetry. Aggregate counts, referrer sources, and engagement without invasive cookies or user tracking.
-        </p>
+      <!-- Page Header -->
+      <div style="margin-bottom: var(--space-6); display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4);">
+        <div>
+          <h1 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">Portfolio &amp; Project Analytics</h1>
+          <p style="font-size: var(--text-sm); color: var(--text-secondary); margin: 0;">
+            Privacy-first engagement telemetry, project-level conversion metrics, and date-range comparison.
+          </p>
+        </div>
+        <div id="analytics-status-msg" style="display: none;"></div>
       </div>
 
-      <!-- KPI Summary Cards -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-6);">
+      <!-- Controls & Date Comparison Toolbar -->
+      <section class="analytics-toolbar" aria-label="Analytics Filter Controls">
+        <div style="display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;">
+          <label style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Timeframe:</label>
+          <div class="preset-group" role="group" aria-label="Date presets">
+            <button type="button" class="preset-btn" data-preset="7d" id="preset-7d">Last 7 Days</button>
+            <button type="button" class="preset-btn active" data-preset="30d" id="preset-30d">Last 30 Days</button>
+            <button type="button" class="preset-btn" data-preset="90d" id="preset-90d">Last 90 Days</button>
+            <button type="button" class="preset-btn" data-preset="custom" id="preset-custom">Custom</button>
+          </div>
+
+          <!-- Custom Date Range Form (collapsible) -->
+          <div id="custom-date-container" class="custom-date-box" style="display: none;">
+            <input type="date" id="custom-start-date" class="custom-date-input" aria-label="Start date" />
+            <span style="font-size: var(--text-xs); color: var(--text-muted);">&ndash;</span>
+            <input type="date" id="custom-end-date" class="custom-date-input" aria-label="End date (inclusive)" />
+            <button type="button" id="apply-custom-date-btn" class="btn btn-secondary btn-card" style="padding: 4px 10px; font-size: 11px;">Apply</button>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;">
+          <label for="project-filter-select" style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Filter Project:</label>
+          <select id="project-filter-select" class="custom-date-input" style="font-family: var(--font-sans); padding: 6px 12px; min-width: 170px;">
+            <option value="all">All Projects &amp; Overview</option>
+            <!-- Injected dynamically by dashboard-analytics.js -->
+          </select>
+        </div>
+      </section>
+
+      <!-- Active Comparison Period Banner -->
+      <div id="comparison-banner" style="background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 10px 16px; margin-bottom: var(--space-6); display: flex; justify-content: space-between; align-items: center; font-size: var(--text-xs); flex-wrap: wrap; gap: 8px;">
+        <div>
+          <span style="color: var(--text-muted);">Comparing:</span>
+          <strong id="current-range-label" style="color: var(--text-primary); margin-left: 4px;">Oct 4 – Oct 10, 2026</strong>
+          <span style="color: var(--text-muted); margin: 0 6px;">versus previous equal period:</span>
+          <span id="prev-range-label" style="color: var(--text-secondary); font-family: var(--font-mono);">Sep 27 – Oct 3, 2026</span>
+        </div>
+        <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);" id="tz-indicator">Timezone: Local</div>
+      </div>
+
+      <!-- Loading & Error Alert States -->
+      <div id="analytics-error-banner" style="display: none; background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: var(--radius-md); padding: 14px; margin-bottom: var(--space-6); color: #f43f5e; font-size: var(--text-sm);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span id="analytics-error-text">Failed to query analytics telemetry.</span>
+          <button type="button" id="analytics-retry-btn" class="btn btn-secondary btn-card" style="padding: 4px 10px; font-size: 11px;">Retry Query</button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards (6 Cards with Comparison Badges) -->
+      <section class="analytics-kpi-grid" aria-label="Key Performance Indicators">
         
-        <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
-          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Total Page Views</span>
-          <div id="metric-total-views" style="font-size: var(--text-2xl); font-weight: 800; color: var(--accent-primary); margin-top: 4px;">0</div>
+        <!-- 1. Portfolio Page Views -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Portfolio Views</span>
+            <span id="badge-portfolio-views" class="trend-badge trend-neutral">0%</span>
+          </div>
+          <div class="kpi-value-row">
+            <span id="metric-portfolio-views" class="kpi-value">0</span>
+          </div>
+          <div id="prev-portfolio-views" class="kpi-comparison-note">Prev period: 0</div>
         </div>
 
-        <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
-          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Unique Referrers</span>
-          <div id="metric-unique-ref" style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin-top: 4px;">0</div>
+        <!-- 2. Project Detail Views -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Project Detail Views</span>
+            <span id="badge-project-views" class="trend-badge trend-neutral">0%</span>
+          </div>
+          <div class="kpi-value-row">
+            <span id="metric-project-views" class="kpi-value">0</span>
+          </div>
+          <div id="prev-project-views" class="kpi-comparison-note">Prev period: 0</div>
         </div>
 
-        <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
-          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Project Demo Clicks</span>
-          <div id="metric-project-clicks" style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin-top: 4px;">0</div>
+        <!-- 3. GitHub Repository Clicks -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">GitHub Repo Clicks</span>
+            <span id="badge-github-clicks" class="trend-badge trend-neutral">0%</span>
+          </div>
+          <div class="kpi-value-row">
+            <span id="metric-github-clicks" class="kpi-value">0</span>
+          </div>
+          <div id="prev-github-clicks" class="kpi-comparison-note">Prev period: 0</div>
         </div>
 
-        <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
-          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Resume Downloads</span>
-          <div id="metric-resume-downloads" style="font-size: var(--text-2xl); font-weight: 800; color: #27c93f; margin-top: 4px;">0</div>
+        <!-- 4. Live Demo Clicks -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Live Demo Clicks</span>
+            <span id="badge-demo-clicks" class="trend-badge trend-neutral">0%</span>
+          </div>
+          <div class="kpi-value-row">
+            <span id="metric-demo-clicks" class="kpi-value">0</span>
+          </div>
+          <div id="prev-demo-clicks" class="kpi-comparison-note">Prev period: 0</div>
         </div>
 
-      </div>
+        <!-- 5. ATS Resume Downloads -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Resume Downloads</span>
+            <span id="badge-resume-downloads" class="trend-badge trend-neutral">0%</span>
+          </div>
+          <div class="kpi-value-row">
+            <span id="metric-resume-downloads" class="kpi-value">0</span>
+          </div>
+          <div id="prev-resume-downloads" class="kpi-comparison-note">Prev period: 0</div>
+        </div>
+
+        <!-- 6. Inbound Contact Inquiries -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Contact Inquiries</span>
+            <span id="badge-contact-submits" class="trend-badge trend-neutral">0%</span>
+          </div>
+          <div class="kpi-value-row">
+            <span id="metric-contact-submits" class="kpi-value">0</span>
+          </div>
+          <div id="prev-contact-submits" class="kpi-comparison-note">Prev period: 0</div>
+        </div>
+
+      </section>
+
+      <!-- Project Detail Analytics Drill-Down Panel (Collapsible) -->
+      <section id="project-detail-panel" class="project-detail-panel" style="display: none;" aria-label="Project Detail Analytics">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-4); flex-wrap: wrap; gap: var(--space-3);">
+          <div>
+            <span class="badge" id="proj-detail-badge" style="font-family: var(--font-mono); font-size: 11px; margin-bottom: 4px; display: inline-block;">Project Drilldown</span>
+            <h2 id="proj-detail-title" style="font-size: var(--text-xl); font-weight: 800; color: var(--text-primary); margin: 0;">Project Name</h2>
+          </div>
+          <div style="display: flex; gap: var(--space-2);">
+            <a href="/dashboard/projects/" id="proj-detail-edit-link" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">Edit in Project Manager &rarr;</a>
+            <button type="button" id="proj-detail-close-btn" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">&times; Close Drilldown</button>
+          </div>
+        </div>
+
+        <!-- Formula Definition Card -->
+        <div class="formula-box">
+          <strong style="color: var(--text-primary);">Metric Definition &bull; Interaction Rate:</strong>
+          Calculated as <code style="font-family: var(--font-mono); color: var(--accent-primary);">(Total Project Clicks + Detail Views) / (Portfolio Page Views) &times; 100%</code>.
+          Distinguishes raw page impressions from engaged actions on your GitHub code and live deployments.
+        </div>
+
+        <!-- Project Detail KPIs -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-6);">
+          <div class="kpi-card" style="background: var(--bg-secondary);">
+            <span class="kpi-title">Project Detail Views</span>
+            <div id="proj-metric-views" class="kpi-value" style="margin-top: 4px;">0</div>
+            <div id="proj-prev-views" class="kpi-comparison-note">Prev: 0</div>
+          </div>
+
+          <div class="kpi-card" style="background: var(--bg-secondary);">
+            <span class="kpi-title">GitHub Repo Clicks</span>
+            <div id="proj-metric-github" class="kpi-value" style="margin-top: 4px;">0</div>
+            <div id="proj-prev-github" class="kpi-comparison-note">Prev: 0</div>
+          </div>
+
+          <div class="kpi-card" style="background: var(--bg-secondary);">
+            <span class="kpi-title">Live Demo Clicks</span>
+            <div id="proj-metric-demo" class="kpi-value" style="margin-top: 4px;">0</div>
+            <div id="proj-prev-demo" class="kpi-comparison-note">Prev: 0</div>
+          </div>
+
+          <div class="kpi-card" style="background: var(--bg-secondary);">
+            <span class="kpi-title">Interaction Rate</span>
+            <div id="proj-metric-rate" class="kpi-value" style="margin-top: 4px; color: var(--accent-primary);">0%</div>
+            <div class="kpi-comparison-note">Conversion to project interest</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Vector SVG Trend Chart -->
+      <section class="analytics-chart-card" aria-label="Views & Interactivity Trend Chart">
+        <div class="chart-header">
+          <div>
+            <h2 id="chart-headline" class="chart-title">Visitor Traffic &amp; Project Interactions Over Time</h2>
+            <p id="chart-subhead" style="font-size: var(--text-xs); color: var(--text-muted); margin: 2px 0 0 0;">Daily activity points for the selected period</p>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="legend-dot" style="background: var(--accent-primary);"></span>
+              <span>Portfolio Views</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #38bdf8;"></span>
+              <span>Project Views</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #22c55e;"></span>
+              <span>Interactions (Clicks)</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="chart-container" class="analytics-svg-wrapper">
+          <!-- Dynamically drawn SVG chart or clean empty state -->
+        </div>
+      </section>
+
+      <!-- Project Performance Table Section -->
+      <section class="analytics-table-card" aria-label="Project Performance Breakdown">
+        <div class="table-toolbar">
+          <div>
+            <h2 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0;">Project Performance Table</h2>
+            <p style="font-size: var(--text-xs); color: var(--text-muted); margin: 2px 0 0 0;">Individual engagement breakdown across your portfolio projects</p>
+          </div>
+          <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+            <div class="search-input-box">
+              <input type="text" id="project-search-input" class="table-search-input" placeholder="Search projects by title..." aria-label="Search projects by title" />
+            </div>
+            <select id="project-sort-select" class="custom-date-input" style="padding: 8px 12px;">
+              <option value="interactions-desc">Sort: Interactions (High &rarr; Low)</option>
+              <option value="views-desc">Sort: Detail Views (High &rarr; Low)</option>
+              <option value="github-desc">Sort: GitHub Clicks (High &rarr; Low)</option>
+              <option value="demo-desc">Sort: Demo Clicks (High &rarr; Low)</option>
+              <option value="title-asc">Sort: Project Name (A &rarr; Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="analytics-table-wrapper">
+          <table class="analytics-table" id="project-performance-table">
+            <thead>
+              <tr>
+                <th scope="col" style="min-width: 180px;">Project Name</th>
+                <th scope="col" class="sortable" data-sort="views">Views</th>
+                <th scope="col" class="sortable" data-sort="github">GitHub Clicks</th>
+                <th scope="col" class="sortable" data-sort="demo">Demo Clicks</th>
+                <th scope="col" class="sortable" data-sort="interactions">Interactions</th>
+                <th scope="col">Period Change</th>
+                <th scope="col" style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="project-table-tbody">
+              <!-- Rendered dynamically by js/dashboard-analytics.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <!-- Split Layout: Referrers & Devices -->
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-6);">
         
         <!-- Referrers List -->
         <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
-          <h3 style="font-size: var(--text-base); font-weight: 700; margin: 0 0 var(--space-4) 0;">Top Referring Sources</h3>
+          <h2 style="font-size: var(--text-base); font-weight: 700; margin: 0 0 var(--space-4) 0; color: var(--text-primary);">Top Referring Sources</h2>
           <div id="referrers-list-container">
             <!-- Rendered by js/dashboard-analytics.js -->
           </div>
@@ -164,25 +393,25 @@
 
         <!-- Device Breakdown -->
         <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
-          <h3 style="font-size: var(--text-base); font-weight: 700; margin: 0 0 var(--space-4) 0;">Device Breakdown</h3>
+          <h2 style="font-size: var(--text-base); font-weight: 700; margin: 0 0 var(--space-4) 0; color: var(--text-primary);">Device Category Breakdown</h2>
           
           <div style="display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-4);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span style="font-size: var(--text-xs); color: var(--text-secondary);">Desktop Browsers</span>
-              <strong id="dev-desktop-pct" style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--accent-primary);">68%</strong>
+              <strong id="dev-desktop-pct" style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--accent-primary);">0%</strong>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span style="font-size: var(--text-xs); color: var(--text-secondary);">Mobile Devices</span>
-              <strong id="dev-mobile-pct" style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--accent-secondary);">27%</strong>
+              <strong id="dev-mobile-pct" style="font-family: var(--font-mono); font-size: var(--text-sm); color: #38bdf8;">0%</strong>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span style="font-size: var(--text-xs); color: var(--text-secondary);">Tablets &amp; Large Displays</span>
-              <strong id="dev-tablet-pct" style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-muted);">5%</strong>
+              <strong id="dev-tablet-pct" style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-muted);">0%</strong>
             </div>
           </div>
 
-          <div style="margin-top: var(--space-6); background: var(--bg-secondary); border-radius: var(--radius-md); padding: 12px; font-size: 11px; color: var(--text-muted);">
-            <strong>Privacy Guarantee:</strong> BuildLab uses cryptographic IP hashing without persistent cross-site cookies. Compliant with GDPR and modern browser privacy policies.
+          <div style="margin-top: var(--space-6); background: var(--bg-secondary); border-radius: var(--radius-md); padding: 12px; font-size: 11px; color: var(--text-muted); line-height: 1.5;">
+            <strong>Privacy Guarantee:</strong> Folioryn collects anonymous aggregated metrics without cross-site tracker cookies or fingerprinting. Full compliance with GDPR and browser tracking protection.
           </div>
         </div>
 
@@ -190,7 +419,7 @@
 
       <!-- Recent Visits Stream -->
       <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
-        <h3 style="font-size: var(--text-base); font-weight: 700; margin: 0 0 var(--space-3) 0;">Real-Time Activity Feed</h3>
+        <h2 style="font-size: var(--text-base); font-weight: 700; margin: 0 0 var(--space-3) 0; color: var(--text-primary);">Real-Time Activity Feed</h2>
         <div id="recent-events-container">
           <!-- Rendered by js/dashboard-analytics.js -->
         </div>

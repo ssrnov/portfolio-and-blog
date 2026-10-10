@@ -24,6 +24,20 @@
   <script>
     (function () {
       document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      try {
+        var raw = localStorage.getItem('profilefolio_session') ||
+                  localStorage.getItem('ssrnovx_mock_session') ||
+                  localStorage.getItem('profilefolio_active_user');
+        var user = raw ? JSON.parse(raw) : null;
+        if (!user || (!user.id && !user.username && !user.email)) {
+          var target = encodeURIComponent(window.location.pathname + window.location.search);
+          window.location.replace('/login/?redirect=' + target + '&auth=required');
+        }
+      } catch (e) {
+        var target = encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.replace('/login/?redirect=' + target + '&auth=required');
+      }
     })();
   </script>
 </head>
@@ -36,14 +50,27 @@
         &larr; Dashboard
       </a>
       <div>
-        <h1 style="font-size: var(--text-sm); font-weight: 700; margin: 0; color: var(--text-primary);">
-          Portfolio Builder &bull; /u/sunny
+        <h1 id="builder-user-title" style="font-size: var(--text-sm); font-weight: 700; margin: 0; color: var(--text-primary);">
+          Portfolio Builder
         </h1>
-        <div class="builder-save-badge">
-          <span class="pulse-dot" style="width:6px; height:6px;"></span>
+        <div class="builder-save-badge" id="builder-save-container" aria-live="polite">
+          <span class="pulse-dot" id="save-status-dot" style="width:6px; height:6px; background-color: #22c55e;"></span>
           <span id="save-status-text">All changes saved</span>
+          <button type="button" id="save-retry-btn" class="btn btn-secondary btn-sm" style="display:none; padding: 2px 6px; font-size: 10px; margin-left: 6px;" aria-label="Retry saving changes">Retry</button>
         </div>
       </div>
+    </div>
+
+    <!-- History (Undo/Redo) Controls -->
+    <div class="builder-history-controls" style="display: flex; align-items: center; gap: 4px;" aria-label="Editor history controls">
+      <button type="button" id="undo-btn" class="btn btn-secondary btn-card" disabled aria-label="Undo change (Ctrl+Z)" title="Undo (Ctrl+Z)" style="padding: 4px 8px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path></svg>
+        <span>Undo</span>
+      </button>
+      <button type="button" id="redo-btn" class="btn btn-secondary btn-card" disabled aria-label="Redo change (Ctrl+Shift+Z)" title="Redo (Ctrl+Shift+Z)" style="padding: 4px 8px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 7v6h-6"></path><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"></path></svg>
+        <span>Redo</span>
+      </button>
     </div>
 
     <!-- Responsive Canvas Viewport Controls -->

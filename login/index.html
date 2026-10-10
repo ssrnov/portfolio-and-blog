@@ -24,6 +24,15 @@
     document.documentElement.setAttribute('data-theme', 'dark');
     localStorage.setItem('theme', 'dark');
   </script>
+  <style>
+    dialog#forgot-password-modal {
+      margin: auto;
+    }
+    dialog#forgot-password-modal::backdrop {
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+    }
+  </style>
 </head>
 <body class="auth-page" style="background-color: var(--bg-primary); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: var(--space-4);">
 
@@ -38,10 +47,33 @@
         <p class="auth-subtitle" style="font-size: var(--text-xs); color: var(--text-secondary); margin: 0;">Sign in to your account to manage your portfolio and resume.</p>
       </div>
 
+      <!-- Live Server / Form Alert Box -->
+      <div id="auth-alert-box" style="display: none;" role="alert"></div>
+
+      <!-- Active Session Gate (Displayed when a user is already signed in) -->
+      <div id="active-session-gate" style="display: none; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-6); text-align: center; margin-bottom: var(--space-4);">
+        <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; color: var(--accent-primary);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <h2 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Active Session Detected</h2>
+        <p style="font-size: var(--text-xs); color: var(--text-secondary); margin: 0 0 16px 0;">
+          You are currently signed in as <strong id="active-session-user-name" style="color: var(--text-primary);">User</strong>. Another account cannot be logged in while this session is active.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <a href="/dashboard/" class="btn btn-primary" style="justify-content: center; font-weight: 600; text-decoration: none;">
+            <span>Continue to Dashboard</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+          <button type="button" id="active-session-logout-btn" class="btn btn-secondary" style="justify-content: center; font-weight: 600;">
+            Sign Out to Switch Account
+          </button>
+        </div>
+      </div>
+
       <!-- Email Login Form -->
       <form id="login-form" novalidate>
         <div class="form-group" style="margin-bottom: var(--space-4);">
-          <label for="login-email" class="form-label">Email Address</label>
+          <label for="login-email" class="form-label">Email Address or Username</label>
           <input
             type="email"
             id="login-email"
@@ -92,6 +124,107 @@
         Don't have an account yet? <a href="/signup/" class="auth-link" style="color: var(--text-primary); text-decoration: underline; font-weight: 600;">Create an account</a>
       </div>
     </div>
+
+    <!-- Password Recovery Modal Dialog (Security Question OR Date of Birth) -->
+    <dialog id="forgot-password-modal" style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); max-width: 440px; width: 92%; box-shadow: 0 20px 40px rgba(0,0,0,0.7); backdrop-filter: blur(12px);">
+      <!-- Header -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-4);">
+        <div>
+          <h2 style="font-size: var(--text-lg); font-weight: 800; margin: 0 0 4px 0; color: var(--text-primary);">Account Recovery</h2>
+          <p style="font-size: var(--text-xs); color: var(--text-secondary); margin: 0;">Verify your identity using Security Question or Date of Birth.</p>
+        </div>
+        <button type="button" id="close-recovery-modal-btn" aria-label="Close recovery modal" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 22px; line-height: 1; padding: 2px 6px;">&times;</button>
+      </div>
+
+      <div id="recovery-alert" style="display: none; padding: 10px 12px; border-radius: var(--radius-sm); font-size: var(--text-xs); margin-bottom: var(--space-4); font-family: var(--font-mono);"></div>
+
+      <!-- Step 1: Account Lookup -->
+      <div id="recovery-step-1">
+        <div class="form-group" style="margin-bottom: var(--space-4);">
+          <label for="recovery-identifier" class="form-label">Email Address or Username</label>
+          <input type="text" id="recovery-identifier" class="form-input" placeholder="developer@example.com or sunny" autocomplete="username" />
+          <div class="field-hint" style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Enter your registered username or email to find your recovery options.</div>
+        </div>
+        <button type="button" id="recovery-find-account-btn" class="btn btn-primary" style="width: 100%; justify-content: center; font-weight: 600;">
+          Find Account &rarr;
+        </button>
+      </div>
+
+      <!-- Step 2: Dual-Method Choice (Security Question OR DOB) -->
+      <div id="recovery-step-2" style="display: none;">
+        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: var(--space-4); font-size: var(--text-xs);">
+          Recovering account: <strong id="recovery-user-target" style="color: var(--text-primary);"></strong>
+        </div>
+
+        <p style="font-size: 11px; color: var(--text-secondary); margin: 0 0 var(--space-3) 0;">
+          Verify using <strong>either</strong> method below:
+        </p>
+
+        <!-- Method Tabs -->
+        <div style="display: flex; gap: 6px; margin-bottom: var(--space-4); background: rgba(0, 0, 0, 0.25); padding: 4px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+          <button type="button" id="tab-recovery-question" class="btn btn-sm" style="flex: 1; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); font-weight: 600; font-size: 11px;">
+            Security Question
+          </button>
+          <button type="button" id="tab-recovery-dob" class="btn btn-sm" style="flex: 1; background: transparent; color: var(--text-secondary); border: 1px solid transparent; font-weight: 500; font-size: 11px;">
+            Date of Birth (DOB)
+          </button>
+        </div>
+
+        <!-- Panel A: Security Question -->
+        <div id="panel-recovery-question">
+          <div class="form-group" style="margin-bottom: var(--space-4);">
+            <label class="form-label" style="font-size: 11px; color: var(--text-muted);">Security Question</label>
+            <div id="display-security-question" style="font-size: var(--text-xs); font-weight: 600; color: var(--text-primary); margin-bottom: 8px; padding: 10px 12px; background: rgba(255, 255, 255, 0.04); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              Loading question...
+            </div>
+            <label for="recovery-security-answer" class="form-label">Secret Answer</label>
+            <input type="text" id="recovery-security-answer" class="form-input" placeholder="Enter your secret answer" autocomplete="off" />
+          </div>
+          <button type="button" id="recovery-verify-question-btn" class="btn btn-primary" style="width: 100%; justify-content: center; font-weight: 600;">
+            Verify Security Question &rarr;
+          </button>
+        </div>
+
+        <!-- Panel B: Date of Birth -->
+        <div id="panel-recovery-dob" style="display: none;">
+          <div class="form-group" style="margin-bottom: var(--space-4);">
+            <label for="recovery-dob-input" class="form-label">Registered Date of Birth</label>
+            <input type="date" id="recovery-dob-input" class="form-input" />
+            <div class="field-hint" style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Select the date of birth registered with this account.</div>
+          </div>
+          <button type="button" id="recovery-verify-dob-btn" class="btn btn-primary" style="width: 100%; justify-content: center; font-weight: 600;">
+            Verify Date of Birth &rarr;
+          </button>
+        </div>
+
+        <div style="text-align: center; margin-top: var(--space-4);">
+          <button type="button" id="recovery-back-to-step1" style="background: none; border: none; font-size: 11px; color: var(--text-muted); cursor: pointer; text-decoration: underline;">
+            &larr; Search a different account
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Set New Password -->
+      <div id="recovery-step-3" style="display: none;">
+        <div style="display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: var(--radius-sm); margin-bottom: var(--space-4); font-size: 11px; color: #22c55e;">
+          <span>&check; Identity verified! Create a new password below.</span>
+        </div>
+
+        <div class="form-group" style="margin-bottom: var(--space-3);">
+          <label for="recovery-new-password" class="form-label">New Password</label>
+          <input type="password" id="recovery-new-password" class="form-input" placeholder="Min 8 characters (letters + numbers)" autocomplete="new-password" />
+        </div>
+
+        <div class="form-group" style="margin-bottom: var(--space-4);">
+          <label for="recovery-confirm-password" class="form-label">Confirm New Password</label>
+          <input type="password" id="recovery-confirm-password" class="form-input" placeholder="Re-enter new password" autocomplete="new-password" />
+        </div>
+
+        <button type="button" id="recovery-submit-new-password-btn" class="btn btn-primary" style="width: 100%; justify-content: center; font-weight: 600;">
+          Save Password & Sign In
+        </button>
+      </div>
+    </dialog>
   </div>
 
   <script type="module" src="/js/main.js"></script>
