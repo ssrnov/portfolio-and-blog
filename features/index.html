@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Platform Features | BuildLab Portfolio Builder</title>
+  <meta name="title" content="Platform Features | BuildLab Portfolio Builder" />
+  <meta name="description" content="Explore BuildLab platform features: smart career profiles, education and CGPA tracking, GitHub sync, customizable templates, and ATS-ready resume export." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238297FF'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%2308090B' text-anchor='middle'>B</text></svg>" />
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo" aria-label="BuildLab Home">
+        <span class="gradient-text font-black" style="font-weight: 800; font-size: 1.25rem;">BuildLab</span>
+        <span class="brand-badge">Features</span>
+      </a>
+
+      <div class="nav-right">
+        <nav class="site-nav" role="navigation" aria-label="Main Navigation">
+          <ul class="nav-links" id="nav-menu">
+            <li><a href="/" class="nav-link">Home</a></li>
+            <li><a href="/features" class="nav-link active">Features</a></li>
+            <li><a href="/templates" class="nav-link">Templates</a></li>
+            <li><a href="/explore" class="nav-link">Explore</a></li>
+            <li><a href="/blog" class="nav-link">Blog</a></li>
+          </ul>
+        </nav>
+
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme">
+          <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+          <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"></path></svg>
+        </button>
+
+        <a href="/signup" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    
+    <section class="section-py" style="text-align: center; border-bottom: 1px solid var(--border-color);">
+      <div class="container" style="max-width: 760px;">
+        <span class="gradient-badge" style="margin-bottom: var(--space-4);">POWERFUL ARCHITECTURE</span>
+        <h1 style="font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 800; line-height: 1.15; margin-bottom: var(--space-4);">
+          Engineered for Career Advancement
+        </h1>
+        <p style="font-size: var(--text-lg); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-6);">
+          BuildLab replaces static personal sites with an integrated career engine. Save your profile once, publish to a custom URL, and export ATS resumes on demand.
+        </p>
+      </div>
+    </section>
+
+    <!-- Deep Dive Features -->
+    <section class="section-py">
+      <div class="container">
+        
+        <div style="display: flex; flex-direction: column; gap: var(--space-12);">
+          
+          <!-- Feature 1 -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-8); align-items: center;">
+            <div>
+              <span class="badge" style="margin-bottom: var(--space-2); display: inline-block;">Feature 01</span>
+              <h2 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin-bottom: var(--space-3);">Academic &amp; Student-First Profiling</h2>
+              <p style="color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-4);">
+                Most portfolio builders assume 10 years of senior engineering experience. BuildLab treats education as a first-class citizen. Record multiple schools, colleges, degrees, branches, academic semesters, CGPA or percentage marks, relevant coursework, and hackathon wins.
+              </p>
+              <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-sm); color: var(--text-secondary);">
+                <li>&bull; Support for CGPA (out of 10 or 4) and percentage grading systems</li>
+                <li>&bull; Clear separation of academic projects vs production systems</li>
+                <li>&bull; Privacy toggle to hide or show grades on public profile</li>
+              </ul>
+            </div>
+            <div class="floating-card" style="padding: var(--space-6); background: var(--bg-surface);">
+              <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-primary); margin-bottom: 6px;">ACADEMIC LEDGER</div>
+              <h3 style="font-size: var(--text-base); margin: 0 0 4px 0;">B.Tech in Computer Science &amp; Engineering</h3>
+              <p style="font-size: var(--text-xs); color: var(--text-muted); margin: 0 0 8px 0;">Indian Institute of Technology &bull; 2022 &ndash; 2026</p>
+              <div style="background: var(--bg-secondary); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; font-family: var(--font-mono); margin-bottom: 8px;">
+                Cumulative Score: <strong>9.60 / 10.00</strong> (Class Rank 1)
+              </div>
+              <div style="font-size: 11px; color: var(--text-secondary);">
+                Relevant Coursework: Distributed Operating Systems, Database Internals, Compiler Design, Machine Learning.
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature 2 -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-8); align-items: center;">
+            <div class="floating-card" style="padding: var(--space-6); background: var(--bg-surface); order: 2;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span class="badge" style="font-family: var(--font-mono);">github.com/api/v3</span>
+                <span style="font-size: 11px; color: #27c93f; font-family: var(--font-mono);">&#9679; OAuth Authorized</span>
+              </div>
+              <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; margin-bottom: 8px;">
+                <div style="font-weight: 700; font-size: var(--text-sm); color: var(--text-primary);">turbocache-engine</div>
+                <div style="font-size: 11px; color: var(--text-muted);">High-performance in-memory cache written in Go</div>
+                <div style="display: flex; gap: 12px; margin-top: 6px; font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary);">
+                  <span>Go 94.2%</span>
+                  <span>&#9733; 1.4k Stars</span>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-sm" style="width: 100%;">Sync Repositories Now</button>
+            </div>
+            <div style="order: 1;">
+              <span class="badge" style="margin-bottom: var(--space-2); display: inline-block;">Feature 02</span>
+              <h2 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin-bottom: var(--space-3);">Deep GitHub Integration</h2>
+              <p style="color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-4);">
+                Forget updating your portfolio every time you finish an open-source tool. Connect your GitHub profile securely and import your public repositories with one click. Edit repository descriptions, attach screenshots, and highlight your best repos.
+              </p>
+              <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-sm); color: var(--text-secondary);">
+                <li>&bull; Safe OAuth flow: tokens are encrypted on the server</li>
+                <li>&bull; Private repositories remain strictly private by default</li>
+                <li>&bull; Add custom production URLs and video demos over default READMEs</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Feature 3 -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-8); align-items: center;">
+            <div>
+              <span class="badge" style="margin-bottom: var(--space-2); display: inline-block;">Feature 03</span>
+              <h2 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin-bottom: var(--space-3);">Integrated ATS Resume Engine</h2>
+              <p style="color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-4);">
+                Applying to companies requires structured PDF resumes; showcasing your personality requires an interactive web portfolio. BuildLab generates both simultaneously from your single source of truth.
+              </p>
+              <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-sm); color: var(--text-secondary);">
+                <li>&bull; Vector PDF output with real selectable text (never screenshot raster graphics)</li>
+                <li>&bull; Standard recruiter-approved section hierarchy and formatting</li>
+                <li>&bull; Choose custom inclusions: exclude phone or address from public web while retaining on PDF</li>
+              </ul>
+            </div>
+            <div class="floating-card" style="padding: var(--space-6); background: var(--bg-surface);">
+              <div style="border-left: 2px solid var(--accent-primary); padding-left: 12px; margin-bottom: 12px;">
+                <div style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary);">Resume Generation Ready</div>
+                <div style="font-size: 11px; color: var(--text-muted);">PDF Document &bull; 1 Page Standard &bull; ATS Passed</div>
+              </div>
+              <div style="display: flex; gap: var(--space-2);">
+                <a href="/signup" class="btn btn-primary btn-sm" style="flex: 1; text-align: center;">Download Sample PDF</a>
+                <a href="/templates" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">View Layouts</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Bottom CTA -->
+    <section class="section-py" style="text-align: center; background: var(--bg-secondary); border-top: 1px solid var(--border-color);">
+      <div class="container" style="max-width: 600px;">
+        <h2 style="font-size: var(--text-2xl); font-weight: 800; margin-bottom: var(--space-3);">Ready to build your career identity?</h2>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-6); font-size: var(--text-sm);">
+          Join students, software engineers, and designers who build on BuildLab.
+        </p>
+        <a href="/signup" class="btn btn-primary btn-lg">Create Your Free Portfolio &rarr;</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-container">
+      <p>&copy; 2026 BuildLab Platform. Built for TechSpace BuildLab '26.</p>
+      <div class="footer-links">
+        <a href="/" class="footer-link">Home</a>
+        <a href="/features" class="footer-link">Features</a>
+        <a href="/templates" class="footer-link">Templates</a>
+        <a href="/explore" class="footer-link">Explore</a>
+        <a href="/privacy" class="footer-link">Privacy</a>
+        <a href="/terms" class="footer-link">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

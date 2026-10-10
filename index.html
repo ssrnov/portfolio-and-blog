@@ -5,36 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <!-- Primary Meta Tags -->
-  <title>SSRNovX | Personal Portfolio &amp; Engineering Blog</title>
-  <meta name="title" content="SSRNovX | Personal Portfolio &amp; Engineering Blog" />
-  <meta name="description" content="Personal Portfolio and Engineering Blog of SSRNovX (TechSpace BuildLab B04). Featuring scalable systems, modern web engineering, projects gallery, and technical writing." />
-  <meta name="author" content="SSRNovX" />
-  <meta name="keywords" content="SSRNovX, Portfolio, Blog, Software Engineer, Full-Stack, JavaScript, System Design, TechSpace BuildLab" />
+  <title>BuildLab — Multi-User Portfolio Builder &amp; Career Platform</title>
+  <meta name="title" content="BuildLab — Multi-User Portfolio Builder &amp; Career Platform" />
+  <meta name="description" content="BuildLab is a modern multi-user platform for students, developers, and professionals to build portfolios, import GitHub repositories, generate ATS resumes, and publish to a unique URL." />
+  <meta name="author" content="BuildLab" />
+  <meta name="keywords" content="BuildLab, Portfolio Builder, Developer Portfolio, Resume Builder, GitHub Import, Student Portfolio, Multi-User SaaS, TechSpace BuildLab" />
   <meta name="robots" content="index, follow" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://github.com/ssrnov/portfolio-and-blog" />
-  <meta property="og:title" content="SSRNovX | Personal Portfolio &amp; Engineering Blog" />
-  <meta property="og:description" content="Personal Portfolio and Engineering Blog of SSRNovX (TechSpace BuildLab B04)." />
+  <meta property="og:url" content="https://buildlab.dev/" />
+  <meta property="og:title" content="BuildLab — Multi-User Portfolio Builder &amp; Career Platform" />
+  <meta property="og:description" content="Turn your skills, education, projects, and experience into a professional portfolio you can share with the world." />
 
   <!-- Twitter Card -->
   <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:title" content="SSRNovX | Personal Portfolio &amp; Engineering Blog" />
-  <meta property="twitter:description" content="Personal Portfolio and Engineering Blog of SSRNovX (TechSpace BuildLab B04)." />
+  <meta property="twitter:title" content="BuildLab — Multi-User Portfolio Builder &amp; Career Platform" />
+  <meta property="twitter:description" content="Turn your skills, education, projects, and experience into a professional portfolio you can share with the world." />
 
   <!-- Favicon (SVG Monogram) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238297FF'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%2308090B' text-anchor='middle'>B</text></svg>" />
 
   <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/css/variables.css" />
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/templates.css" />
 
   <!-- Inline Script for Early Theme Initialization to Prevent FOUC -->
   <script>
@@ -53,51 +54,59 @@
   <!-- Accessibility: Skip Link -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- Global Header & Navigation -->
+  <!-- =========================================================================
+       SECTION 1: GLOBAL RESPONSIVE NAVBAR
+       ========================================================================= -->
   <header class="site-header" role="banner">
     <div class="container nav-container">
-      <a href="/" class="brand-logo" aria-label="SSRNovX Home">
-        <span>SSRNovX</span>
-        <span class="brand-badge">BuildLab</span>
+      <a href="/" class="brand-logo" aria-label="BuildLab Home">
+        <span class="gradient-text font-black" style="font-weight: 800; font-size: 1.25rem;">BuildLab</span>
+        <span class="brand-badge">Platform</span>
       </a>
 
       <div class="nav-right">
         <nav class="site-nav" role="navigation" aria-label="Main Navigation">
           <ul class="nav-links" id="nav-menu">
-            <li><a href="/" class="nav-link active" data-page="home">Home</a></li>
-            <li><a href="/about" class="nav-link" data-page="about">About</a></li>
-            <li><a href="/projects" class="nav-link" data-page="projects">Projects</a></li>
-            <li><a href="/blog" class="nav-link" data-page="blog">Blog</a></li>
-            <li><a href="/contact" class="nav-link" data-page="contact">Contact</a></li>
+            <li><a href="#features" class="nav-link">Features</a></li>
+            <li><a href="/templates" class="nav-link">Templates</a></li>
+            <li><a href="/explore" class="nav-link">Explore</a></li>
+            <li><a href="/blog" class="nav-link">Blog</a></li>
+            <li><a href="/about" class="nav-link">About</a></li>
           </ul>
         </nav>
 
-        <!-- Theme Toggle Button -->
-        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">
-          <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="4"></circle>
-            <path d="M12 2v2"></path>
-            <path d="M12 20v2"></path>
-            <path d="m4.93 4.93 1.41 1.41"></path>
-            <path d="m17.66 17.66 1.41 1.41"></path>
-            <path d="M2 12h2"></path>
-            <path d="M20 12h2"></path>
-            <path d="m6.34 17.66-1.41 1.41"></path>
-            <path d="m19.07 4.93-1.41 1.41"></path>
-          </svg>
-          <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-          </svg>
-        </button>
+        <!-- Action Buttons -->
+        <div style="display: flex; align-items: center; gap: var(--space-3);">
+          <!-- Theme Toggle -->
+          <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle light or dark theme" title="Toggle theme">
+            <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="m4.93 4.93 1.41 1.41"></path>
+              <path d="m17.66 17.66 1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="m6.34 17.66-1.41 1.41"></path>
+              <path d="m19.07 4.93-1.41 1.41"></path>
+            </svg>
+            <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18">
+              <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
+          </button>
 
-        <!-- Mobile Navigation Toggle -->
-        <button id="mobile-menu-toggle" class="mobile-toggle-btn" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open navigation menu">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
+          <a href="/login" class="btn btn-secondary btn-sm">Log in</a>
+          <a href="/signup" class="btn btn-primary btn-sm">Get Started</a>
+
+          <!-- Mobile Navigation Toggle -->
+          <button id="mobile-menu-toggle" class="mobile-toggle-btn" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -105,244 +114,1201 @@
   <!-- Main Content Landmark -->
   <main id="main-content">
     
-    <!-- 1. Hero Section -->
-    <section id="hero" class="hero-section section-py" aria-labelledby="hero-title">
-      <div class="container hero-content">
-        <span class="hero-greeting">Hi, I'm SSRNovX</span>
-        <h1 id="hero-title" class="hero-title">
-          Engineering Scalable Systems &amp; Modern Web Experiences.
-        </h1>
-        <p class="hero-lead">
-          Software engineer focused on clean architecture, performance optimization, and responsive interface design. 
-          Building robust software with native web standards, resilient backend services, and a minimalist design philosophy.
-        </p>
+    <!-- =========================================================================
+         SECTION 2: HERO (Two-Column Desktop with Interactive Floating Composition)
+         ========================================================================= -->
+    <section id="hero" class="hero-section section-py" aria-labelledby="hero-title" style="padding-top: var(--space-12); padding-bottom: var(--space-12);">
+      <div class="container hero-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: var(--space-10); align-items: center;">
+        
+        <!-- Left Side: Copy and Primary CTAs -->
+        <div>
+          <div class="gradient-badge" style="margin-bottom: var(--space-4);">
+            <span>YOUR WORK. YOUR STORY.</span>
+          </div>
 
-        <div class="hero-actions">
-          <a href="/projects" class="btn btn-primary">
-            <span>View Projects</span>
-            <span aria-hidden="true">&rarr;</span>
-          </a>
-          <a href="/assets/resume/SSRNovX_Resume.pdf" download="SSRNovX_Resume.pdf" class="btn btn-secondary" title="Download Resume PDF">
-            <span>Download Resume</span>
-            <span aria-hidden="true">&darr;</span>
-          </a>
+          <h1 id="hero-title" class="hero-title" style="font-size: clamp(2.2rem, 4.5vw, 3.8rem); line-height: 1.1; margin-bottom: var(--space-5);">
+            Your potential deserves a <span class="gradient-text">better portfolio.</span>
+          </h1>
+
+          <p class="hero-lead" style="font-size: var(--text-lg); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-6); max-width: 540px;">
+            Turn your skills, education, projects, and experience into a professional portfolio you can share with the world. Import GitHub repositories, customize visual templates, and export ATS-ready resumes in minutes.
+          </p>
+
+          <div class="hero-actions" style="display: flex; gap: var(--space-4); flex-wrap: wrap; margin-bottom: var(--space-6);">
+            <a href="/signup" class="btn btn-primary btn-lg">
+              <span>Create your portfolio</span>
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+            <a href="/templates" class="btn btn-secondary btn-lg">
+              <span>Explore templates</span>
+            </a>
+          </div>
+
+          <p style="font-size: var(--text-xs); color: var(--text-muted); display: flex; align-items: center; gap: var(--space-2);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Built for students, developers, freelancers, and professionals. No credit card required.
+          </p>
         </div>
 
-        <div class="hero-socials" aria-label="Social and repository links">
-          <a href="https://github.com/ssrnov" target="_blank" rel="noopener noreferrer" class="social-link">
-            <span>GitHub</span>
-            <span aria-hidden="true">&nearr;</span>
-          </a>
-          <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="social-link">
-            <span>Repository</span>
-            <span aria-hidden="true">&nearr;</span>
-          </a>
-          <a href="/contact" class="social-link">
-            <span>Contact</span>
-            <span aria-hidden="true">&rarr;</span>
-          </a>
+        <!-- Right Side: Real Interface Components Composition (Floating & Interactive) -->
+        <div class="hero-floating-composition" style="position: relative; min-height: 440px; display: flex; flex-direction: column; gap: var(--space-4);">
+          
+          <!-- Top Row: Profile Card & Pulsing Status -->
+          <div class="floating-card" style="display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--accent-primary);">
+            <div style="display: flex; align-items: center; gap: var(--space-3);">
+              <div style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #08090B;">
+                AR
+              </div>
+              <div>
+                <h2 style="font-size: var(--text-sm); font-weight: 700; margin: 0; color: var(--text-primary);">Alex Rivera</h2>
+                <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Full-Stack Engineer &bull; San Francisco / Remote</p>
+              </div>
+            </div>
+            <div class="sample-indicator-badge">
+              <span class="pulsing-dot"></span>
+              <span>Available for Hire</span>
+            </div>
+          </div>
+
+          <!-- Middle Split: Education & GitHub Repo -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
+            <!-- Education Card -->
+            <div class="floating-card" style="padding: var(--space-4);">
+              <span class="badge" style="font-size: 10px; margin-bottom: 6px; display: inline-block;">Academics</span>
+              <h3 style="font-size: var(--text-xs); font-weight: 700; margin: 0 0 4px 0; color: var(--text-primary);">B.Tech Computer Science</h3>
+              <p style="font-size: 11px; color: var(--text-muted); margin: 0 0 6px 0;">Stanford University</p>
+              <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-primary); font-weight: 700;">
+                CGPA 9.4 / 10.0
+              </div>
+            </div>
+
+            <!-- GitHub Card -->
+            <div class="floating-card" style="padding: var(--space-4);">
+              <span class="badge" style="font-size: 10px; margin-bottom: 6px; display: inline-block;">GitHub Sync</span>
+              <h3 style="font-size: var(--text-xs); font-weight: 700; margin: 0 0 4px 0; color: var(--text-primary); font-family: var(--font-mono);">alexrivera/turbocache</h3>
+              <p style="font-size: 11px; color: var(--text-muted); margin: 0 0 6px 0;">TypeScript &bull; In-memory cache</p>
+              <div style="display: flex; gap: var(--space-3); font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">
+                <span>&#9733; 1,420</span>
+                <span>&#9906; 180</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project Showcase Card -->
+          <div class="floating-card" style="padding: var(--space-5);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+              <div>
+                <span class="project-category-tag">Featured Project</span>
+                <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 2px 0 0 0;">CloudScale Autonomous Optimizer</h3>
+              </div>
+              <span class="badge" style="background: rgba(39, 201, 63, 0.15); color: #27c93f; border-color: rgba(39, 201, 63, 0.3);">Active</span>
+            </div>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3);">
+              Autonomous microservices engine reducing tail latency by 43% under high traffic.
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+              <span class="badge" style="font-size: 10px;">React</span>
+              <span class="badge" style="font-size: 10px;">Node.js</span>
+              <span class="badge" style="font-size: 10px;">PostgreSQL</span>
+              <span class="badge" style="font-size: 10px;">Docker</span>
+            </div>
+          </div>
+
+          <!-- Bottom Live URL Bar with Beacon -->
+          <div style="background: var(--bg-surface); border: 1px dashed var(--border-color); border-radius: var(--radius-md); padding: 8px 14px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-family: var(--font-mono);">
+            <span style="color: var(--text-muted);">https://buildlab.dev/u/alexrivera</span>
+            <span style="color: var(--accent-primary); display: flex; align-items: center; gap: 6px;">
+              <span class="pulsing-dot"></span> Published &amp; Live
+            </span>
+          </div>
+
         </div>
+
       </div>
     </section>
 
-    <!-- 2. Featured Projects Preview -->
-    <section class="section-py" aria-labelledby="featured-projects-title">
+    <!-- =========================================================================
+         SECTION 3: INTERACTIVE PORTFOLIO PREVIEW (Switchable Tabs & Device Frame)
+         ========================================================================= -->
+    <section id="interactive-preview" class="section-py" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
       <div class="container">
-        <div class="home-section-header">
-          <div>
-            <span class="section-label">Selected Work</span>
-            <h2 id="featured-projects-title" class="section-title">Featured Projects</h2>
-            <p class="section-subtitle">
-              A highlight of recent applications, distributed background workers, and web experiments.
-            </p>
-          </div>
-          <a href="/projects" class="section-more-link">
-            <span>View all projects</span>
-            <span aria-hidden="true">&rarr;</span>
-          </a>
+        
+        <div class="section-header" style="text-align: center; max-width: 640px; margin: 0 auto var(--space-8) auto;">
+          <span class="section-label">Live Product Experience</span>
+          <h2 class="section-title">See how your portfolio comes together</h2>
+          <p class="section-subtitle">
+            Switch between profile sections and toggle device viewports to see how BuildLab generates clean, accessible portfolio layouts from your saved data.
+          </p>
         </div>
 
-        <!-- Populated dynamically by js/projects.js -->
-        <div id="featured-projects-grid" class="projects-grid">
-          <!-- Fallback static preview while JavaScript loads -->
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. Skills Preview -->
-    <section class="section-py" aria-labelledby="skills-preview-title">
-      <div class="container">
-        <div class="home-section-header">
-          <div>
-            <span class="section-label">Core Proficiencies</span>
-            <h2 id="skills-preview-title" class="section-title">Technical Competencies</h2>
-            <p class="section-subtitle">
-              Modern tooling and engineering standards I employ to build performant, maintainable systems.
-            </p>
-          </div>
-          <a href="/about#skills" class="section-more-link">
-            <span>Full background &amp; skills</span>
-            <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
-
-        <div class="skills-container">
-          <!-- Category 1: Frontend -->
-          <div class="skill-category-card">
-            <h3 class="skill-category-title">
-              <span>Frontend Engineering</span>
-              <span class="brand-badge">UI/UX</span>
-            </h3>
-            <div class="skill-badges">
-              <span class="skill-badge">JavaScript (ES6+)</span>
-              <span class="skill-badge">TypeScript</span>
-              <span class="skill-badge">HTML5 Semantic</span>
-              <span class="skill-badge">Modern CSS3</span>
-              <span class="skill-badge">Vite</span>
-              <span class="skill-badge">Accessibility (a11y)</span>
+        <!-- Preview Browser Frame -->
+        <div id="interactive-preview-stage" class="preview-browser-window desktop-frame">
+          
+          <!-- Mockup Header with Controls -->
+          <div class="preview-browser-header">
+            <div class="browser-traffic-lights">
+              <span class="traffic-light red"></span>
+              <span class="traffic-light yellow"></span>
+              <span class="traffic-light green"></span>
             </div>
-          </div>
 
-          <!-- Category 2: Backend -->
-          <div class="skill-category-card">
-            <h3 class="skill-category-title">
-              <span>Backend &amp; Systems</span>
-              <span class="brand-badge">APIs</span>
-            </h3>
-            <div class="skill-badges">
-              <span class="skill-badge">Node.js</span>
-              <span class="skill-badge">Express</span>
-              <span class="skill-badge">RESTful APIs</span>
-              <span class="skill-badge">Redis</span>
-              <span class="skill-badge">SQL Databases</span>
-              <span class="skill-badge">WebSockets</span>
+            <!-- Address Bar -->
+            <div class="browser-address-bar">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>https://buildlab.dev/u/alexrivera</span>
             </div>
-          </div>
 
-          <!-- Category 3: DevOps -->
-          <div class="skill-category-card">
-            <h3 class="skill-category-title">
-              <span>DevOps &amp; Workflow</span>
-              <span class="brand-badge">Infra</span>
-            </h3>
-            <div class="skill-badges">
-              <span class="skill-badge">Git &amp; GitHub</span>
-              <span class="skill-badge">Vercel Deployment</span>
-              <span class="skill-badge">Docker</span>
-              <span class="skill-badge">Linux CLI</span>
-              <span class="skill-badge">Postman</span>
-            </div>
-          </div>
+            <!-- Device Switcher & Style Controls -->
+            <div class="browser-controls-group">
+              <div class="device-toggle-group">
+                <button type="button" class="device-toggle-btn active" data-device-mode="desktop" aria-label="Desktop viewport">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                  <span>Desktop</span>
+                </button>
+                <button type="button" class="device-toggle-btn" data-device-mode="mobile" aria-label="Mobile viewport">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                  <span>Mobile</span>
+                </button>
+              </div>
 
-          <!-- Category 4: Core Engineering -->
-          <div class="skill-category-card">
-            <h3 class="skill-category-title">
-              <span>Core Engineering</span>
-              <span class="brand-badge">Logic</span>
-            </h3>
-            <div class="skill-badges">
-              <span class="skill-badge">Data Structures</span>
-              <span class="skill-badge">Algorithms</span>
-              <span class="skill-badge">System Design</span>
-              <span class="skill-badge">Clean Code</span>
-              <span class="skill-badge">Refactoring</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. Short About Section -->
-    <section class="section-py" aria-labelledby="short-about-title">
-      <div class="container">
-        <div class="home-section-header">
-          <div>
-            <span class="section-label">Overview</span>
-            <h2 id="short-about-title" class="section-title">About Me</h2>
-            <p class="section-subtitle">
-              A snapshot of my engineering journey, problem-solving philosophy, and academic foundation.
-            </p>
-          </div>
-          <a href="/about" class="section-more-link">
-            <span>Read full story</span>
-            <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
-
-        <div class="about-grid">
-          <div class="about-bio-card">
-            <p>
-              I am a software engineer passionate about clean software architecture, native web standards, and distributed systems. 
-              My engineering philosophy focuses on cutting through excessive runtime bloat to deliver reliable, high-speed, and deeply accessible digital experiences.
-            </p>
-            <p>
-              Currently participating in the <strong>TechSpace BuildLab '26</strong>, developing modular web platforms with strict engineering standards and modern toolchains.
-            </p>
-            <div style="margin-top: var(--space-6);">
-              <a href="/about" class="btn btn-secondary btn-card">
-                <span>Detailed Background &amp; Education</span>
-                <span aria-hidden="true">&rarr;</span>
+              <a href="/signup" class="btn btn-primary btn-sm">
+                <span>Create One Like This</span>
               </a>
             </div>
           </div>
 
-          <div class="facts-grid">
-            <div class="fact-card">
-              <p class="fact-label">Primary Role</p>
-              <p class="fact-value">Software Engineer</p>
-            </div>
-            <div class="fact-card">
-              <p class="fact-label">Specialization</p>
-              <p class="fact-value">Full-Stack &amp; Systems</p>
-            </div>
-            <div class="fact-card">
-              <p class="fact-label">Degree</p>
-              <p class="fact-value">B.Tech in CSE</p>
-            </div>
-            <div class="fact-card">
-              <p class="fact-label">Institution</p>
-              <p class="fact-value">SRM University</p>
-            </div>
+          <!-- Section Switcher Tabs -->
+          <div style="background-color: var(--bg-surface); border-bottom: 1px solid var(--border-subtle); padding: 0 var(--space-6);">
+            <nav class="preview-tabs-nav" role="tablist" aria-label="Preview Section Tabs" style="margin-bottom: 0;">
+              <button role="tab" aria-selected="true" class="preview-tab-btn active" data-preview-tab="overview">Portfolio Overview</button>
+              <button role="tab" aria-selected="false" class="preview-tab-btn" data-preview-tab="projects">Projects Showcase</button>
+              <button role="tab" aria-selected="false" class="preview-tab-btn" data-preview-tab="education">Education &amp; Academics</button>
+              <button role="tab" aria-selected="false" class="preview-tab-btn" data-preview-tab="blog">Technical Writing</button>
+            </nav>
           </div>
+
+          <!-- Viewport Content Area -->
+          <div class="preview-stage-viewport">
+            
+            <!-- Panel 1: Overview -->
+            <div class="preview-tab-panel" data-tab-content="overview">
+              <div style="display: flex; gap: var(--space-6); align-items: center; margin-bottom: var(--space-8); flex-wrap: wrap;">
+                <div style="width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); display: flex; align-items: center; justify-content: center; font-size: var(--text-2xl); font-weight: 800; color: #08090B;">
+                  AR
+                </div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: 4px;">
+                    <h3 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 0;">Alex Rivera</h3>
+                    <span class="sample-indicator-badge">Verified Demo Profile</span>
+                  </div>
+                  <p style="font-size: var(--text-base); color: var(--text-secondary); margin: 0 0 6px 0;">
+                    Staff Systems Engineer &bull; Distributed Infrastructure &bull; San Francisco, CA
+                  </p>
+                  <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
+                    <span class="badge">alexrivera.eth</span>
+                    <span class="badge">github.com/alexrivera</span>
+                    <span class="badge">linkedin.com/in/alexrivera</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-bottom: var(--space-6);">
+                <h4 style="font-size: var(--text-sm); font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: var(--space-3);">Core Competencies</h4>
+                <div style="display: flex; flex-wrap: wrap; gap: var(--space-2);">
+                  <span class="badge" style="background: var(--bg-surface);">Distributed Systems</span>
+                  <span class="badge" style="background: var(--bg-surface);">TypeScript / Node.js</span>
+                  <span class="badge" style="background: var(--bg-surface);">Go &amp; Rust</span>
+                  <span class="badge" style="background: var(--bg-surface);">PostgreSQL Internals</span>
+                  <span class="badge" style="background: var(--bg-surface);">Docker &amp; K8s</span>
+                  <span class="badge" style="background: var(--bg-surface);">Microservices</span>
+                </div>
+              </div>
+
+              <div>
+                <h4 style="font-size: var(--text-sm); font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: var(--space-3);">About Me</h4>
+                <p style="font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed); max-width: 720px;">
+                  I architect fault-tolerant distributed backends and high-performance developer tooling. Graduated with honors from Stanford University, previously contributed to high-throughput data pipelines at Stripe and Cloudflare. Passionate about open-source observability and zero-downtime database migrations.
+                </p>
+              </div>
+            </div>
+
+            <!-- Panel 2: Projects -->
+            <div class="preview-tab-panel" data-tab-content="projects" style="display: none;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-4);">
+                <div class="project-card" style="padding: var(--space-5);">
+                  <div class="project-card-header">
+                    <span class="project-category-tag">Systems &bull; 2026</span>
+                    <span class="badge" style="font-size: 10px;">Featured</span>
+                  </div>
+                  <h4 class="project-card-title" style="font-size: var(--text-base);">TurboCache Distributed KV</h4>
+                  <p class="project-card-desc">Sub-millisecond persistent in-memory caching engine using Raft consensus protocol.</p>
+                  <div class="project-tags">
+                    <span class="project-tag">Go</span>
+                    <span class="project-tag">gRPC</span>
+                    <span class="project-tag">Raft</span>
+                  </div>
+                  <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-primary);">github.com/alexrivera/turbocache</div>
+                </div>
+
+                <div class="project-card" style="padding: var(--space-5);">
+                  <div class="project-card-header">
+                    <span class="project-category-tag">Frontend &bull; 2025</span>
+                    <span class="badge" style="font-size: 10px;">Demo Live</span>
+                  </div>
+                  <h4 class="project-card-title" style="font-size: var(--text-base);">WebGL Shader Studio</h4>
+                  <p class="project-card-desc">Interactive GLSL shader playground with realtime raymarching compilation and node graph.</p>
+                  <div class="project-tags">
+                    <span class="project-tag">WebGL</span>
+                    <span class="project-tag">TypeScript</span>
+                    <span class="project-tag">Vite</span>
+                  </div>
+                  <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-primary);">shaderstudio.demo.app</div>
+                </div>
+
+                <div class="project-card" style="padding: var(--space-5);">
+                  <div class="project-card-header">
+                    <span class="project-category-tag">DevOps &bull; 2025</span>
+                    <span class="badge" style="font-size: 10px;">Open Source</span>
+                  </div>
+                  <h4 class="project-card-title" style="font-size: var(--text-base);">AutoMigrate CLI</h4>
+                  <p class="project-card-desc">Zero-downtime schema migration verification tool for Postgres and SQLite databases.</p>
+                  <div class="project-tags">
+                    <span class="project-tag">Rust</span>
+                    <span class="project-tag">PostgreSQL</span>
+                    <span class="project-tag">CLI</span>
+                  </div>
+                  <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-primary);">crates.io/crates/automigrate</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 3: Education & Academics -->
+            <div class="preview-tab-panel" data-tab-content="education" style="display: none;">
+              <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                
+                <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-5);">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                    <div>
+                      <h4 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0;">Stanford University</h4>
+                      <p style="font-size: var(--text-sm); color: var(--accent-primary); margin: 2px 0 0 0;">Bachelor of Science in Computer Science</p>
+                    </div>
+                    <span class="badge" style="font-family: var(--font-mono);">2020 &ndash; 2024</span>
+                  </div>
+                  <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                    Focus: Distributed Systems, Advanced Algorithms, Computer Networks.
+                  </p>
+                  <div style="display: flex; gap: var(--space-4); align-items: center; font-size: var(--text-xs); font-family: var(--font-mono);">
+                    <span style="color: var(--accent-primary); font-weight: 700;">Score: 3.92 / 4.0 GPA (Dean's Honor List)</span>
+                    <span style="color: var(--text-muted);">&bull; Outstanding Capstone Award</span>
+                  </div>
+                </div>
+
+                <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-5);">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                    <div>
+                      <h4 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0;">Lincoln High School</h4>
+                      <p style="font-size: var(--text-sm); color: var(--accent-primary); margin: 2px 0 0 0;">High School Diploma &bull; Science &amp; Mathematics</p>
+                    </div>
+                    <span class="badge" style="font-family: var(--font-mono);">2016 &ndash; 2020</span>
+                  </div>
+                  <div style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-secondary);">
+                    Score: 98.4% &bull; National Merit Scholar &bull; President of Robotics Club
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Panel 4: Blog -->
+            <div class="preview-tab-panel" data-tab-content="blog" style="display: none;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-4);">
+                
+                <article class="project-card" style="padding: var(--space-5);">
+                  <div style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-primary); margin-bottom: 6px;">
+                    ARCHITECTURE &bull; 8 MIN READ
+                  </div>
+                  <h4 style="font-size: var(--text-base); font-weight: 700; margin-bottom: 8px;">
+                    How We Reduced Distributed Locks Contention in High-Throughput Workloads
+                  </h4>
+                  <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-3);">
+                    A detailed look into optimizing Redis distributed locks using optimistic concurrency and local token bucket pacing.
+                  </p>
+                  <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">Published Oct 2025</span>
+                </article>
+
+                <article class="project-card" style="padding: var(--space-5);">
+                  <div style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-primary); margin-bottom: 6px;">
+                    DATABASES &bull; 6 MIN READ
+                  </div>
+                  <h4 style="font-size: var(--text-base); font-weight: 700; margin-bottom: 8px;">
+                    Understanding PostgreSQL WAL &amp; Replica Lag in Production Environments
+                  </h4>
+                  <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-3);">
+                    Deep dive into write-ahead logs, streaming replication bottlenecks, and zero-loss failover configurations.
+                  </p>
+                  <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">Published Aug 2025</span>
+                </article>
+
+              </div>
+            </div>
+
+          </div>
+
         </div>
+
       </div>
     </section>
 
-    <!-- 5. Contact CTA Section -->
-    <section class="section-py" aria-labelledby="contact-cta-title">
+    <!-- =========================================================================
+         SECTION 4: FEATURE BENTO GRID (10 High-Impact Platform Capabilities)
+         ========================================================================= -->
+    <section id="features" class="section-py" aria-labelledby="features-title">
       <div class="container">
-        <div class="contact-cta-banner">
-          <div class="contact-cta-content">
-            <span class="section-label">Collaboration</span>
-            <h2 id="contact-cta-title">Have a project or technical inquiry?</h2>
-            <p>
-              I am always open to exploring challenging engineering opportunities, discussing software architecture, or collaborating on open-source initiatives.
+        
+        <div class="section-header" style="text-align: center; max-width: 680px; margin: 0 auto var(--space-10) auto;">
+          <span class="section-label">Platform Architecture</span>
+          <h2 id="features-title" class="section-title">Everything you need to stand out.</h2>
+          <p class="section-subtitle">
+            A comprehensive career infrastructure designed to replace fragmented resume documents and static portfolio websites.
+          </p>
+        </div>
+
+        <div class="bento-grid">
+          
+          <!-- Card 1: Smart Profile -->
+          <div class="bento-card bento-card-highlight">
+            <div class="bento-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+            <h3 class="bento-card-title">1. Smart Profile</h3>
+            <p class="bento-card-desc">
+              One reusable, centralized career profile containing your biography, contact coordinates, technical headline, verified links, and custom privacy controls.
+            </p>
+            <span class="badge" style="align-self: flex-start;">Universal Identity</span>
+          </div>
+
+          <!-- Card 2: Education and Academics -->
+          <div class="bento-card">
+            <div class="bento-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+            </div>
+            <h3 class="bento-card-title">2. Education &amp; Academics</h3>
+            <p class="bento-card-desc">
+              Built for students and alumni. Support for schools, universities, degrees, branches, CGPA, percentage scales, relevant coursework, and academic honors.
+            </p>
+            <span class="badge" style="align-self: flex-start;">CGPA &bull; Coursework</span>
+          </div>
+
+          <!-- Card 3: GitHub Integration -->
+          <div class="bento-card bento-card-highlight">
+            <div class="bento-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            </div>
+            <h3 class="bento-card-title">3. GitHub Integration</h3>
+            <p class="bento-card-desc">
+              Connect your GitHub account with secure OAuth. Fetch public repositories, language distribution, and stars, and import selected projects with one click.
+            </p>
+            <span class="badge" style="align-self: flex-start;">Real OAuth &bull; Stars Sync</span>
+          </div>
+
+          <!-- Card 4: Project Showcase -->
+          <div class="bento-card">
+            <div class="bento-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            </div>
+            <h3 class="bento-card-title">4. Project Showcase</h3>
+            <p class="bento-card-desc">
+              Display deep case studies with architecture breakdowns, tech stack tags, live preview URLs, repository links, and featured project reordering.
+            </p>
+            <span class="badge" style="align-self: flex-start;">Case Studies</span>
+          </div>
+
+          <!-- Card 5: Experience & Certifications -->
+          <div class="bento-card">
+            <div class="bento-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+            <h3 class="bento-card-title">5. Experience &amp; Honors</h3>
+            <p class="bento-card-desc">
+              Document full-time roles, internships, freelancing, hackathons, and certified credentials with verified issuer links and dates.
+            </p>
+            <span class="badge" style="align-self: flex-start;">Work &amp; Hackathons</span>
+          </div>
+
+          <!-- Card 6: Resume Builder -->
+          <div class="bento-card bento-card-highlight">
+            <div class="bento-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <h3 class="bento-card-title">6. Resume Builder</h3>
+            <p class="bento-card-desc">
+              Generate ATS-compliant vector PDF resumes directly from your saved profile without typing your information twice. Selectable text and clean margins.
+            </p>
+            <span class="badge" style="align-self: flex-start;">Vector PDF Export</span>
+          </div>
+
+          <!-- Card 7: Portfolio Designer -->
+          <div class="bento-card">
+            <div class="bento-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m4.93 4.93 4.24 4.24"></path><path d="m14.83 9.17 4.24-4.24"></path><path d="m14.83 14.83 4.24 4.24"></path><path d="m9.17 14.83-4.24 4.24"></path></svg>
+            </div>
+            <h3 class="bento-card-title">7. Portfolio Designer</h3>
+            <p class="bento-card-desc">
+              Customize accent palettes, layout densities, section ordering, and visual templates in a real-time live preview editor before publishing.
+            </p>
+            <span class="badge" style="align-self: flex-start;">Live Editor</span>
+          </div>
+
+          <!-- Card 8: Publish and Share -->
+          <div class="bento-card">
+            <div class="bento-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+            </div>
+            <h3 class="bento-card-title">8. Publish &amp; Share</h3>
+            <p class="bento-card-desc">
+              Get an instant public link at <code>/u/username</code>, QR code generator for conferences and resumes, and full control over published vs. draft states.
+            </p>
+            <span class="badge" style="align-self: flex-start;">Unique Public URL</span>
+          </div>
+
+          <!-- Card 9: Privacy-Conscious Analytics -->
+          <div class="bento-card">
+            <div class="bento-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            </div>
+            <h3 class="bento-card-title">9. Privacy Analytics</h3>
+            <p class="bento-card-desc">
+              Understand how recruiters and visitors interact with your portfolio without invasive third-party tracking cookies or personal data harvesting.
+            </p>
+            <span class="badge" style="align-self: flex-start;">Zero Tracking Cookies</span>
+          </div>
+
+          <!-- Card 10: AI Writing Assistant -->
+          <div class="bento-card">
+            <div class="bento-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+            </div>
+            <h3 class="bento-card-title">10. AI Writing Assistant</h3>
+            <p class="bento-card-desc">
+              Refine your professional bio, articulate project contributions into concise impact bullets, and ensure professional phrasing across all sections.
+            </p>
+            <span class="badge" style="align-self: flex-start;">Impact Bullets</span>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 5: TEMPLATE GALLERY (Responsive Gallery with Functional Filters)
+         ========================================================================= -->
+    <section id="templates" class="section-py" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+      <div class="container">
+        
+        <div class="section-header" style="text-align: center; max-width: 680px; margin: 0 auto var(--space-6) auto;">
+          <span class="section-label">Aesthetic Archetypes</span>
+          <h2 class="section-title">Find your style. Make it yours.</h2>
+          <p class="section-subtitle">
+            Every template uses the exact same structured profile data. Switch styles anytime without rebuilding or losing a single character.
+          </p>
+        </div>
+
+        <!-- Functional Filter Pills Bar -->
+        <div class="template-filters-bar" style="justify-content: center;">
+          <button type="button" class="template-filter-btn active" data-filter="all">All Templates</button>
+          <button type="button" class="template-filter-btn" data-filter="minimal">Minimal</button>
+          <button type="button" class="template-filter-btn" data-filter="developer">Developer</button>
+          <button type="button" class="template-filter-btn" data-filter="creative">Creative</button>
+          <button type="button" class="template-filter-btn" data-filter="student">Student</button>
+          <button type="button" class="template-filter-btn" data-filter="professional">Professional</button>
+        </div>
+
+        <!-- Gallery Grid (6 Distinct Templates) -->
+        <div class="template-gallery-grid" id="template-cards-container">
+          
+          <!-- Template 1: Minimal Professional -->
+          <article class="template-gallery-card" data-categories="minimal professional">
+            <div class="template-preview-canvas">
+              <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
+                <rect width="220" height="120" rx="6" fill="#151821" stroke="#232733"/>
+                <circle cx="36" cy="36" r="14" fill="#8297FF"/>
+                <rect x="58" y="26" width="90" height="8" rx="2" fill="#F5F6FA"/>
+                <rect x="58" y="38" width="60" height="6" rx="2" fill="#9CA3B4"/>
+                <rect x="24" y="64" width="80" height="40" rx="4" fill="#101216" stroke="#232733"/>
+                <rect x="116" y="64" width="80" height="40" rx="4" fill="#101216" stroke="#232733"/>
+              </svg>
+            </div>
+            <div class="template-gallery-content">
+              <div>
+                <span class="badge" style="font-size: 10px; margin-bottom: 6px;">Minimal &bull; Clean</span>
+                <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Minimal Professional</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                  Understated typography, generous whitespace, and restrained card borders. Ideal for software engineers and executives.
+                </p>
+              </div>
+              <div style="display: flex; gap: var(--space-2); margin-top: auto;">
+                <a href="/u/sunny" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Preview</a>
+                <a href="/signup" class="btn btn-primary btn-sm use-template-action" data-template-id="minimal-professional" style="flex: 1; text-align: center;">Use Template</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Template 2: Developer Dark -->
+          <article class="template-gallery-card" data-categories="developer minimal">
+            <div class="template-preview-canvas" style="background-color: #0d1117;">
+              <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
+                <rect width="220" height="120" rx="6" fill="#0d1117" stroke="#30363d"/>
+                <rect x="16" y="14" width="188" height="18" rx="3" fill="#161b22"/>
+                <circle cx="26" cy="23" r="3" fill="#ff5f56"/>
+                <circle cx="34" cy="23" r="3" fill="#ffbd2e"/>
+                <circle cx="42" cy="23" r="3" fill="#27c93f"/>
+                <text x="20" y="52" fill="#58a6ff" font-family="monospace" font-size="8">&gt; whoami --role staff_eng</text>
+                <text x="20" y="68" fill="#7ee787" font-family="monospace" font-size="8">&gt; git clone portfolio</text>
+                <rect x="20" y="80" width="80" height="28" rx="2" fill="#161b22" stroke="#30363d"/>
+                <rect x="110" y="80" width="80" height="28" rx="2" fill="#161b22" stroke="#30363d"/>
+              </svg>
+            </div>
+            <div class="template-gallery-content">
+              <div>
+                <span class="badge" style="font-size: 10px; margin-bottom: 6px;">Terminal &bull; Dark</span>
+                <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Developer Dark</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                  Terminal telemetry aesthetic with JetBrains Mono, command-prompt breadcrumbs, and live GitHub commit counters.
+                </p>
+              </div>
+              <div style="display: flex; gap: var(--space-2); margin-top: auto;">
+                <a href="/u/sunny" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Preview</a>
+                <a href="/signup" class="btn btn-primary btn-sm use-template-action" data-template-id="developer-dark" style="flex: 1; text-align: center;">Use Template</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Template 3: Creative Portfolio -->
+          <article class="template-gallery-card" data-categories="creative professional">
+            <div class="template-preview-canvas" style="background: linear-gradient(135deg, rgba(130, 151, 255, 0.1), rgba(167, 139, 250, 0.1));">
+              <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
+                <rect width="220" height="120" rx="6" fill="#151821" stroke="#8297FF" stroke-opacity="0.3"/>
+                <rect x="20" y="20" width="180" height="44" rx="4" fill="url(#grad1)"/>
+                <defs>
+                  <linearGradient id="grad1" x1="20" y1="20" x2="200" y2="64" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#8297FF" stop-opacity="0.3"/>
+                    <stop offset="1" stop-color="#A78BFA" stop-opacity="0.4"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="40" cy="42" r="12" fill="#F5F6FA"/>
+                <rect x="20" y="74" width="85" height="34" rx="4" fill="#101216" stroke="#232733"/>
+                <rect x="115" y="74" width="85" height="34" rx="4" fill="#101216" stroke="#232733"/>
+              </svg>
+            </div>
+            <div class="template-gallery-content">
+              <div>
+                <span class="badge" style="font-size: 10px; margin-bottom: 6px;">Vibrant &bull; Design</span>
+                <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Creative Portfolio</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                  Rich gradient accents, visual asset galleries, and media-focused cards designed for UI/UX designers and creative technologists.
+                </p>
+              </div>
+              <div style="display: flex; gap: var(--space-2); margin-top: auto;">
+                <a href="/u/sunny" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Preview</a>
+                <a href="/signup" class="btn btn-primary btn-sm use-template-action" data-template-id="creative-portfolio" style="flex: 1; text-align: center;">Use Template</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Template 4: Editorial Portfolio -->
+          <article class="template-gallery-card" data-categories="minimal professional">
+            <div class="template-preview-canvas">
+              <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
+                <rect width="220" height="120" rx="6" fill="#101216" stroke="#232733"/>
+                <rect x="20" y="24" width="180" height="10" rx="2" fill="#F5F6FA"/>
+                <line x1="20" y1="44" x2="200" y2="44" stroke="#232733"/>
+                <rect x="20" y="54" width="160" height="6" rx="2" fill="#9CA3B4" opacity="0.6"/>
+                <rect x="20" y="66" width="130" height="6" rx="2" fill="#9CA3B4" opacity="0.4"/>
+                <rect x="20" y="78" width="170" height="6" rx="2" fill="#9CA3B4" opacity="0.5"/>
+                <rect x="20" y="94" width="90" height="14" rx="2" fill="#8297FF" opacity="0.2"/>
+              </svg>
+            </div>
+            <div class="template-gallery-content">
+              <div>
+                <span class="badge" style="font-size: 10px; margin-bottom: 6px;">Editorial &bull; Writing</span>
+                <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Editorial Portfolio</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                  Long-form narrative flow, deep case-study typography, and reader-first article formatting for writers and researchers.
+                </p>
+              </div>
+              <div style="display: flex; gap: var(--space-2); margin-top: auto;">
+                <a href="/u/sunny" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Preview</a>
+                <a href="/signup" class="btn btn-primary btn-sm use-template-action" data-template-id="editorial-portfolio" style="flex: 1; text-align: center;">Use Template</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Template 5: Student Portfolio -->
+          <article class="template-gallery-card" data-categories="student minimal">
+            <div class="template-preview-canvas">
+              <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
+                <rect width="220" height="120" rx="6" fill="#151821" stroke="#232733"/>
+                <rect x="20" y="18" width="180" height="30" rx="4" fill="#101216" stroke="#8297FF" stroke-opacity="0.3"/>
+                <text x="32" y="34" fill="#8297FF" font-family="monospace" font-size="8" font-weight="bold">DEGREE &bull; CGPA 9.6/10</text>
+                <text x="32" y="43" fill="#9CA3B4" font-family="sans-serif" font-size="7">IIT Delhi &bull; Computer Science</text>
+                <rect x="20" y="58" width="85" height="48" rx="4" fill="#101216" stroke="#232733"/>
+                <rect x="115" y="58" width="85" height="48" rx="4" fill="#101216" stroke="#232733"/>
+              </svg>
+            </div>
+            <div class="template-gallery-content">
+              <div>
+                <span class="badge" style="font-size: 10px; margin-bottom: 6px;">Academics &bull; Student</span>
+                <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Student Portfolio</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                  Puts university credentials, coursework, hackathon achievements, and academic projects front and center for campus placements.
+                </p>
+              </div>
+              <div style="display: flex; gap: var(--space-2); margin-top: auto;">
+                <a href="/u/sunny" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Preview</a>
+                <a href="/signup" class="btn btn-primary btn-sm use-template-action" data-template-id="student-portfolio" style="flex: 1; text-align: center;">Use Template</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Template 6: Technical Showcase -->
+          <article class="template-gallery-card" data-categories="developer student">
+            <div class="template-preview-canvas">
+              <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
+                <rect width="220" height="120" rx="6" fill="#101216" stroke="#232733"/>
+                <rect x="20" y="20" width="180" height="22" rx="3" fill="#151821"/>
+                <rect x="28" y="28" width="40" height="6" rx="1" fill="#8297FF"/>
+                <rect x="74" y="28" width="40" height="6" rx="1" fill="#A78BFA"/>
+                <rect x="120" y="28" width="40" height="6" rx="1" fill="#27c93f"/>
+                <rect x="20" y="50" width="180" height="56" rx="4" fill="#151821" stroke="#232733"/>
+              </svg>
+            </div>
+            <div class="template-gallery-content">
+              <div>
+                <span class="badge" style="font-size: 10px; margin-bottom: 6px;">Benchmark &bull; Code</span>
+                <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Technical Showcase</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                  Dense matrix layout highlighting live architecture diagrams, benchmark charts, API schemas, and package registries.
+                </p>
+              </div>
+              <div style="display: flex; gap: var(--space-2); margin-top: auto;">
+                <a href="/u/sunny" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Preview</a>
+                <a href="/signup" class="btn btn-primary btn-sm use-template-action" data-template-id="technical-showcase" style="flex: 1; text-align: center;">Use Template</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <div id="template-empty-state" style="display: none; text-align: center; padding: var(--space-10) 0;">
+          <p style="color: var(--text-muted); font-size: var(--text-base);">No templates match the selected filter.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 6: FEATURED PUBLIC PORTFOLIOS (Curated Demo Accounts)
+         ========================================================================= -->
+    <section class="section-py" aria-labelledby="showcase-title">
+      <div class="container">
+        
+        <div class="section-header" style="text-align: center; max-width: 680px; margin: 0 auto var(--space-8) auto;">
+          <span class="section-label">Real Platform Examples</span>
+          <h2 id="showcase-title" class="section-title">Built with BuildLab</h2>
+          <p class="section-subtitle">
+            Curated sample accounts illustrating how different disciplines represent their work.
+          </p>
+          <div style="margin-top: var(--space-3);">
+            <span class="sample-indicator-badge">
+              <span class="pulsing-dot"></span> Clearly Identified Demonstration Accounts
+            </span>
+          </div>
+        </div>
+
+        <div class="curated-profiles-grid">
+          
+          <!-- Example 1: Computer Science Student -->
+          <div class="curated-profile-card">
+            <div>
+              <div style="display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-3);">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #8297FF, #A78BFA); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #08090B;">
+                  PS
+                </div>
+                <div>
+                  <h3 style="font-size: var(--text-base); font-weight: 700; margin: 0; color: var(--text-primary);">Priya Sharma</h3>
+                  <p style="font-size: 11px; color: var(--text-muted); margin: 0;">CS Undergrad &bull; IIT Delhi</p>
+                </div>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                Specializing in Distributed Consensus &amp; Transformer Interpretability. CGPA 9.6 / 10.0.
+              </p>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--space-4);">
+                <span class="badge" style="font-size: 10px;">Python</span>
+                <span class="badge" style="font-size: 10px;">PyTorch</span>
+                <span class="badge" style="font-size: 10px;">C++</span>
+                <span class="badge" style="font-size: 10px;">CUDA</span>
+              </div>
+            </div>
+            <div>
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-3); margin-bottom: var(--space-3); font-size: 11px; color: var(--text-muted);">
+                Featured: <strong>AttentionLens Research Repo</strong>
+              </div>
+              <a href="/u/sunny" class="btn btn-secondary btn-sm" style="width: 100%; text-align: center;">View Demo Profile &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Example 2: Frontend Developer -->
+          <div class="curated-profile-card">
+            <div>
+              <div style="display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-3);">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #27c93f, #8297FF); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #08090B;">
+                  LV
+                </div>
+                <div>
+                  <h3 style="font-size: var(--text-base); font-weight: 700; margin: 0; color: var(--text-primary);">Liam Vance</h3>
+                  <p style="font-size: 11px; color: var(--text-muted); margin: 0;">Senior Design Technologist &bull; Remote</p>
+                </div>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                Building fluid 3D web interfaces, WebGL procedural systems, and design tokens frameworks.
+              </p>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--space-4);">
+                <span class="badge" style="font-size: 10px;">Three.js</span>
+                <span class="badge" style="font-size: 10px;">TypeScript</span>
+                <span class="badge" style="font-size: 10px;">Tailwind</span>
+                <span class="badge" style="font-size: 10px;">GLSL</span>
+              </div>
+            </div>
+            <div>
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-3); margin-bottom: var(--space-3); font-size: 11px; color: var(--text-muted);">
+                Featured: <strong>Spatial Audio 3D Graph</strong>
+              </div>
+              <a href="/u/sunny" class="btn btn-secondary btn-sm" style="width: 100%; text-align: center;">View Demo Profile &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Example 3: UI/UX Designer -->
+          <div class="curated-profile-card">
+            <div>
+              <div style="display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-3);">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #ff5f56, #A78BFA); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #08090B;">
+                  ML
+                </div>
+                <div>
+                  <h3 style="font-size: var(--text-base); font-weight: 700; margin: 0; color: var(--text-primary);">Maya Lin</h3>
+                  <p style="font-size: 11px; color: var(--text-muted); margin: 0;">Product Designer &bull; London, UK</p>
+                </div>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                Crafting intuitive enterprise workflow software and multi-brand design systems at scale.
+              </p>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--space-4);">
+                <span class="badge" style="font-size: 10px;">Figma</span>
+                <span class="badge" style="font-size: 10px;">Design Systems</span>
+                <span class="badge" style="font-size: 10px;">User Research</span>
+              </div>
+            </div>
+            <div>
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-3); margin-bottom: var(--space-3); font-size: 11px; color: var(--text-muted);">
+                Featured: <strong>Fintech Checkout Redesign</strong>
+              </div>
+              <a href="/u/sunny" class="btn btn-secondary btn-sm" style="width: 100%; text-align: center;">View Demo Profile &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Example 4: Data Analyst -->
+          <div class="curated-profile-card">
+            <div>
+              <div style="display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-3);">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #ffbd2e, #8297FF); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #08090B;">
+                  CR
+                </div>
+                <div>
+                  <h3 style="font-size: var(--text-base); font-weight: 700; margin: 0; color: var(--text-primary);">Carlos Ruiz</h3>
+                  <p style="font-size: 11px; color: var(--text-muted); margin: 0;">Quantitative Data Analyst &bull; NYC</p>
+                </div>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                Predictive modeling, automated algorithmic backtesting, and interactive BI dashboards.
+              </p>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--space-4);">
+                <span class="badge" style="font-size: 10px;">Python</span>
+                <span class="badge" style="font-size: 10px;">SQL / BigQuery</span>
+                <span class="badge" style="font-size: 10px;">Pandas</span>
+                <span class="badge" style="font-size: 10px;">Tableau</span>
+              </div>
+            </div>
+            <div>
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-3); margin-bottom: var(--space-3); font-size: 11px; color: var(--text-muted);">
+                Featured: <strong>Market Volatility Engine</strong>
+              </div>
+              <a href="/u/sunny" class="btn btn-secondary btn-sm" style="width: 100%; text-align: center;">View Demo Profile &rarr;</a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 7: GITHUB INTEGRATION SHOWCASE (5-Step Walkthrough)
+         ========================================================================= -->
+    <section class="section-py" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+      <div class="container">
+        
+        <div class="section-header" style="text-align: center; max-width: 680px; margin: 0 auto var(--space-10) auto;">
+          <span class="section-label">Effortless Automation</span>
+          <h2 class="section-title">Import your GitHub repositories in seconds</h2>
+          <p class="section-subtitle">
+            Skip tedious copy-pasting. Connect your account securely, pull your public repositories, and showcase your code with full control.
+          </p>
+        </div>
+
+        <div class="github-flow-grid">
+          
+          <div class="github-flow-step">
+            <div class="step-num-badge">1</div>
+            <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Connect GitHub</h3>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+              Authenticate via standard GitHub OAuth. Zero access requested to your private repos by default.
             </p>
           </div>
+
+          <div class="github-flow-step">
+            <div class="step-num-badge">2</div>
+            <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Import Repositories</h3>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+              BuildLab retrieves your repository titles, descriptions, stars, primary language, and last updated timestamps.
+            </p>
+          </div>
+
+          <div class="github-flow-step">
+            <div class="step-num-badge">3</div>
+            <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Review &amp; Edit</h3>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+              Enhance descriptions, add screenshots, and link your live deployed demo before publishing.
+            </p>
+          </div>
+
+          <div class="github-flow-step">
+            <div class="step-num-badge">4</div>
+            <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Select Featured</h3>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+              Choose which repositories take prime position on your portfolio hero and hide unfinished experiments.
+            </p>
+          </div>
+
+          <div class="github-flow-step">
+            <div class="step-num-badge">5</div>
+            <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Publish Live</h3>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+              Your projects appear instantly in your selected portfolio template, complete with live links and language badges.
+            </p>
+          </div>
+
+        </div>
+
+        <div style="margin-top: var(--space-8); text-align: center;">
+          <p style="font-size: var(--text-xs); color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+            <strong>Security Guarantee:</strong> Access tokens are encrypted securely on the server and never exposed to browser scripts. Private repos remain strictly private.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 8: HOW IT WORKS (3-Step Timeline with Connecting Line)
+         ========================================================================= -->
+    <section class="section-py" aria-labelledby="how-it-works-title">
+      <div class="container" style="max-width: 800px;">
+        
+        <div class="section-header" style="text-align: center; margin-bottom: var(--space-12);">
+          <span class="section-label">Workflow</span>
+          <h2 id="how-it-works-title" class="section-title">From zero to published in three steps</h2>
+          <p class="section-subtitle">
+            No design degrees or complex web frameworks required. BuildLab handles the layout, responsiveness, and hosting.
+          </p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: var(--space-8);">
+          
+          <!-- Step 1 -->
+          <div class="timeline-step">
+            <div class="timeline-step-badge">1</div>
+            <div>
+              <span class="badge" style="margin-bottom: 6px; display: inline-block;">Step 1 &bull; Data Foundation</span>
+              <h3 style="font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin: 0 0 8px 0;">Build your profile</h3>
+              <p style="font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                Add your education, CGPA, technical skills, projects, employment or internship experience, and professional links. Your data is saved incrementally so you never lose progress.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="timeline-step">
+            <div class="timeline-step-badge">2</div>
+            <div>
+              <span class="badge" style="margin-bottom: 6px; display: inline-block;">Step 2 &bull; Visual Identity</span>
+              <h3 style="font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin: 0 0 8px 0;">Customize your portfolio</h3>
+              <p style="font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                Choose an aesthetic template, customize accent colors, adjust section order, and preview how your portfolio looks on desktop, tablet, and mobile screens in real time.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="timeline-step">
+            <div class="timeline-step-badge">3</div>
+            <div>
+              <span class="badge" style="margin-bottom: 6px; display: inline-block;">Step 3 &bull; Global Availability</span>
+              <h3 style="font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin: 0 0 8px 0;">Publish and share</h3>
+              <p style="font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                Generate your personal public URL at <code>/u/username</code>, share it with recruiters, clients, colleges, or companies, and export an ATS-compliant PDF resume whenever needed.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 9: RESUME AND CAREER READINESS
+         ========================================================================= -->
+    <section class="section-py" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+      <div class="container">
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-10); align-items: center;">
+          
           <div>
-            <a href="/contact" class="btn btn-primary">
-              <span>Get in Touch</span>
+            <span class="section-label">Dual-Output Architecture</span>
+            <h2 class="section-title" style="margin-bottom: var(--space-4);">One profile. Two powerful career tools.</h2>
+            <p class="section-subtitle" style="margin-bottom: var(--space-6);">
+              Why build a portfolio and write a resume separately? BuildLab reuses your verified education, skills, projects, and work experience to instantly generate a print-ready, ATS-compliant PDF resume.
+            </p>
+
+            <ul style="list-style: none; padding: 0; margin: 0 0 var(--space-6) 0; display: flex; flex-direction: column; gap: var(--space-3);">
+              <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--text-secondary);">
+                <span style="color: var(--accent-primary); font-weight: 700;">&#10003;</span>
+                <span>Selectable text with standard font hierarchy that parser robots love.</span>
+              </li>
+              <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--text-secondary);">
+                <span style="color: var(--accent-primary); font-weight: 700;">&#10003;</span>
+                <span>Toggle which sections appear on web vs. resume with granular privacy.</span>
+              </li>
+              <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--text-secondary);">
+                <span style="color: var(--accent-primary); font-weight: 700;">&#10003;</span>
+                <span>Vector-sharp layout without blurred image exports or bad line wraps.</span>
+              </li>
+            </ul>
+
+            <a href="/signup" class="btn btn-primary">
+              <span>Try the Resume Builder</span>
               <span aria-hidden="true">&rarr;</span>
             </a>
           </div>
+
+          <!-- Visual Resume Mockup Frame -->
+          <div style="background-color: #ffffff; color: #1a1a1a; padding: var(--space-8); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); font-family: var(--font-sans);">
+            <div style="border-bottom: 2px solid #1a1a1a; padding-bottom: 12px; margin-bottom: 16px;">
+              <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 4px 0; color: #000000;">ALEX RIVERA</h3>
+              <p style="font-size: 11px; margin: 0; color: #555555; font-family: var(--font-mono);">
+                San Francisco, CA &bull; alex@rivera.dev &bull; buildlab.dev/u/alexrivera &bull; github.com/alexrivera
+              </p>
+            </div>
+
+            <div style="margin-bottom: 14px;">
+              <h4 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #ddd; padding-bottom: 2px; margin-bottom: 6px; color: #000;">EDUCATION</h4>
+              <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700;">
+                <span>Stanford University</span>
+                <span style="font-family: var(--font-mono);">2020 &ndash; 2024</span>
+              </div>
+              <p style="font-size: 10px; margin: 2px 0 0 0; color: #444;">
+                Bachelor of Science in Computer Science &bull; <strong>GPA 3.92 / 4.0</strong>
+              </p>
+            </div>
+
+            <div style="margin-bottom: 14px;">
+              <h4 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #ddd; padding-bottom: 2px; margin-bottom: 6px; color: #000;">TECHNICAL EXPERIENCE</h4>
+              <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700;">
+                <span>Cloudflare &bull; Systems Software Intern</span>
+                <span style="font-family: var(--font-mono);">Jun 2023 &ndash; Sep 2023</span>
+              </div>
+              <ul style="font-size: 10px; margin: 4px 0 0 16px; padding: 0; color: #444; line-height: 1.4;">
+                <li>Designed caching proxy layer in Go processing 25,000+ rps with p99 &lt; 4ms.</li>
+                <li>Authored automated fuzzing suites catching 14 edge-case race conditions.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #ddd; padding-bottom: 2px; margin-bottom: 6px; color: #000;">SKILLS</h4>
+              <p style="font-size: 10px; margin: 0; color: #444;">
+                <strong>Languages:</strong> TypeScript, Go, Python, Rust, SQL &bull; <strong>Infra:</strong> Docker, Kubernetes, AWS, Raft
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 10: BLOG AND RESOURCES
+         ========================================================================= -->
+    <section class="section-py" aria-labelledby="resources-title">
+      <div class="container">
+        
+        <div class="section-header" style="text-align: center; max-width: 680px; margin: 0 auto var(--space-10) auto;">
+          <span class="section-label">Editorial Resources</span>
+          <h2 id="resources-title" class="section-title">Insights for ambitious builders</h2>
+          <p class="section-subtitle">
+            Curated guides and engineering insights on crafting impactful portfolios, resumes, and technical presentations.
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6);">
+          
+          <article class="project-card">
+            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-primary); margin-bottom: 6px;">
+              CAREER &bull; 5 MIN READ
+            </div>
+            <h3 style="font-size: var(--text-base); font-weight: 700; margin-bottom: 8px;">
+              How to Build a High-Converting Developer Portfolio in 2026
+            </h3>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-4);">
+              Recruiters spend under 45 seconds scanning a portfolio. Here is how to structure your projects and proof points for maximum impact.
+            </p>
+            <a href="/blog/sample-article" class="link-inline" style="font-size: var(--text-xs);">Read Article &rarr;</a>
+          </article>
+
+          <article class="project-card">
+            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-primary); margin-bottom: 6px;">
+              STUDENTS &bull; 7 MIN READ
+            </div>
+            <h3 style="font-size: var(--text-base); font-weight: 700; margin-bottom: 8px;">
+              From Academic Projects to Production Showcases: A Student's Guide
+            </h3>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-4);">
+              How to take college assignments, capstone projects, and hackathon prototypes and present them like production-ready software.
+            </p>
+            <a href="/blog/sample-article" class="link-inline" style="font-size: var(--text-xs);">Read Article &rarr;</a>
+          </article>
+
+          <article class="project-card">
+            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-primary); margin-bottom: 6px;">
+              GITHUB &bull; 6 MIN READ
+            </div>
+            <h3 style="font-size: var(--text-base); font-weight: 700; margin-bottom: 8px;">
+              Using GitHub Repositories Effectively on Your Portfolio
+            </h3>
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-4);">
+              Why a great README, clear architectural diagrams, and clean commit hygiene beat a hundred unfinished tutorial clones.
+            </p>
+            <a href="/blog/sample-article" class="link-inline" style="font-size: var(--text-xs);">Read Article &rarr;</a>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 11: FINAL CALL TO ACTION
+         ========================================================================= -->
+    <section class="section-py" style="background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%); border-top: 1px solid var(--border-color);">
+      <div class="container" style="text-align: center; max-width: 680px;">
+        <span class="gradient-badge" style="margin-bottom: var(--space-4);">READY TO STAND OUT?</span>
+        <h2 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; margin-bottom: var(--space-4);">
+          Your next opportunity starts with what you build.
+        </h2>
+        <p style="font-size: var(--text-base); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-6);">
+          Create a portfolio that brings your skills, projects, education, and experience together into one link you can share with the world.
+        </p>
+        <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+          <a href="/signup" class="btn btn-primary btn-lg">
+            <span>Build your portfolio</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+          <a href="/templates" class="btn btn-secondary btn-lg">
+            <span>Explore templates</span>
+          </a>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Site Footer -->
-  <footer class="site-footer" role="contentinfo">
-    <div class="container footer-container">
-      <p>&copy; 2026 SSRNovX. Built for TechSpace BuildLab '26 (BuildLab B04).</p>
-      <div class="footer-links">
-        <a href="/" class="footer-link">Home</a>
-        <a href="/about" class="footer-link">About</a>
-        <a href="/projects" class="footer-link">Projects</a>
-        <a href="/blog" class="footer-link">Blog</a>
-        <a href="/contact" class="footer-link">Contact</a>
-        <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
+  <!-- =========================================================================
+       SECTION 12: COMPLETE PLATFORM FOOTER
+       ========================================================================= -->
+  <footer class="site-footer" role="contentinfo" style="border-top: 1px solid var(--border-color); background-color: var(--bg-primary); padding-top: var(--space-12); padding-bottom: var(--space-8);">
+    <div class="container">
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-8); margin-bottom: var(--space-12);">
+        
+        <!-- Brand Summary -->
+        <div style="grid-column: span 1.5;">
+          <a href="/" class="brand-logo" style="margin-bottom: var(--space-3); display: inline-flex;">
+            <span class="gradient-text font-black" style="font-weight: 800; font-size: 1.25rem;">BuildLab</span>
+          </a>
+          <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); max-width: 280px; margin-bottom: var(--space-4);">
+            The modern career platform and multi-user portfolio builder for students, engineers, and professionals.
+          </p>
+          <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+            TechSpace BuildLab B04 Platform
+          </div>
+        </div>
+
+        <!-- Product Links -->
+        <div>
+          <h4 style="font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-primary); text-transform: uppercase; margin-bottom: var(--space-3);">Product</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-xs);">
+            <li><a href="#features" class="footer-link">Features</a></li>
+            <li><a href="/templates" class="footer-link">Template Gallery</a></li>
+            <li><a href="/explore" class="footer-link">Explore Portfolios</a></li>
+            <li><a href="/dashboard/resume" class="footer-link">Resume Builder</a></li>
+            <li><a href="/dashboard/builder" class="footer-link">Live Designer</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources Links -->
+        <div>
+          <h4 style="font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-primary); text-transform: uppercase; margin-bottom: var(--space-3);">Resources</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-xs);">
+            <li><a href="/blog" class="footer-link">Engineering Blog</a></li>
+            <li><a href="/blog/sample-article" class="footer-link">Portfolio Guide</a></li>
+            <li><a href="/u/sunny" class="footer-link">Sample Profile</a></li>
+          </ul>
+        </div>
+
+        <!-- Company & Legal Links -->
+        <div>
+          <h4 style="font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-primary); text-transform: uppercase; margin-bottom: var(--space-3);">Company &amp; Legal</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-xs);">
+            <li><a href="/about" class="footer-link">About BuildLab</a></li>
+            <li><a href="/contact" class="footer-link">Contact Support</a></li>
+            <li><a href="/privacy" class="footer-link">Privacy Policy</a></li>
+            <li><a href="/terms" class="footer-link">Terms of Service</a></li>
+            <li><a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Repository</a></li>
+          </ul>
+        </div>
+
       </div>
+
+      <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-6); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); font-size: var(--text-xs); color: var(--text-muted);">
+        <p style="margin: 0;">&copy; 2026 BuildLab Platform. Built for TechSpace BuildLab '26.</p>
+        <div style="display: flex; gap: var(--space-4);">
+          <a href="/privacy" class="footer-link">Privacy</a>
+          <a href="/terms" class="footer-link">Terms</a>
+          <a href="/contact" class="footer-link">Security</a>
+        </div>
+      </div>
+
     </div>
   </footer>
 

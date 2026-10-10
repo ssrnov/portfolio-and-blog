@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Terms of Service | BuildLab Platform</title>
+  <meta name="title" content="Terms of Service | BuildLab Platform" />
+  <meta name="description" content="BuildLab terms of service: user content ownership, acceptable use guidelines, and platform service terms." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238297FF'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%2308090B' text-anchor='middle'>B</text></svg>" />
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo" aria-label="BuildLab Home">
+        <span class="gradient-text font-black" style="font-weight: 800; font-size: 1.25rem;">BuildLab</span>
+        <span class="brand-badge">Legal</span>
+      </a>
+
+      <div class="nav-right">
+        <nav class="site-nav" role="navigation" aria-label="Main Navigation">
+          <ul class="nav-links" id="nav-menu">
+            <li><a href="/" class="nav-link">Home</a></li>
+            <li><a href="/features" class="nav-link">Features</a></li>
+            <li><a href="/templates" class="nav-link">Templates</a></li>
+            <li><a href="/explore" class="nav-link">Explore</a></li>
+          </ul>
+        </nav>
+
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme">
+          <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+          <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"></path></svg>
+        </button>
+
+        <a href="/login" class="btn btn-secondary btn-sm">Sign In</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <section class="section-py" style="border-bottom: 1px solid var(--border-color);">
+      <div class="container" style="max-width: 760px;">
+        <span class="badge" style="margin-bottom: var(--space-3); display: inline-block;">Effective Date: October 2026</span>
+        <h1 style="font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 800; line-height: 1.2; margin-bottom: var(--space-4);">
+          Terms of Service
+        </h1>
+        <p style="font-size: var(--text-base); color: var(--text-secondary); line-height: var(--leading-relaxed);">
+          Welcome to BuildLab. By using our multi-user portfolio and resume platform, you agree to these terms.
+        </p>
+      </div>
+    </section>
+
+    <section class="section-py">
+      <div class="container" style="max-width: 760px;">
+        <div style="display: flex; flex-direction: column; gap: var(--space-8); line-height: var(--leading-relaxed); color: var(--text-secondary); font-size: var(--text-sm);">
+          
+          <div>
+            <h2 style="font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">1. User Content &amp; Ownership</h2>
+            <p>You retain 100% intellectual property rights and full ownership of all code, projects, media, text descriptions, and resume contents you add to BuildLab. By publishing a portfolio, you grant BuildLab a non-exclusive license solely to host, render, and display that content at your assigned public URL (<code>/u/username</code>) as instructed by you.</p>
+          </div>
+
+          <div>
+            <h2 style="font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">2. Acceptable Use</h2>
+            <p>You agree not to use BuildLab to distribute malicious code, phishing portals, copyright-infringing assets, defamatory material, or illegal content. We reserve the right to suspend or remove any published portfolio that violates our acceptable use policy.</p>
+          </div>
+
+          <div>
+            <h2 style="font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">3. Multi-User Platform Boundaries</h2>
+            <p>Each user account is isolated and guarded by cryptographic authentication and server authorization policies. You agree not to attempt to access, mutate, or tamper with another member's drafts, private settings, or stored credentials.</p>
+          </div>
+
+          <div>
+            <h2 style="font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">4. Service Availability &amp; Disclaimer</h2>
+            <p>BuildLab is provided on an "as-is" and "as-available" basis for the TechSpace BuildLab '26 initiative. While we take pride in high uptime and database resilience, we encourage members to maintain local backups of critical resume documents.</p>
+          </div>
+
+          <div>
+            <h2 style="font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">5. Termination</h2>
+            <p>You may terminate your account at any time through Account Settings. BuildLab reserves the right to terminate accounts that engage in spamming or platform abuse.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-container">
+      <p>&copy; 2026 BuildLab Platform. Built for TechSpace BuildLab '26.</p>
+      <div class="footer-links">
+        <a href="/" class="footer-link">Home</a>
+        <a href="/features" class="footer-link">Features</a>
+        <a href="/templates" class="footer-link">Templates</a>
+        <a href="/explore" class="footer-link">Explore</a>
+        <a href="/privacy" class="footer-link">Privacy</a>
+        <a href="/terms" class="footer-link">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

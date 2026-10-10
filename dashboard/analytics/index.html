@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Analytics | BuildLab Studio</title>
+  <meta name="description" content="Privacy-first portfolio analytics, traffic sources, visitor engagement, and device telemetry." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238297FF'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%2308090B' text-anchor='middle'>B</text></svg>" />
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) {
+        document.documentElement.setAttribute('data-theme', storedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+</head>
+<body class="dashboard-shell">
+
+  <!-- Left Sidebar -->
+  <aside class="dashboard-sidebar" role="navigation">
+    <div>
+      <div class="sidebar-header">
+        <a href="/" class="brand-logo" aria-label="BuildLab Home">
+          <span class="gradient-text font-black" style="font-weight: 800; font-size: 1.25rem;">BuildLab</span>
+          <span class="brand-badge">Studio</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="/dashboard/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Overview</span>
+        </a>
+        <a href="/dashboard/education/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+          <span>Education</span>
+        </a>
+        <a href="/dashboard/skills/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <span>Skills Matrix</span>
+        </a>
+        <a href="/dashboard/projects/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+          <span>Projects &amp; GitHub</span>
+        </a>
+        <a href="/dashboard/experience/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          <span>Experience &amp; Honors</span>
+        </a>
+        <a href="/dashboard/builder/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+          <span>Portfolio Designer</span>
+        </a>
+        <a href="/dashboard/resume/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          <span>ATS Resume</span>
+          <span class="sidebar-link-badge">PDF</span>
+        </a>
+        <a href="/dashboard/publish/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+          <span>Publish &amp; Share</span>
+        </a>
+        <a href="/dashboard/analytics/" class="sidebar-link active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Analytics</span>
+          <span class="sidebar-link-badge">Privacy</span>
+        </a>
+        <a href="/dashboard/settings/" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-snippet">
+        <div class="user-avatar-small">B</div>
+        <div class="user-info-text">
+          <h4>Sunny</h4>
+          <p>/u/sunny</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main View -->
+  <main class="dashboard-main">
+    <header class="dashboard-topbar">
+      <div class="topbar-breadcrumbs">
+        <a href="/dashboard/" style="color: inherit; text-decoration: none;">Studio</a>
+        <span>/</span>
+        <strong>Portfolio Analytics</strong>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme">
+          <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+          <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="dashboard-content" style="max-width: 900px;">
+      
+      <div style="margin-bottom: var(--space-6);">
+        <h1 style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">Portfolio Analytics &amp; Engagement</h1>
+        <p style="font-size: var(--text-sm); color: var(--text-secondary); margin: 0;">
+          Privacy-friendly telemetry. Aggregate counts, referrer sources, and engagement without invasive cookies or user tracking.
+        </p>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-6);">
+        
+        <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
+          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Total Page Views</span>
+          <div id="metric-total-views" style="font-size: var(--text-2xl); font-weight: 800; color: var(--accent-primary); margin-top: 4px;">0</div>
+        </div>
+
+        <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
+          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Unique Referrers</span>
+          <div id="metric-unique-ref" style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin-top: 4px;">0</div>
+        </div>
+
+        <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
+          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Project Demo Clicks</span>
+          <div id="metric-project-clicks" style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin-top: 4px;">0</div>
+        </div>
+
+        <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
+          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">Resume Downloads</span>
+          <div id="metric-resume-downloads" style="font-size: var(--text-2xl); font-weight: 800; color: #27c93f; margin-top: 4px;">0</div>
+        </div>
+
+      </div>
+
+      <!-- Split Layout: Referrers & Devices -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-6);">
+        
+        <!-- Referrers List -->
+        <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
+          <h3 style="font-size: var(--text-base); font-weight: 700; margin: 0 0 var(--space-4) 0;">Top Referring Sources</h3>
+          <div id="referrers-list-container">
+            <!-- Rendered by js/dashboard-analytics.js -->
+          </div>
+        </div>
+
+        <!-- Device Breakdown -->
+        <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
+          <h3 style="font-size: var(--text-base); font-weight: 700; margin: 0 0 var(--space-4) 0;">Device Breakdown</h3>
+          
+          <div style="display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-4);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: var(--text-xs); color: var(--text-secondary);">Desktop Browsers</span>
+              <strong id="dev-desktop-pct" style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--accent-primary);">68%</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: var(--text-xs); color: var(--text-secondary);">Mobile Devices</span>
+              <strong id="dev-mobile-pct" style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--accent-secondary);">27%</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: var(--text-xs); color: var(--text-secondary);">Tablets &amp; Large Displays</span>
+              <strong id="dev-tablet-pct" style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-muted);">5%</strong>
+            </div>
+          </div>
+
+          <div style="margin-top: var(--space-6); background: var(--bg-secondary); border-radius: var(--radius-md); padding: 12px; font-size: 11px; color: var(--text-muted);">
+            <strong>Privacy Guarantee:</strong> BuildLab uses cryptographic IP hashing without persistent cross-site cookies. Compliant with GDPR and modern browser privacy policies.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Recent Visits Stream -->
+      <div class="floating-card" style="background: var(--bg-surface); padding: var(--space-5);">
+        <h3 style="font-size: var(--text-base); font-weight: 700; margin: 0 0 var(--space-3) 0;">Real-Time Activity Feed</h3>
+        <div id="recent-events-container">
+          <!-- Rendered by js/dashboard-analytics.js -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="/js/main.js"></script>
+  <script type="module" src="/js/dashboard-analytics.js"></script>
+</body>
+</html>

@@ -4,22 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Portfolio Templates | SSRNovX Studio</title>
-  <meta name="description" content="Explore developer portfolio templates: Monochrome Minimal, Terminal Hacker, and Clean Editorial." />
+  <title>Portfolio Template Gallery | BuildLab Platform</title>
+  <meta name="description" content="Explore and choose from 6 distinctive portfolio templates: Minimal Professional, Developer Dark, Creative Portfolio, Editorial, Student, and Technical Showcase." />
   <meta name="robots" content="index, follow" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238297FF'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%2308090B' text-anchor='middle'>B</text></svg>" />
 
   <!-- Fonts & Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   
   <link rel="stylesheet" href="/css/variables.css" />
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/components.css" />
-  <link rel="stylesheet" href="/css/dashboard.css" />
   <link rel="stylesheet" href="/css/templates.css" />
 
   <script>
@@ -38,8 +37,8 @@
   <!-- Header -->
   <header class="site-header" role="banner">
     <div class="container nav-container">
-      <a href="/" class="brand-logo" aria-label="SSRNovX Home">
-        <span>SSRNovX</span>
+      <a href="/" class="brand-logo" aria-label="BuildLab Home">
+        <span class="gradient-text font-black" style="font-weight: 800; font-size: 1.25rem;">BuildLab</span>
         <span class="brand-badge">Templates</span>
       </a>
 
@@ -47,33 +46,21 @@
         <nav class="site-nav" role="navigation" aria-label="Main Navigation">
           <ul class="nav-links" id="nav-menu">
             <li><a href="/" class="nav-link">Home</a></li>
+            <li><a href="/features" class="nav-link">Features</a></li>
             <li><a href="/templates" class="nav-link active">Templates</a></li>
-            <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
-            <li><a href="/login" class="nav-link">Sign In</a></li>
+            <li><a href="/explore" class="nav-link">Explore</a></li>
+            <li><a href="/blog" class="nav-link">Blog</a></li>
           </ul>
         </nav>
 
         <!-- Theme Toggle -->
         <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme">
-          <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="4"></circle>
-            <path d="M12 2v2"></path>
-            <path d="M12 20v2"></path>
-            <path d="m4.93 4.93 1.41 1.41"></path>
-            <path d="m17.66 17.66 1.41 1.41"></path>
-            <path d="M2 12h2"></path>
-            <path d="M20 12h2"></path>
-            <path d="m6.34 17.66-1.41 1.41"></path>
-            <path d="m19.07 4.93-1.41 1.41"></path>
-          </svg>
-          <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-          </svg>
+          <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+          <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"></path></svg>
         </button>
 
-        <a href="/dashboard/builder" class="btn btn-primary btn-card">
-          <span>Start Building</span>
-          <span aria-hidden="true">&rarr;</span>
+        <a href="/dashboard/builder" class="btn btn-primary btn-sm">
+          <span>Start Building &rarr;</span>
         </a>
       </div>
     </div>
@@ -81,102 +68,199 @@
 
   <!-- Main Content -->
   <main id="main-content">
-    <section class="page-header">
-      <div class="container page-header-content">
-        <span class="page-label">Showcase Gallery</span>
-        <h1 class="page-title">Developer Portfolio Templates</h1>
-        <p class="page-subtitle">
-          Choose a foundational theme optimized for developer portfolios, system architects, and technical writing. Switch templates anytime with zero content loss.
+    <section class="section-py" style="text-align: center; border-bottom: 1px solid var(--border-color);">
+      <div class="container" style="max-width: 760px;">
+        <span class="gradient-badge" style="margin-bottom: var(--space-4);">CURATED ARCHETYPES</span>
+        <h1 style="font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 800; line-height: 1.15; margin-bottom: var(--space-4);">
+          Portfolio Template Gallery
+        </h1>
+        <p style="font-size: var(--text-lg); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-6);">
+          Choose an aesthetic direction for your career presentation. Switch templates at any time with <strong>zero data loss</strong>—your education, projects, and skills persist across all styles.
         </p>
+
+        <!-- Functional Filter Bar -->
+        <div class="template-filters-bar" style="justify-content: center;">
+          <button type="button" class="template-filter-btn active" data-filter="all">All Templates</button>
+          <button type="button" class="template-filter-btn" data-filter="minimal">Minimal</button>
+          <button type="button" class="template-filter-btn" data-filter="developer">Developer</button>
+          <button type="button" class="template-filter-btn" data-filter="creative">Creative</button>
+          <button type="button" class="template-filter-btn" data-filter="student">Student</button>
+          <button type="button" class="template-filter-btn" data-filter="professional">Professional</button>
+        </div>
       </div>
     </section>
 
     <section class="section-py">
       <div class="container">
-        <div class="templates-grid">
+        <div class="template-gallery-grid" id="template-cards-container">
           
-          <!-- Template 1: Monochrome Minimal -->
-          <article class="template-card">
-            <div class="template-preview-frame">
-              <svg width="220" height="130" viewBox="0 0 220 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect width="220" height="130" rx="4" fill="var(--bg-primary)" stroke="var(--border-color)" />
-                <rect x="20" y="20" width="80" height="10" rx="2" fill="currentColor" />
-                <rect x="20" y="38" width="160" height="6" rx="2" fill="var(--text-muted)" opacity="0.6" />
-                <rect x="20" y="48" width="130" height="6" rx="2" fill="var(--text-muted)" opacity="0.4" />
-                <rect x="20" y="68" width="80" height="42" rx="3" stroke="var(--border-color)" />
-                <rect x="110" y="68" width="80" height="42" rx="3" stroke="var(--border-color)" />
+          <!-- Template 1: Minimal Professional -->
+          <article class="template-gallery-card" data-categories="minimal professional">
+            <div class="template-preview-canvas">
+              <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
+                <rect width="220" height="120" rx="6" fill="#151821" stroke="#232733"/>
+                <circle cx="36" cy="36" r="14" fill="#8297FF"/>
+                <rect x="58" y="26" width="90" height="8" rx="2" fill="#F5F6FA"/>
+                <rect x="58" y="38" width="60" height="6" rx="2" fill="#9CA3B4"/>
+                <rect x="24" y="64" width="80" height="40" rx="4" fill="#101216" stroke="#232733"/>
+                <rect x="116" y="64" width="80" height="40" rx="4" fill="#101216" stroke="#232733"/>
               </svg>
             </div>
-            <div class="template-content">
+            <div class="template-gallery-content">
               <div>
-                <span class="brand-badge" style="margin-bottom: var(--space-2); display: inline-block;">Default</span>
-                <h3 class="template-title">Monochrome Minimal</h3>
-                <p class="template-desc">
-                  High-contrast black-and-white aesthetic, clean typography hierarchy, and generous spacing designed for modern engineers and systems architects.
+                <span class="badge" style="font-size: 10px; margin-bottom: 6px;">Minimal &bull; Clean</span>
+                <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Minimal Professional</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                  Understated typography, generous whitespace, and restrained card borders. Ideal for software engineers, consultants, and technical executives.
                 </p>
               </div>
-              <div style="display: flex; gap: var(--space-3);">
-                <a href="/u/sunny" class="btn btn-secondary btn-card" style="flex: 1;">Preview</a>
-                <a href="/dashboard/builder" class="btn btn-primary btn-card" style="flex: 1;">Use Template</a>
+              <div style="display: flex; gap: var(--space-2); margin-top: auto;">
+                <a href="/u/sunny" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Preview</a>
+                <a href="/dashboard/builder" class="btn btn-primary btn-sm use-template-action" data-template-id="minimal-professional" style="flex: 1; text-align: center;">Use Template</a>
               </div>
             </div>
           </article>
 
-          <!-- Template 2: Terminal Hacker -->
-          <article class="template-card">
-            <div class="template-preview-frame" style="background-color: #0d1117;">
-              <svg width="220" height="130" viewBox="0 0 220 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect width="220" height="130" rx="4" fill="#0d1117" stroke="#30363d" />
-                <rect x="15" y="15" width="190" height="20" rx="2" fill="#161b22" />
-                <circle cx="25" cy="25" r="3" fill="#ff5f56" />
-                <circle cx="34" cy="25" r="3" fill="#ffbd2e" />
-                <circle cx="43" cy="25" r="3" fill="#27c93f" />
-                <text x="20" y="55" fill="#58a6ff" font-family="monospace" font-size="8">&gt; whoami</text>
-                <text x="20" y="70" fill="#7ee787" font-family="monospace" font-size="8">&gt; backend_lead --ready</text>
-                <text x="20" y="85" fill="#8b949e" font-family="monospace" font-size="8">&gt; git clone portfolio</text>
-                <rect x="20" y="98" width="6" height="10" fill="#58a6ff" />
+          <!-- Template 2: Developer Dark -->
+          <article class="template-gallery-card" data-categories="developer minimal">
+            <div class="template-preview-canvas" style="background-color: #0d1117;">
+              <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
+                <rect width="220" height="120" rx="6" fill="#0d1117" stroke="#30363d"/>
+                <rect x="16" y="14" width="188" height="18" rx="3" fill="#161b22"/>
+                <circle cx="26" cy="23" r="3" fill="#ff5f56"/>
+                <circle cx="34" cy="23" r="3" fill="#ffbd2e"/>
+                <circle cx="42" cy="23" r="3" fill="#27c93f"/>
+                <text x="20" y="52" fill="#58a6ff" font-family="monospace" font-size="8">&gt; whoami --role staff_eng</text>
+                <text x="20" y="68" fill="#7ee787" font-family="monospace" font-size="8">&gt; git clone portfolio</text>
+                <rect x="20" y="80" width="80" height="28" rx="2" fill="#161b22" stroke="#30363d"/>
+                <rect x="110" y="80" width="80" height="28" rx="2" fill="#161b22" stroke="#30363d"/>
               </svg>
             </div>
-            <div class="template-content">
+            <div class="template-gallery-content">
               <div>
-                <span class="brand-badge" style="margin-bottom: var(--space-2); display: inline-block;">CLI / Shell</span>
-                <h3 class="template-title">Terminal Hacker</h3>
-                <p class="template-desc">
-                  Matrix and Unix terminal inspired interface featuring command-prompt navigation, ASCII art headings, and raw monospace telemetry layouts.
+                <span class="badge" style="font-size: 10px; margin-bottom: 6px;">Terminal &bull; Dark</span>
+                <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Developer Dark</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                  Terminal telemetry aesthetic with JetBrains Mono, command-prompt breadcrumbs, and live GitHub commit counters.
                 </p>
               </div>
-              <div style="display: flex; gap: var(--space-3);">
-                <a href="/u/sunny" class="btn btn-secondary btn-card" style="flex: 1;">Preview</a>
-                <a href="/dashboard/builder" class="btn btn-primary btn-card" style="flex: 1;">Use Template</a>
+              <div style="display: flex; gap: var(--space-2); margin-top: auto;">
+                <a href="/u/sunny" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Preview</a>
+                <a href="/dashboard/builder" class="btn btn-primary btn-sm use-template-action" data-template-id="developer-dark" style="flex: 1; text-align: center;">Use Template</a>
               </div>
             </div>
           </article>
 
-          <!-- Template 3: Clean Editorial -->
-          <article class="template-card">
-            <div class="template-preview-frame">
-              <svg width="220" height="130" viewBox="0 0 220 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect width="220" height="130" rx="4" fill="var(--bg-primary)" stroke="var(--border-color)" />
-                <circle cx="40" cy="40" r="16" fill="var(--bg-secondary)" stroke="var(--border-color)" />
-                <rect x="68" y="30" width="110" height="8" rx="2" fill="currentColor" />
-                <rect x="68" y="44" width="70" height="5" rx="2" fill="var(--text-muted)" />
-                <line x1="20" y1="65" x2="200" y2="65" stroke="var(--border-color)" />
-                <rect x="20" y="78" width="180" height="6" rx="2" fill="var(--text-muted)" opacity="0.6" />
-                <rect x="20" y="90" width="140" height="6" rx="2" fill="var(--text-muted)" opacity="0.4" />
-                <rect x="20" y="102" width="160" height="6" rx="2" fill="var(--text-muted)" opacity="0.5" />
+          <!-- Template 3: Creative Portfolio -->
+          <article class="template-gallery-card" data-categories="creative professional">
+            <div class="template-preview-canvas" style="background: linear-gradient(135deg, rgba(130, 151, 255, 0.1), rgba(167, 139, 250, 0.1));">
+              <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
+                <rect width="220" height="120" rx="6" fill="#151821" stroke="#8297FF" stroke-opacity="0.3"/>
+                <rect x="20" y="20" width="180" height="44" rx="4" fill="url(#grad2)"/>
+                <defs>
+                  <linearGradient id="grad2" x1="20" y1="20" x2="200" y2="64" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#8297FF" stop-opacity="0.3"/>
+                    <stop offset="1" stop-color="#A78BFA" stop-opacity="0.4"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="40" cy="42" r="12" fill="#F5F6FA"/>
+                <rect x="20" y="74" width="85" height="34" rx="4" fill="#101216" stroke="#232733"/>
+                <rect x="115" y="74" width="85" height="34" rx="4" fill="#101216" stroke="#232733"/>
               </svg>
             </div>
-            <div class="template-content">
+            <div class="template-gallery-content">
               <div>
-                <span class="brand-badge" style="margin-bottom: var(--space-2); display: inline-block;">Editorial</span>
-                <h3 class="template-title">Clean Editorial</h3>
-                <p class="template-desc">
-                  Focused on long-form essays, case-study teardowns, and deep project narratives with serif accent typography and reader-first line heights.
+                <span class="badge" style="font-size: 10px; margin-bottom: 6px;">Vibrant &bull; Design</span>
+                <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Creative Portfolio</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                  Rich gradient accents, visual asset showcases, and media-focused cards designed for UI/UX designers and creative technologists.
                 </p>
               </div>
-              <div style="display: flex; gap: var(--space-3);">
-                <a href="/u/sunny" class="btn btn-secondary btn-card" style="flex: 1;">Preview</a>
-                <a href="/dashboard/builder" class="btn btn-primary btn-card" style="flex: 1;">Use Template</a>
+              <div style="display: flex; gap: var(--space-2); margin-top: auto;">
+                <a href="/u/sunny" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Preview</a>
+                <a href="/dashboard/builder" class="btn btn-primary btn-sm use-template-action" data-template-id="creative-portfolio" style="flex: 1; text-align: center;">Use Template</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Template 4: Editorial Portfolio -->
+          <article class="template-gallery-card" data-categories="minimal professional">
+            <div class="template-preview-canvas">
+              <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
+                <rect width="220" height="120" rx="6" fill="#101216" stroke="#232733"/>
+                <rect x="20" y="24" width="180" height="10" rx="2" fill="#F5F6FA"/>
+                <line x1="20" y1="44" x2="200" y2="44" stroke="#232733"/>
+                <rect x="20" y="54" width="160" height="6" rx="2" fill="#9CA3B4" opacity="0.6"/>
+                <rect x="20" y="66" width="130" height="6" rx="2" fill="#9CA3B4" opacity="0.4"/>
+                <rect x="20" y="78" width="170" height="6" rx="2" fill="#9CA3B4" opacity="0.5"/>
+                <rect x="20" y="94" width="90" height="14" rx="2" fill="#8297FF" opacity="0.2"/>
+              </svg>
+            </div>
+            <div class="template-gallery-content">
+              <div>
+                <span class="badge" style="font-size: 10px; margin-bottom: 6px;">Editorial &bull; Writing</span>
+                <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Editorial Portfolio</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                  Long-form narrative flow, deep case-study typography, and reader-first article formatting for technical writers and researchers.
+                </p>
+              </div>
+              <div style="display: flex; gap: var(--space-2); margin-top: auto;">
+                <a href="/u/sunny" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Preview</a>
+                <a href="/dashboard/builder" class="btn btn-primary btn-sm use-template-action" data-template-id="editorial-portfolio" style="flex: 1; text-align: center;">Use Template</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Template 5: Student Portfolio -->
+          <article class="template-gallery-card" data-categories="student minimal">
+            <div class="template-preview-canvas">
+              <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
+                <rect width="220" height="120" rx="6" fill="#151821" stroke="#232733"/>
+                <rect x="20" y="18" width="180" height="30" rx="4" fill="#101216" stroke="#8297FF" stroke-opacity="0.3"/>
+                <text x="32" y="34" fill="#8297FF" font-family="monospace" font-size="8" font-weight="bold">DEGREE &bull; CGPA 9.6/10</text>
+                <text x="32" y="43" fill="#9CA3B4" font-family="sans-serif" font-size="7">IIT Delhi &bull; Computer Science</text>
+                <rect x="20" y="58" width="85" height="48" rx="4" fill="#101216" stroke="#232733"/>
+                <rect x="115" y="58" width="85" height="48" rx="4" fill="#101216" stroke="#232733"/>
+              </svg>
+            </div>
+            <div class="template-gallery-content">
+              <div>
+                <span class="badge" style="font-size: 10px; margin-bottom: 6px;">Academics &bull; Student</span>
+                <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Student Portfolio</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                  Puts university credentials, coursework, hackathon achievements, and academic projects front and center for campus placements.
+                </p>
+              </div>
+              <div style="display: flex; gap: var(--space-2); margin-top: auto;">
+                <a href="/u/sunny" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Preview</a>
+                <a href="/dashboard/builder" class="btn btn-primary btn-sm use-template-action" data-template-id="student-portfolio" style="flex: 1; text-align: center;">Use Template</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Template 6: Technical Showcase -->
+          <article class="template-gallery-card" data-categories="developer student">
+            <div class="template-preview-canvas">
+              <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
+                <rect width="220" height="120" rx="6" fill="#101216" stroke="#232733"/>
+                <rect x="20" y="20" width="180" height="22" rx="3" fill="#151821"/>
+                <rect x="28" y="28" width="40" height="6" rx="1" fill="#8297FF"/>
+                <rect x="74" y="28" width="40" height="6" rx="1" fill="#A78BFA"/>
+                <rect x="120" y="28" width="40" height="6" rx="1" fill="#27c93f"/>
+                <rect x="20" y="50" width="180" height="56" rx="4" fill="#151821" stroke="#232733"/>
+              </svg>
+            </div>
+            <div class="template-gallery-content">
+              <div>
+                <span class="badge" style="font-size: 10px; margin-bottom: 6px;">Benchmark &bull; Code</span>
+                <h3 style="font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">Technical Showcase</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+                  Dense matrix layout highlighting live architecture diagrams, benchmark charts, API schemas, and package registries.
+                </p>
+              </div>
+              <div style="display: flex; gap: var(--space-2); margin-top: auto;">
+                <a href="/u/sunny" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Preview</a>
+                <a href="/dashboard/builder" class="btn btn-primary btn-sm use-template-action" data-template-id="technical-showcase" style="flex: 1; text-align: center;">Use Template</a>
               </div>
             </div>
           </article>
@@ -189,12 +273,13 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container footer-container">
-      <p>&copy; 2026 SSRNovX Studio. TechSpace BuildLab '26.</p>
+      <p>&copy; 2026 BuildLab Platform. Built for TechSpace BuildLab '26.</p>
       <div class="footer-links">
         <a href="/" class="footer-link">Home</a>
+        <a href="/features" class="footer-link">Features</a>
         <a href="/templates" class="footer-link">Templates</a>
+        <a href="/explore" class="footer-link">Explore</a>
         <a href="/dashboard" class="footer-link">Dashboard</a>
-        <a href="/login" class="footer-link">Sign In</a>
       </div>
     </div>
   </footer>

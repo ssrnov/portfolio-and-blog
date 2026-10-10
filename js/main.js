@@ -6,6 +6,7 @@
 import { initProjects } from './projects.js';
 import { initBlog } from './blog.js';
 import { initContact } from './contact.js';
+import { initHomepage } from './homepage.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
@@ -13,6 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initActiveNavLink();
 
   // Conditionally initialize components present on the current page
+  if (document.getElementById('interactive-preview-stage') || document.querySelector('.hero-floating-composition')) {
+    initHomepage();
+  }
+
   if (document.getElementById('projects-grid') || document.getElementById('featured-projects-grid')) {
     initProjects();
   }
