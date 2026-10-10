@@ -1,0 +1,709 @@
+/* ==========================================================================
+   FOLIORYN — MOBILE-FIRST DESIGN SYSTEM & DYNAMIC ANIMATION ENGINE
+   Tailored Responsive Architecture & Premium Mobile Experience
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. KEYFRAME ANIMATIONS & AMBIENT EFFECTS
+   -------------------------------------------------------------------------- */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulseBeacon {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 20px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25), 0 8px 30px rgba(255, 255, 255, 0.05);
+  }
+}
+
+@keyframes shimmerSweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes drawerSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes drawerSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes staggerItemIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Base Animation Utility Classes */
+.animate-fade-in {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-float {
+  animation: floatGentle 4.5s ease-in-out infinite;
+}
+
+.animate-pulse-beacon {
+  animation: pulseBeacon 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-glow {
+  animation: pulseGlow 3.5s ease-in-out infinite;
+}
+
+/* Scroll Reveal Initial & Active States */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger Delays for Grid Children */
+.reveal-stagger-1 { transition-delay: 0.04s; }
+.reveal-stagger-2 { transition-delay: 0.09s; }
+.reveal-stagger-3 { transition-delay: 0.14s; }
+.reveal-stagger-4 { transition-delay: 0.19s; }
+.reveal-stagger-5 { transition-delay: 0.24s; }
+.reveal-stagger-6 { transition-delay: 0.29s; }
+
+/* --------------------------------------------------------------------------
+   2. MOBILE HAMBURGER & INTERACTIVE DRAWER MENU
+   -------------------------------------------------------------------------- */
+
+.mobile-toggle-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  z-index: 1001;
+}
+
+.mobile-toggle-btn:active {
+  transform: scale(0.92);
+}
+
+.mobile-toggle-btn svg {
+  transition: transform 0.25s ease;
+}
+
+.mobile-toggle-btn.is-active svg {
+  transform: rotate(90deg);
+}
+
+/* Mobile Nav Overlay Backdrop */
+.mobile-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-nav-backdrop.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------------------------
+   3. PERSISTENT MOBILE BOTTOM NAVIGATION BAR (Thumb Ergonomics)
+   -------------------------------------------------------------------------- */
+
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(60px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: rgba(12, 13, 13, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 990;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.mobile-bottom-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  position: relative;
+  flex: 1;
+  max-width: 72px;
+}
+
+.mobile-bottom-tab svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.2s ease;
+}
+
+.mobile-bottom-tab:active svg {
+  transform: scale(0.85);
+}
+
+.mobile-bottom-tab.active {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.mobile-bottom-tab.active svg {
+  stroke: #ffffff;
+  transform: translateY(-2px);
+}
+
+.mobile-bottom-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  width: 14px;
+  height: 2px;
+  border-radius: 999px;
+  background-color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   4. RESPONSIVE BREAKPOINT: TABLET & MOBILE (< 768px)
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  /* Prevent horizontal scroll anywhere on page */
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+
+  body {
+    padding-bottom: 68px !important; /* Space for Mobile Bottom Nav */
+  }
+
+  /* Show Bottom Navigation */
+  .mobile-bottom-nav {
+    display: flex;
+  }
+
+  /* Container Width & Padding */
+  .container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Site Header Compact Layout */
+  .site-header {
+    height: 3.75rem !important;
+    padding: 0 !important;
+  }
+
+  .nav-container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .brand-logo {
+    font-size: 1.05rem !important;
+    gap: 6px !important;
+  }
+
+  .brand-mark {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 13px !important;
+    margin-right: 4px !important;
+  }
+
+  .mobile-toggle-btn {
+    display: flex !important;
+  }
+
+  /* Top Right Action Button Collapse */
+  .nav-right .btn-primary {
+    display: none !important; /* Hide long button from header, move to drawer */
+  }
+
+  .nav-right .btn-secondary {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+
+  /* Mobile Slide-Down Drawer */
+  .nav-links {
+    display: none;
+    position: fixed !important;
+    top: 3.75rem !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    max-height: calc(100vh - 3.75rem) !important;
+    overflow-y: auto !important;
+    background: rgba(10, 11, 11, 0.98) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85) !important;
+    padding: 20px 20px 32px 20px !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    z-index: 999 !important;
+  }
+
+  .nav-links.is-open {
+    display: flex !important;
+    animation: drawerSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  }
+
+  .nav-links li {
+    width: 100% !important;
+    opacity: 0;
+    animation: staggerItemIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .nav-links.is-open li:nth-child(1) { animation-delay: 0.03s; }
+  .nav-links.is-open li:nth-child(2) { animation-delay: 0.07s; }
+  .nav-links.is-open li:nth-child(3) { animation-delay: 0.11s; }
+  .nav-links.is-open li:nth-child(4) { animation-delay: 0.15s; }
+  .nav-links.is-open li:nth-child(5) { animation-delay: 0.19s; }
+  .nav-links.is-open li:nth-child(6) { animation-delay: 0.23s; }
+
+  .nav-link {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 14px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    border-radius: var(--radius-sm) !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--text-primary) !important;
+    transition: all var(--transition-fast) !important;
+  }
+
+  .nav-link:active {
+    transform: scale(0.98) !important;
+    background: var(--accent-subtle) !important;
+  }
+
+  .nav-link.active {
+    border-color: var(--border-hover) !important;
+    background: var(--bg-secondary) !important;
+  }
+
+  .nav-link.active::after {
+    display: none !important;
+  }
+
+  /* Drawer Mobile Action CTA Buttons */
+  .mobile-drawer-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    margin-top: 14px !important;
+    padding-top: 14px !important;
+    border-top: 1px solid var(--border-subtle) !important;
+    width: 100% !important;
+  }
+
+  .mobile-drawer-actions .btn {
+    width: 100% !important;
+    height: 46px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* --------------------------------------------------------------------------
+     Section Layout & Spacing Compaction
+     -------------------------------------------------------------------------- */
+  .section-py {
+    padding-top: 2.75rem !important;
+    padding-bottom: 2.75rem !important;
+  }
+
+  .section-header {
+    margin-bottom: 1.75rem !important;
+  }
+
+  .section-title {
+    font-size: 1.65rem !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .section-subtitle {
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+  }
+
+  /* --------------------------------------------------------------------------
+     Hero Section Mobile Tailoring
+     -------------------------------------------------------------------------- */
+  .hero-section {
+    padding-top: 1.75rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+
+  .hero-content {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2rem !important;
+  }
+
+  .hero-title {
+    font-size: clamp(1.85rem, 8vw, 2.5rem) !important;
+    line-height: 1.15 !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .hero-lead {
+    font-size: 0.95rem !important;
+    line-height: 1.55 !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .hero-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  .hero-actions .btn {
+    width: 100% !important;
+    height: 48px !important;
+    font-size: 14px !important;
+  }
+
+  /* Floating Hero Live Mockup Cards */
+  .hero-floating-composition {
+    width: 100% !important;
+    gap: 12px !important;
+  }
+
+  .floating-card {
+    padding: 12px 14px !important;
+  }
+
+  .education-github-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  /* --------------------------------------------------------------------------
+     All Grid Systems Forced Single Column Collapse
+     -------------------------------------------------------------------------- */
+  div[style*="grid-template-columns"],
+  form[style*="grid-template-columns"],
+  .feature-grid,
+  .curated-profiles-grid,
+  .projects-grid,
+  .blog-grid,
+  .template-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Horizontal Filter Chips with Smooth Touch Scroll */
+  .template-filter-pills,
+  .category-filter-bar,
+  .explore-categories-bar {
+    display: flex !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 16px !important;
+    scrollbar-width: none !important;
+    gap: 8px !important;
+  }
+
+  .template-filter-pills::-webkit-scrollbar,
+  .category-filter-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .template-filter-btn,
+  .category-pill {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    padding: 6px 14px !important;
+    font-size: 12px !important;
+  }
+
+  /* Footer Links Stacking */
+  .footer-container,
+  div[style*="border-top"][style*="justify-content: space-between"] {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+
+  /* --------------------------------------------------------------------------
+     Dashboard App Shell Mobile Transformation
+     -------------------------------------------------------------------------- */
+  .dashboard-shell {
+    flex-direction: column !important;
+    display: flex !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+  }
+
+  .dashboard-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 280px !important;
+    max-width: 85vw !important;
+    height: 100vh !important;
+    z-index: 1050 !important;
+    transform: translateX(-100%) !important;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.85) !important;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .dashboard-sidebar.is-open {
+    transform: translateX(0) !important;
+  }
+
+  .dashboard-topbar {
+    height: 3.5rem !important;
+    padding: 0 16px !important;
+  }
+
+  .dashboard-content {
+    padding: 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .dashboard-header-block {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .dashboard-actions-group {
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px !important;
+  }
+
+  .dashboard-actions-group .btn {
+    flex: 1 !important;
+  }
+
+  /* Builder Studio on Mobile */
+  .builder-split-workspace {
+    flex-direction: column !important;
+    display: flex !important;
+  }
+
+  .builder-controls-pane {
+    width: 100% !important;
+  }
+
+  .builder-preview-pane {
+    width: 100% !important;
+    min-height: 480px !important;
+  }
+
+  /* Resume Preview on Mobile */
+  .resume-paper-wrapper {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 12px 0 !important;
+  }
+
+  .resume-a4-sheet {
+    transform-origin: top left !important;
+    max-width: 100% !important;
+  }
+
+  /* Form Elements Font Size (Prevents iOS Auto-Zoom) */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. EXTRA SMALL MOBILE SCREENS (< 420px)
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 420px) {
+  .hero-title {
+    font-size: 1.7rem !important;
+  }
+
+  .section-title {
+    font-size: 1.45rem !important;
+  }
+
+  .btn {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+  }
+
+  .floating-card h2,
+  .floating-card h3 {
+    font-size: 12px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. MICRO-INTERACTIONS & AMBIENT ANIMATIONS
+   -------------------------------------------------------------------------- */
+
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  transform: skewX(-20deg);
+  transition: none;
+}
+
+.btn-primary:hover::after,
+.btn-primary:active::after {
+  left: 160%;
+  transition: all 0.65s ease;
+}
+
+.hero-floating-composition {
+  animation: floatGentle 6s ease-in-out infinite;
+}
+
+.pulsing-dot,
+.pulse-dot,
+.status-dot {
+  animation: pulseBeacon 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+}
+
+.feature-card:active,
+.curated-profile-card:active,
+.project-card:active,
+.blog-card:active,
+.template-card:active {
+  transform: scale(0.98) !important;
+}
