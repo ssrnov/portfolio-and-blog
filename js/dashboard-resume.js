@@ -1,0 +1,286 @@
+/**
+ * BuildLab — Dynamic ATS Resume Builder Controller
+ * Synchronizes user data (Profile, Education with CGPA, Categorized Skills, Projects, Experience)
+ * directly with the real-time A4 document canvas and handles ATS Vector PDF print triggers.
+ */
+
+import {
+  getProfile,
+  getEducation,
+  getSkills,
+  getExperiences,
+  getCertifications
+} from './profile-data.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+  initResumeBuilder();
+});
+
+function initResumeBuilder() {
+  const profile = getProfile();
+  const education = getEducation();
+  const skills = getSkills();
+  const experiences = getExperiences();
+  const certifications = getCertifications();
+
+  // Populate Editor Inputs
+  const inputName = document.getElementById('resume-input-name');
+  const inputRole = document.getElementById('resume-input-role');
+  const inputEmail = document.getElementById('resume-input-email');
+  const inputPhone = document.getElementById('resume-input-phone');
+  const inputLocation = document.getElementById('resume-input-location');
+  const inputSummary = document.getElementById('resume-input-summary');
+
+  if (inputName) inputName.value = profile.fullName || 'Sunny';
+  if (inputRole) inputRole.value = profile.headline || 'Full-Stack Software Engineer & Systems Architect';
+  if (inputEmail) inputEmail.value = profile.email || 'contact@ssrnovx.dev';
+  if (inputPhone) inputPhone.value = '+91 98765 43210';
+  if (inputLocation) inputLocation.value = profile.location || 'Bengaluru, India';
+  if (inputSummary) inputSummary.value = profile.bio || 'Software Engineer with strong fundamentals in distributed systems, web platform APIs, and database architecture. Proven track record building high-performance web applications with sub-second response times.';
+
+  // Render Initial Canvas
+  renderA4Canvas({
+    profile,
+    education,
+    skills,
+    experiences,
+    certifications
+  });
+
+  // Attach Two-Way Input Listeners
+  attachInputListeners();
+
+  // PDF Print Trigger
+  const downloadPdfBtn = document.getElementById('download-pdf-btn');
+  downloadPdfBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.print();
+  });
+}
+
+function attachInputListeners() {
+  const fields = [
+    { id: 'resume-input-name', target: 'preview-resume-name' },
+    { id: 'resume-input-role', target: 'preview-resume-role' },
+    { id: 'resume-input-summary', target: 'preview-resume-summary' }
+  ];
+
+  fields.forEach(({ id, target }) => {
+    const el = document.getElementById(id);
+    const targetEl = document.getElementById(target);
+    if (el && targetEl) {
+      el.addEventListener('input', () => {
+        targetEl.textContent = el.value;
+      });
+    }
+  });
+
+  // Re-render contact bar on edit
+  const contactInputs = ['resume-input-email', 'resume-input-phone', 'resume-input-location'];
+  contactInputs.forEach(id => {
+    document.getElementById(id)?.addEventListener('input', updateContactBar);
+  });
+}
+
+function updateContactBar() {
+  const email = document.getElementById('resume-input-email')?.value || 'contact@ssrnovx.dev';
+  const phone = document.getElementById('resume-input-phone')?.value || '+91 98765 43210';
+  const loc = document.getElementById('resume-input-location')?.value || 'Bengaluru, India';
+  const bar = document.getElementById('preview-contact-bar');
+
+  if (bar) {
+    bar.innerHTML = `
+      <span>${escapeHtml(email)}</span>
+      <span>&bull;</span>
+      <span>${escapeHtml(phone)}</span>
+      <span>&bull;</span>
+      <span>${escapeHtml(loc)}</span>
+      <span>&bull;</span>
+      <span>github.com/ssrnov</span>
+      <span>&bull;</span>
+      <span>buildlab.dev/u/sunny</span>
+    `;
+  }
+}
+
+function renderA4Canvas({ profile, education, skills, experiences, certifications }) {
+  const canvas = document.getElementById('a4-canvas');
+  if (!canvas) return;
+
+  // Group skills by category
+  const skillsByCategory = {};
+  skills.forEach(s => {
+    const cat = s.category || 'other';
+    if (!skillsByCategory[cat]) skillsByCategory[cat] = [];
+    skillsByCategory[cat].push(s.name);
+  });
+
+  // Get featured projects from localStorage
+  let projects = [];
+  try {
+    const raw = localStorage.getItem('ssrnovx_projects');
+    projects = raw ? JSON.parse(raw).slice(0, 3) : [];
+  } catch (e) {
+    projects = [];
+  }
+
+  canvas.innerHTML = `
+    <!-- Header -->
+    <header class="a4-header" style="text-align: center; border-bottom: 2px solid #111; padding-bottom: 12px; margin-bottom: 16px;">
+      <h2 class="a4-name" id="preview-resume-name" style="font-size: 24px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 4px 0; color: #000;">
+        ${escapeHtml(profile.fullName || 'Sunny')}
+      </h2>
+      <div id="preview-resume-role" style="font-size: 13px; font-weight: 600; color: #333; margin-bottom: 6px;">
+        ${escapeHtml(profile.headline || 'Software Engineer — Full-Stack & Systems')}
+      </div>
+      <div class="a4-contact-bar" id="preview-contact-bar" style="font-size: 10px; color: #555; display: flex; justify-content: center; flex-wrap: wrap; gap: 6px;">
+        <span>${escapeHtml(profile.email || 'contact@ssrnovx.dev')}</span>
+        <span>&bull;</span>
+        <span>+91 98765 43210</span>
+        <span>&bull;</span>
+        <span>${escapeHtml(profile.location || 'Bengaluru, India')}</span>
+        <span>&bull;</span>
+        <span>github.com/ssrnov</span>
+        <span>&bull;</span>
+        <span>buildlab.dev/u/${escapeHtml(profile.username || 'sunny')}</span>
+      </div>
+    </header>
+
+    <!-- Professional Summary -->
+    <section style="margin-bottom: 14px;">
+      <h3 class="a4-section-title" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; padding-bottom: 3px; margin-bottom: 6px; color: #111;">
+        Professional Summary
+      </h3>
+      <p id="preview-resume-summary" style="font-size: 10.5px; line-height: 1.5; color: #222; margin: 0;">
+        ${escapeHtml(profile.bio || 'Software Engineer with strong fundamentals in distributed systems, web platform APIs, and database architecture. Proven track record building high-performance web applications with sub-second response times.')}
+      </p>
+    </section>
+
+    <!-- Education & Academics -->
+    <section style="margin-bottom: 14px;">
+      <h3 class="a4-section-title" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; padding-bottom: 3px; margin-bottom: 6px; color: #111;">
+        Education &amp; Academic Qualifications
+      </h3>
+      ${education.map(edu => `
+        <div style="margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #000;">
+            <span>${escapeHtml(edu.institution)}</span>
+            <span>${escapeHtml(edu.startDate)} &ndash; ${escapeHtml(edu.currentlyStudying ? 'Present' : edu.endDate)}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: #333; font-weight: 600; margin-top: 2px;">
+            <span>${escapeHtml(edu.qualification)} in ${escapeHtml(edu.fieldOfStudy)}</span>
+            <span style="font-weight: 700; color: #111;">${escapeHtml(edu.gradeType)}: ${escapeHtml(edu.gradeValue)} / ${escapeHtml(edu.gradeScale)}</span>
+          </div>
+          ${edu.coursework ? `
+            <p style="font-size: 9.5px; color: #444; line-height: 1.4; margin: 3px 0 0 0;">
+              <strong>Coursework:</strong> ${escapeHtml(edu.coursework)}
+            </p>
+          ` : ''}
+          ${edu.achievements ? `
+            <p style="font-size: 9.5px; color: #444; line-height: 1.4; margin: 2px 0 0 0;">
+              <strong>Honors:</strong> ${edu.achievements}
+            </p>
+          ` : ''}
+        </div>
+      `).join('')}
+    </section>
+
+    <!-- Technical Competencies -->
+    <section style="margin-bottom: 14px;">
+      <h3 class="a4-section-title" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; padding-bottom: 3px; margin-bottom: 6px; color: #111;">
+        Technical Competencies
+      </h3>
+      <ul class="a4-bullets" style="margin: 0; padding-left: 16px; font-size: 10px; line-height: 1.5; color: #222;">
+        ${Object.keys(skillsByCategory).map(cat => `
+          <li style="margin-bottom: 2px;">
+            <strong style="text-transform: capitalize;">${escapeHtml(cat)}:</strong>
+            ${escapeHtml(skillsByCategory[cat].join(', '))}
+          </li>
+        `).join('')}
+      </ul>
+    </section>
+
+    <!-- Work & Engineering Experience -->
+    <section style="margin-bottom: 14px;">
+      <h3 class="a4-section-title" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; padding-bottom: 3px; margin-bottom: 6px; color: #111;">
+        Engineering Experience
+      </h3>
+      ${experiences.map(exp => `
+        <div style="margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #000;">
+            <span>${escapeHtml(exp.organization)}</span>
+            <span>${escapeHtml(exp.startDate)} &ndash; ${escapeHtml(exp.currentlyActive ? 'Present' : exp.endDate)}</span>
+          </div>
+          <div style="font-size: 10.5px; color: #333; font-style: italic; margin-bottom: 3px;">
+            ${escapeHtml(exp.role)} &bull; ${escapeHtml(exp.location || 'Remote')}
+          </div>
+          <p style="font-size: 10px; line-height: 1.45; color: #222; margin: 0;">
+            ${escapeHtml(exp.description)}
+          </p>
+        </div>
+      `).join('')}
+    </section>
+
+    <!-- Featured Projects -->
+    <section style="margin-bottom: 12px;">
+      <h3 class="a4-section-title" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; padding-bottom: 3px; margin-bottom: 6px; color: #111;">
+        Selected Projects
+      </h3>
+      ${(projects.length > 0 ? projects : [
+        {
+          title: "Distributed Cache & Consensus Engine",
+          githubUrl: "https://github.com/ssrnov/distributed-cache",
+          tags: ["Go", "Raft", "Docker", "gRPC"],
+          description: "Engineered high-throughput in-memory key-value cache engine with LRU eviction and Raft consensus achieving sub-millisecond p99 latencies."
+        },
+        {
+          title: "Real-Time Telemetry & Observability Pipeline",
+          githubUrl: "https://github.com/ssrnov/telemetry-pipeline",
+          tags: ["TypeScript", "WebSockets", "TimescaleDB", "PostgreSQL"],
+          description: "Architected distributed stream ingestion pipeline processing over 12,000 metrics events/sec with sub-50ms dashboard visualization updates."
+        }
+      ]).map(proj => `
+        <div style="margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #000;">
+            <span>${escapeHtml(proj.title)}</span>
+            <span style="font-family: monospace; font-size: 9.5px; color: #444;">${escapeHtml(proj.githubUrl?.replace('https://', '') || '')}</span>
+          </div>
+          ${proj.tags && proj.tags.length ? `
+            <div style="font-size: 9.5px; color: #555; margin-bottom: 2px;">
+              <strong>Stack:</strong> ${escapeHtml(Array.isArray(proj.tags) ? proj.tags.join(', ') : proj.tags)}
+            </div>
+          ` : ''}
+          <p style="font-size: 10px; line-height: 1.4; color: #222; margin: 0;">
+            ${escapeHtml(proj.description)}
+          </p>
+        </div>
+      `).join('')}
+    </section>
+
+    <!-- Certifications -->
+    ${certifications.length > 0 ? `
+      <section>
+        <h3 class="a4-section-title" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #333; padding-bottom: 3px; margin-bottom: 6px; color: #111;">
+          Certifications &amp; Credentials
+        </h3>
+        <ul class="a4-bullets" style="margin: 0; padding-left: 16px; font-size: 10px; line-height: 1.5; color: #222;">
+          ${certifications.map(c => `
+            <li>
+              <strong>${escapeHtml(c.title)}</strong> &ndash; ${escapeHtml(c.issuer)} (${escapeHtml(c.issueDate)})
+            </li>
+          `).join('')}
+        </ul>
+      </section>
+    ` : ''}
+  `;
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}

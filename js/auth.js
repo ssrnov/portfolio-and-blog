@@ -116,7 +116,7 @@ function initSignupForm(form) {
       await authService.signUp(email, password, { username, fullName });
       showAuthAlert('Account created successfully! Loading your Studio...', 'success');
       setTimeout(() => {
-        window.location.href = '/dashboard/';
+        window.location.href = '/onboarding/';
       }, 700);
     } catch (err) {
       showAuthAlert(err.message || 'Registration failed. Try a different username or email.', 'error');

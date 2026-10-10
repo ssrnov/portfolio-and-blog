@@ -14,6 +14,7 @@ export default defineConfig({
         notFound: resolve(__dirname, '404.html'),
         login: resolve(__dirname, 'login/index.html'),
         signup: resolve(__dirname, 'signup/index.html'),
+        onboarding: resolve(__dirname, 'onboarding/index.html'),
         templates: resolve(__dirname, 'templates/index.html'),
         dashboard: resolve(__dirname, 'dashboard/index.html'),
         dashboardBuilder: resolve(__dirname, 'dashboard/builder/index.html'),
