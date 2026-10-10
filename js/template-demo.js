@@ -15,69 +15,83 @@ export const DEMO_DATASETS = {
     name: 'Minimal Professional',
     badge: 'Senior & Executive Archetype',
     person: {
-      fullName: 'Sophia Lin',
-      handle: '@sophialin',
-      headline: 'Staff Systems Architect & Distributed Infrastructure Lead',
-      status: 'Available for advisory & principal roles',
-      bio: 'Designing resilient cloud runtimes, zero-trust infrastructure, and high-throughput low-latency event systems with clean, minimalist aesthetics.',
-      location: 'San Francisco, CA',
-      githubUrl: 'https://github.com/sophialin-demo',
-      email: 'sophia.lin@example.com',
-      archetypeNote: 'Minimal Professional Archetype'
+      fullName: 'Sunny Singh',
+      handle: '@sunnysingh',
+      headline: 'Principal Systems Architect & Distributed Infrastructure Lead',
+      status: 'Architecting hyperscale distributed systems & developer platforms',
+      bio: 'Principal engineer with deep expertise in distributed consensus, low-latency microsecond runtimes, zero-trust cloud infrastructure, and modern developer platforms. Passionate about minimalism, sub-millisecond execution, and high-throughput systems serving hundreds of millions of users.',
+      location: 'Bangalore, India',
+      githubUrl: 'https://github.com/sunnysingh-dev',
+      email: 'sunny.singh@folioryn.dev',
+      archetypeNote: 'Flagship Minimal Professional Archetype'
     },
     projects: [
       {
-        title: 'Chronos Distributed Event Stream',
-        description: 'Fault-tolerant distributed log storage processing 1.4M events/sec with sub-millisecond p99 replication latency across three cloud regions.',
-        tags: ['Rust', 'Raft Consensus', 'Zero-Copy I/O'],
-        repo_url: 'https://github.com/sophialin-demo/chronos-stream',
-        live_url: 'https://chronos-demo.folioryn.dev',
+        title: 'Titan Core: Distributed Consensus Log Engine',
+        description: 'Fault-tolerant Raft-based distributed commit log engine processing 2.8M write operations/sec with zero disk stalls and sub-0.5ms p99 write latency across multi-cloud clusters.',
+        tags: ['Rust', 'Raft Consensus', 'Zero-Copy I/O', 'eBPF', 'Distributed Storage'],
+        repo_url: 'https://github.com/sunnysingh-dev/titan-core',
+        live_url: 'https://titan-demo.folioryn.dev',
         featured: true
       },
       {
-        title: 'Aegis Zero-Trust Service Mesh',
-        description: 'Lightweight sidecar proxy enforcing mTLS cryptographic identity and policy governance with less than 0.8ms added network overhead.',
-        tags: ['Go', 'eBPF', 'mTLS', 'Envoy API'],
-        repo_url: 'https://github.com/sophialin-demo/aegis-mesh',
-        live_url: 'https://aegis-demo.folioryn.dev',
+        title: 'Hyperion Zero-Trust Service Mesh',
+        description: 'Microsecond-latency edge service proxy enforcing mutual TLS, cryptographically signed JWTs, and dynamic rate limiting across 1,800+ microservices with less than 0.6ms overhead.',
+        tags: ['Go', 'eBPF Kernel Probes', 'mTLS', 'Envoy API', 'gRPC'],
+        repo_url: 'https://github.com/sunnysingh-dev/hyperion-mesh',
+        live_url: 'https://hyperion-demo.folioryn.dev',
         featured: true
       },
       {
-        title: 'Hydra Real-Time Telemetry Platform',
-        description: 'Time-series metrics engine with adaptive sampling, column-oriented compression, and ANSI SQL query planning.',
-        tags: ['TypeScript', 'ClickHouse', 'Vector Engine'],
-        repo_url: 'https://github.com/sophialin-demo/hydra-telemetry',
+        title: 'Nexus Real-Time Telemetry & Observability Pipeline',
+        description: 'Column-oriented metrics and distributed tracing platform with automated anomaly detection, vectorized query processing, and full ANSI SQL compatibility.',
+        tags: ['C++20', 'ClickHouse', 'Vector AST', 'OpenTelemetry'],
+        repo_url: 'https://github.com/sunnysingh-dev/nexus-telemetry',
+        live_url: 'https://nexus-demo.folioryn.dev',
+        featured: true
+      },
+      {
+        title: 'Aura Live State Synchronizer',
+        description: 'CRDT-driven collaborative workspace sync engine delivering zero-conflict state reconciliation with sub-10ms peer synchronization over secure WebSockets.',
+        tags: ['TypeScript', 'WebSockets', 'CRDTs', 'IndexedDB'],
+        repo_url: 'https://github.com/sunnysingh-dev/aura-sync',
         live_url: '',
         featured: false
       }
     ],
     skills: [
-      { category: 'Architecture', items: ['Distributed Systems', 'Event-Driven Architectures', 'High-Availability Design', 'Disaster Recovery'] },
-      { category: 'Languages', items: ['Rust', 'Go', 'TypeScript', 'C++', 'SQL'] },
-      { category: 'Cloud & Infrastructure', items: ['Kubernetes', 'Terraform', 'AWS (EKS, DynamoDB)', 'eBPF', 'Prometheus'] },
-      { category: 'Leadership', items: ['Technical Strategy', 'Architecture Reviews', 'Mentorship & Hiring', 'RFC Authoring'] }
+      { category: 'Distributed Systems', items: ['Raft Consensus', 'Event Sourcing', 'High-Availability Multi-Region', 'Fault Tolerance', 'Disaster Recovery Automation'] },
+      { category: 'Languages', items: ['Rust', 'Go', 'TypeScript', 'C++20', 'SQL', 'Python'] },
+      { category: 'Cloud & Infrastructure', items: ['Kubernetes (K8s)', 'Terraform', 'AWS & GCP Cloud', 'eBPF', 'Prometheus & Grafana', 'ClickHouse'] },
+      { category: 'Leadership & Strategy', items: ['System Architecture Reviews', 'RFC Governance', 'High-Velocity Team Scaling', 'Executive Briefings'] }
     ],
     experience: [
       {
-        role: 'Staff Systems Architect',
-        organization: 'Helios Distributed Systems',
+        role: 'Principal Systems Architect',
+        organization: 'Aether Cloud Systems',
         period: '2022 — Present',
-        description: 'Lead platform architecture for core ingest infrastructure serving 650M daily API requests. Reduced infrastructure spend by 38% through custom zero-copy memory pipelines.'
+        description: 'Direct technical roadmap for core data plane pipelines processing 1.2B daily API requests. Engineered custom memory-mapped zero-copy queue reducing p99 latency by 54% and annual cloud infrastructure costs by $1.8M.'
       },
       {
-        role: 'Principal Software Engineer',
-        organization: 'Strata Cloud Solutions',
+        role: 'Staff Software Engineer',
+        organization: 'Vortex Distributed Labs',
         period: '2019 — 2022',
-        description: 'Designed multi-region failover automation and container execution runtimes. Spearheaded microservice migration across 18 distributed teams.'
+        description: 'Designed multi-region automated failover orchestrator and internal developer runtime. Mentored 35+ senior engineers across 8 cross-functional distributed infrastructure teams.'
+      },
+      {
+        role: 'Senior Backend Engineer',
+        organization: 'HyperScale Technologies',
+        period: '2017 — 2019',
+        description: 'Architected low-latency caching tiers and distributed database sharding layers supporting rapid user growth from 2M to 40M active users.'
       }
     ],
     education: [
       {
-        institution: 'University of California, Berkeley',
-        degree: 'M.S. in Computer Science',
-        period: '2017 — 2019',
-        score: 'GPA 3.96 / 4.0',
-        honors: 'Distributed Computing Fellowship'
+        institution: 'Indian Institute of Technology (IIT) Delhi',
+        degree: 'B.Tech in Computer Science and Engineering',
+        period: '2013 — 2017',
+        score: 'CGPA 9.85 / 10.0',
+        honors: 'President’s Gold Medal for Outstanding Academic & Research Excellence'
       }
     ]
   },
@@ -87,46 +101,46 @@ export const DEMO_DATASETS = {
     name: 'Developer Portfolio',
     badge: 'Terminal & Hacker Archetype',
     person: {
-      fullName: 'Marcus Kane',
-      handle: '@mkane_dev',
-      headline: 'Full-Stack Systems Engineer & OSS Contributor',
-      status: 'Open to high-impact engineering roles',
-      bio: 'Command-line enthusiast, kernel hobbyist, and full-stack engineer building fast developer tooling and high-concurrency Node.js services.',
-      location: 'Berlin, Germany',
-      githubUrl: 'https://github.com/mkane-demo',
-      email: 'marcus.kane@example.com',
+      fullName: 'Aditya Sharma',
+      handle: '@adityasharma_dev',
+      headline: 'Full-Stack Systems Engineer & Open-Source Contributor',
+      status: 'Building high-performance CLI utilities & real-time WebAssembly runtimes',
+      bio: 'Command-line purist, kernel enthusiast, and full-stack software engineer. Obsessed with zero-dependency binaries, Neovim workflows, and building ultra-fast developer tooling with Go, Rust, and TypeScript.',
+      location: 'Pune, India',
+      githubUrl: 'https://github.com/adityasharma-dev',
+      email: 'aditya.sharma@folioryn.dev',
       archetypeNote: 'Developer Terminal Archetype'
     },
     projects: [
       {
-        title: 'kane-cli: Modern Dotfiles & Devbox',
-        description: 'Cross-platform CLI tool orchestrating reproducible local developer containers with zero configuration.',
-        tags: ['Rust', 'CLI', 'Docker', 'Async Tokio'],
-        repo_url: 'https://github.com/mkane-demo/kane-cli',
-        live_url: 'https://crates.io/crates/kane-cli',
+        title: 'vortex-cli: Universal Developer Container Orchestrator',
+        description: 'Blazing fast single-binary CLI tool creating reproducible local container environments in under 200ms with native Docker and Podman hooks.',
+        tags: ['Rust', 'CLI', 'Docker Engine API', 'Async Tokio'],
+        repo_url: 'https://github.com/adityasharma-dev/vortex-cli',
+        live_url: 'https://crates.io/crates/vortex-cli',
         featured: true
       },
       {
-        title: 'FastSocket WebAssembly Gateway',
-        description: 'High-throughput binary WebSocket multiplexer written in C and compiled to Wasm for low-memory microVMs.',
+        title: 'PulseWasm: Edge Binary Streamer',
+        description: 'WebAssembly-compiled WebSocket multiplexer delivering bidirectional real-time event broadcasting with sub-2MB memory footprint per microVM.',
         tags: ['WebAssembly', 'C', 'WebSockets', 'Node.js'],
-        repo_url: 'https://github.com/mkane-demo/fastsocket-wasm',
-        live_url: 'https://fastsocket.folioryn.dev',
+        repo_url: 'https://github.com/adityasharma-dev/pulsewasm',
+        live_url: 'https://pulsewasm-demo.folioryn.dev',
         featured: true
       },
       {
-        title: 'GitPulse Commit Analytics Engine',
-        description: 'Automated GitHub contribution analyzer with interactive terminal UI and SQLite caching.',
-        tags: ['Go', 'Bubbletea TUI', 'GitHub GraphQL'],
-        repo_url: 'https://github.com/mkane-demo/gitpulse',
+        title: 'DevLens: Terminal Git Commit Telemetry',
+        description: 'Beautiful terminal UI (TUI) analyzing git history, branch velocity, and code hotspots with embedded SQLite indexing and zero lag.',
+        tags: ['Go', 'Bubbletea TUI', 'SQLite', 'Git Plumbing'],
+        repo_url: 'https://github.com/adityasharma-dev/devlens',
         live_url: '',
         featured: false
       }
     ],
     skills: [
       { category: 'Core Stack', items: ['Go', 'Rust', 'TypeScript', 'Node.js', 'Python', 'C'] },
-      { category: 'Tooling', items: ['Neovim', 'Docker', 'Linux Kernel Basics', 'Git Internals', 'Zsh'] },
-      { category: 'Data & Storage', items: ['PostgreSQL', 'Redis', 'SQLite', 'Kafka'] },
+      { category: 'Tooling & Shell', items: ['Neovim', 'Docker', 'Linux Kernel Basics', 'Git Internals', 'Zsh / Bash Scripting'] },
+      { category: 'Data & Storage', items: ['PostgreSQL', 'Redis', 'SQLite', 'Apache Kafka'] },
       { category: 'Testing & CI', items: ['GitHub Actions', 'Benchmarking', 'Unit Testing', 'Fuzzing'] }
     ],
     experience: [
@@ -134,7 +148,7 @@ export const DEMO_DATASETS = {
         role: 'Senior Systems Engineer',
         organization: 'ByteStream Networks',
         period: '2023 — Present',
-        description: 'Building ultra-low-latency real-time video streaming edge nodes. Authored core packet processing pipeline handling 20Gbps sustained bandwidth.'
+        description: 'Building ultra-low-latency real-time video streaming edge nodes. Authored core packet processing pipeline handling 40Gbps sustained bandwidth without packet drops.'
       },
       {
         role: 'Software Engineer',
@@ -145,11 +159,11 @@ export const DEMO_DATASETS = {
     ],
     education: [
       {
-        institution: 'Technical University of Munich',
-        degree: 'B.Sc. in Computer Science',
+        institution: 'Birla Institute of Technology and Science (BITS), Pilani',
+        degree: 'B.E. in Computer Science',
         period: '2017 — 2021',
-        score: '1.2 (Top 5% with Honors)',
-        honors: 'Best Systems Capstone Thesis'
+        score: 'CGPA 9.20 / 10.0',
+        honors: 'Winner of Inter-College National Open-Source Hackathon'
       }
     ]
   },
@@ -159,60 +173,60 @@ export const DEMO_DATASETS = {
     name: 'Student Portfolio',
     badge: 'Academics & Placements Archetype',
     person: {
-      fullName: 'Aarav Patel',
-      handle: '@aarav_codes',
-      headline: 'Computer Science Undergraduate & Hackathon Winner',
-      status: 'Actively seeking 2026 SWE Graduate Roles & Internships',
-      bio: 'Final-year CS student with strong foundations in Data Structures, Algorithms, Distributed Databases, and Modern Web Development. 3x Hackathon winner.',
-      location: 'Bangalore, India',
-      githubUrl: 'https://github.com/aaravpatel-demo',
-      email: 'aarav.patel@student.example.edu',
+      fullName: 'Vineet Verma',
+      handle: '@vineetverma_cs',
+      headline: 'Computer Science Undergraduate, Competitive Coder & 3x Hackathon Winner',
+      status: 'Actively seeking 2026 SWE Graduate Roles & Software Engineering Internships',
+      bio: 'Final-year CS student with a strong command of Data Structures, Algorithms, Distributed Databases, and full-stack web engineering. Knight on LeetCode (Rating 2140+) and winner of Smart India Hackathon.',
+      location: 'Delhi NCR, India',
+      githubUrl: 'https://github.com/vineetverma-dev',
+      email: 'vineet.verma@student.folioryn.dev',
       archetypeNote: 'Student & Early-Career Archetype'
     },
     projects: [
       {
-        title: 'CampusRide — Peer Carpooling Platform',
-        description: 'Campus-wide ride-matching system with real-time route optimization, student ID verification, and peer ratings.',
-        tags: ['JavaScript', 'Express', 'PostgreSQL', 'Leaflet.js'],
-        repo_url: 'https://github.com/aaravpatel-demo/campus-ride',
-        live_url: 'https://campusride-demo.folioryn.dev',
+        title: 'CampusSync — Collaborative College Portal & Ride-Share',
+        description: 'Campus-wide peer carpooling and resource sharing portal with real-time route optimization, student ID verification, and timetable sync for 3,200+ students.',
+        tags: ['JavaScript', 'Node.js', 'Express', 'PostgreSQL', 'Leaflet.js'],
+        repo_url: 'https://github.com/vineetverma-dev/campussync',
+        live_url: 'https://campussync-demo.folioryn.dev',
         featured: true
       },
       {
-        title: 'MediChain — Patient Health Records',
-        description: 'Decentralized medical records locker with encrypted audit logs and doctor access delegacy. 1st Place at National Smart India Hackathon.',
-        tags: ['Solidity', 'Web3.js', 'React', 'IPFS'],
-        repo_url: 'https://github.com/aaravpatel-demo/medichain-app',
-        live_url: 'https://medichain-hackathon.folioryn.dev',
+        title: 'MediVault — Tamper-Proof Health Records',
+        description: 'Decentralized patient medical record storage with encrypted audit logs and fine-grained doctor access delegation. Won 1st Prize at National Smart India Hackathon.',
+        tags: ['React', 'Solidity', 'IPFS', 'Web3.js', 'TailwindCSS'],
+        repo_url: 'https://github.com/vineetverma-dev/medivault',
+        live_url: 'https://medivault-demo.folioryn.dev',
         featured: true
       },
       {
-        title: 'AlgoVisualizer — Graph & Tree Visualizer',
-        description: 'Interactive educational web tool demonstrating Dijkstra, A*, and Tree traversals with step-by-step playback.',
-        tags: ['Vanilla JS', 'HTML5 Canvas', 'CSS Animations'],
-        repo_url: 'https://github.com/aaravpatel-demo/algo-visualizer',
-        live_url: 'https://algoviz-demo.folioryn.dev',
+        title: 'AlgoLens — Interactive Algorithm Visualizer',
+        description: 'Interactive educational web tool demonstrating Dijkstra, Bellman-Ford, A*, and Tree traversals with step-by-step playback and speed control.',
+        tags: ['Vanilla JS', 'HTML5 Canvas', 'CSS Animations', 'Data Structures'],
+        repo_url: 'https://github.com/vineetverma-dev/algolens',
+        live_url: 'https://algolens-demo.folioryn.dev',
         featured: false
       }
     ],
     skills: [
-      { category: 'Programming Languages', items: ['C++', 'Java', 'JavaScript (ES6+)', 'Python', 'SQL'] },
-      { category: 'Computer Science Core', items: ['Data Structures & Algorithms', 'Operating Systems', 'DBMS', 'Computer Networks'] },
+      { category: 'Programming Languages', items: ['C++ (STL)', 'Java', 'JavaScript (ES6+)', 'Python', 'SQL'] },
+      { category: 'Computer Science Core', items: ['Data Structures & Algorithms', 'Operating Systems', 'DBMS', 'Computer Networks', 'OOP'] },
       { category: 'Web Development', items: ['HTML5/CSS3', 'Node.js', 'REST APIs', 'Supabase', 'PostgreSQL'] },
-      { category: 'Developer Tools', items: ['Git/GitHub', 'VS Code', 'Postman', 'Linux Bash'] }
+      { category: 'Developer Tools', items: ['Git/GitHub', 'VS Code', 'Postman', 'Linux Bash', 'Docker Basics'] }
     ],
     experience: [
       {
         role: 'Software Engineering Intern',
-        organization: 'Zeta Innovations',
+        organization: 'Zeta Cloud Innovations',
         period: 'May 2025 — July 2025',
-        description: 'Built internal telemetry endpoints for microservices. Optimized query execution times on PostgreSQL tables containing 4M+ rows by 65%.'
+        description: 'Built internal telemetry endpoints for microservices. Optimized query execution times on PostgreSQL tables containing 8M+ rows by 72%.'
       },
       {
         role: 'Lead Student Coordinator',
         organization: 'ACM Student Chapter',
         period: '2024 — Present',
-        description: 'Organized 8 competitive coding bootcamps for 500+ attendees. Mentored junior students in algorithmic problem-solving.'
+        description: 'Organized 12 competitive coding bootcamps for 600+ attendees. Mentored junior students in algorithmic problem-solving and ICPC contest preparation.'
       }
     ],
     education: [
@@ -220,15 +234,15 @@ export const DEMO_DATASETS = {
         institution: 'SRM Institute of Science and Technology',
         degree: 'B.Tech in Computer Science and Engineering',
         period: '2022 — 2026 (Currently in 7th Semester)',
-        score: 'CGPA 9.42 / 10.0',
+        score: 'CGPA 9.48 / 10.0',
         honors: 'Dean’s Academic Merit Scholarship (All Semesters)'
       },
       {
-        institution: 'National Public School',
+        institution: 'Delhi Public School, R.K. Puram',
         degree: 'Senior Secondary (Class XII CBSE)',
         period: '2020 — 2022',
-        score: '97.2% Aggregate',
-        honors: 'School Topper in Mathematics & Physics'
+        score: '97.4% Aggregate',
+        honors: 'School Topper in Computer Science & Mathematics'
       }
     ]
   },
@@ -238,69 +252,69 @@ export const DEMO_DATASETS = {
     name: 'Creative Portfolio',
     badge: 'Design & Interaction Archetype',
     person: {
-      fullName: 'Elena Rostova',
-      handle: '@elena_designs',
-      headline: 'Interaction Designer & Creative Technologist',
-      status: 'Open for select design systems & product contracts',
-      bio: 'Crafting expressive digital interfaces at the intersection of design engineering, WebGL shaders, fluid micro-interactions, and accessible typography.',
-      location: 'Stockholm, Sweden',
-      githubUrl: 'https://github.com/elenarostova-demo',
-      email: 'elena@rostova-design.example',
+      fullName: 'Aayush Kashyap',
+      handle: '@aayushkashyap_design',
+      headline: 'Creative Technologist, Interaction Designer & WebGL Engineer',
+      status: 'Open for select design systems & product engineering contracts',
+      bio: 'Crafting expressive digital interfaces at the intersection of design engineering, WebGL shaders, kinetic typography, fluid micro-interactions, and accessible typography. Winner of Awwwards Site of the Day.',
+      location: 'Bengaluru, India',
+      githubUrl: 'https://github.com/aayushkashyap-design',
+      email: 'aayush.kashyap@folioryn.dev',
       archetypeNote: 'Creative Technologist Archetype'
     },
     projects: [
       {
-        title: 'Luminary — Kinetic Typography Studio',
-        description: 'Interactive browser playground generating generative vector glyphs influenced by audio frequency analysis and mouse physics.',
-        tags: ['Three.js', 'GLSL Shaders', 'Web Audio API', 'Canvas'],
-        repo_url: 'https://github.com/elenarostova-demo/luminary-studio',
-        live_url: 'https://luminary-demo.folioryn.dev',
+        title: 'Chronicle — Kinetic Audio-Reactive Typography Playground',
+        description: 'Interactive browser playground generating generative vector glyphs influenced by Web Audio FFT frequency analysis and mouse physics with custom GLSL shaders.',
+        tags: ['Three.js', 'GLSL Shaders', 'Web Audio API', 'Canvas', 'GSAP'],
+        repo_url: 'https://github.com/aayushkashyap-design/chronicle-studio',
+        live_url: 'https://chronicle-demo.folioryn.dev',
         featured: true
       },
       {
-        title: 'Prism Accessible Design System',
-        description: 'Enterprise Figma component library and token compiler with automated WCAG AAA contrast verifications.',
-        tags: ['Design Tokens', 'Vanilla CSS', 'Figma API', 'Accessibility'],
-        repo_url: 'https://github.com/elenarostova-demo/prism-tokens',
-        live_url: 'https://prism-tokens.folioryn.dev',
+        title: 'Spectra Accessible Design Token System',
+        description: 'Enterprise Figma component library and token compiler with automated WCAG AAA contrast verifications and fluid typography math.',
+        tags: ['Design Tokens', 'Vanilla CSS', 'Figma API', 'Accessibility', 'TypeScript'],
+        repo_url: 'https://github.com/aayushkashyap-design/spectra-tokens',
+        live_url: 'https://spectra-tokens.folioryn.dev',
         featured: true
       },
       {
-        title: 'Aurora Ambient Sound Synthesizer',
-        description: 'Minimalist browser synth generating calming generative soundscapes for deep focus sessions.',
-        tags: ['Web Audio API', 'SVG Animation', 'CSS Grid'],
-        repo_url: 'https://github.com/elenarostova-demo/aurora-synth',
+        title: 'Atmosphere Generative Ambient Soundscape',
+        description: 'Minimalist browser synth generating calming generative soundscapes and procedural waves for deep focus and flow sessions.',
+        tags: ['Web Audio API', 'SVG Animation', 'CSS Grid', 'Generative Art'],
+        repo_url: 'https://github.com/aayushkashyap-design/atmosphere-synth',
         live_url: '',
         featured: false
       }
     ],
     skills: [
-      { category: 'Design Disciplines', items: ['UI/UX Systems', 'Interaction Design', 'Design Engineering', 'Motion Graphics'] },
-      { category: 'Frontend Craft', items: ['Vanilla CSS', 'WebGL / Three.js', 'SVG Vector Animation', 'HTML5 Semantic Web'] },
-      { category: 'Design Software', items: ['Figma Master', 'After Effects', 'Spline 3D', 'Blender Basics'] },
-      { category: 'Standards', items: ['WCAG 2.2 AAA Accessibility', 'Fluid Typography', 'Design Token Pipelines'] }
+      { category: 'Design Disciplines', items: ['UI/UX Systems', 'Interaction Design', 'Design Engineering', 'Motion Graphics', 'Design Systems'] },
+      { category: 'Frontend Craft', items: ['Vanilla CSS', 'WebGL / Three.js', 'GLSL Shaders', 'SVG Vector Animation', 'HTML5 Semantic Web'] },
+      { category: 'Design Software', items: ['Figma Master', 'After Effects', 'Spline 3D', 'Blender', 'Procreate'] },
+      { category: 'Standards', items: ['WCAG 2.2 AAA Accessibility', 'Fluid Typography', 'Design Token Pipelines', '60fps Performance'] }
     ],
     experience: [
       {
         role: 'Lead Interaction Designer',
-        organization: 'Nordic Digital Agency',
+        organization: 'Studio Kinetic Labs',
         period: '2023 — Present',
-        description: 'Led UI design and design systems for global consumer brands. Won 2024 Awwwards Site of the Month for spatial interface design.'
+        description: 'Led UI design and design systems for global consumer brands. Won Awwwards Site of the Day for spatial web interface design and creative interaction craft.'
       },
       {
         role: 'Design Engineer',
-        organization: 'Vanguard Studios',
+        organization: 'Vanguard Design Studio',
         period: '2021 — 2023',
-        description: 'Bridged design and engineering teams by building production React and Vanilla web components with sub-60fps animations.'
+        description: 'Bridged design and engineering teams by building production React and Vanilla web components with zero-jank 60fps micro-animations.'
       }
     ],
     education: [
       {
-        institution: 'Umeå Institute of Design',
-        degree: 'M.F.A. in Interaction Design',
+        institution: 'National Institute of Design (NID), Ahmedabad',
+        degree: 'M.Des in Interaction Design',
         period: '2019 — 2021',
         score: 'With Distinction',
-        honors: 'Nordic Design Excellence Award'
+        honors: 'National Design Excellence Gold Trophy'
       }
     ]
   },
@@ -310,39 +324,39 @@ export const DEMO_DATASETS = {
     name: 'Editorial Portfolio',
     badge: 'Writing & Architecture Archetype',
     person: {
-      fullName: 'Julian Rivera',
-      handle: '@jrivera_writes',
-      headline: 'Systems Architect, Technical Author & Columnist',
-      status: 'Writing on software resilience and systems philosophy',
-      bio: 'Author of "Reliable Runtimes at Scale". Explores the philosophy of computing, long-term software durability, and clean architectural prose.',
-      location: 'London, United Kingdom',
-      githubUrl: 'https://github.com/julianrivera-demo',
-      email: 'julian@rivera-systems.example',
+      fullName: 'Kabir Mehra',
+      handle: '@kabirmehra_writes',
+      headline: 'Systems Architect, Technical Author & Software Essayist',
+      status: 'Writing on software resilience, systems philosophy, and software durability',
+      bio: 'Author of "The Durability Manifesto". Explores the philosophy of computing, long-term software durability, modular software architecture, and clean architectural prose.',
+      location: 'Mumbai, India',
+      githubUrl: 'https://github.com/kabirmehra-writes',
+      email: 'kabir.mehra@folioryn.dev',
       archetypeNote: 'Editorial Narrative Archetype'
     },
     projects: [
       {
-        title: 'The Resilience Manifesto (Long-Form Book)',
-        description: 'A 12-chapter comprehensive treatise on engineering systems that gracefully degrade during catastrophic network partitions.',
-        tags: ['Technical Writing', 'Distributed Systems', 'Case Studies'],
-        repo_url: 'https://github.com/julianrivera-demo/resilience-manifesto',
-        live_url: 'https://resilience-manifesto.folioryn.dev',
+        title: 'The Durability Manifesto (Open-Access Architectural Book)',
+        description: 'A 14-chapter comprehensive treatise on engineering systems that gracefully degrade during catastrophic network partitions and outlive technology hype cycles.',
+        tags: ['Technical Writing', 'Distributed Systems', 'Case Studies', 'Software Architecture'],
+        repo_url: 'https://github.com/kabirmehra-writes/durability-manifesto',
+        live_url: 'https://durability-manifesto.folioryn.dev',
         featured: true
       },
       {
-        title: 'Loom: Declarative State Machine Engine',
-        description: 'Formal verification state engine with pure deterministic transitions and verifiable audit trails.',
-        tags: ['TypeScript', 'TLA+ Specifications', 'Deterministic State'],
-        repo_url: 'https://github.com/julianrivera-demo/loom-engine',
-        live_url: 'https://loom-engine.folioryn.dev',
+        title: 'Synapse: Deterministic Finite State Machine Engine',
+        description: 'Formal verification state engine with pure deterministic transitions, immutable event logs, and verifiable audit trails.',
+        tags: ['TypeScript', 'TLA+ Specifications', 'Deterministic State', 'State Machines'],
+        repo_url: 'https://github.com/kabirmehra-writes/synapse-engine',
+        live_url: 'https://synapse-engine.folioryn.dev',
         featured: true
       },
       {
-        title: 'Systems Commentary: The 2026 Monolith Revival',
-        description: 'In-depth analysis examining why modular monoliths with strict package boundary contracts dominate microservices for 90% of teams.',
-        tags: ['Essay', 'Software Architecture', 'Engineering Strategy'],
+        title: 'Systems Commentary: The Death of Microservice Complexity',
+        description: 'Read by over 240,000 engineers—an in-depth analysis examining why modular monoliths with strict package boundary contracts dominate microservices for 95% of engineering organizations.',
+        tags: ['Essay', 'Software Architecture', 'Engineering Strategy', 'Domain-Driven Design'],
         repo_url: '',
-        live_url: 'https://rivera-systems.example/essays/monolith-revival',
+        live_url: 'https://kabirmehra.folioryn.dev/essays/monolith-revival',
         featured: false
       }
     ],
@@ -355,24 +369,24 @@ export const DEMO_DATASETS = {
     experience: [
       {
         role: 'Chief Technical Author & Advisor',
-        organization: 'Rivera Systems Advisory',
+        organization: 'Mehra Systems Advisory',
         period: '2022 — Present',
-        description: 'Consulted for Fortune 500 engineering directors on core architecture migration, RFC formatting, and technical documentation.'
+        description: 'Consulted for Fortune 500 engineering directors on core architecture migration, RFC formatting, and technical documentation quality.'
       },
       {
         role: 'Principal Systems Architect',
         organization: 'Apex FinTech Infrastructure',
         period: '2017 — 2022',
-        description: 'Directed architectural blueprints for high-frequency trading ledger settlement systems handling £12B in monthly volume.'
+        description: 'Directed architectural blueprints for high-frequency trading ledger settlement systems handling ₹8,500 Crore in monthly volume with zero downtime.'
       }
     ],
     education: [
       {
-        institution: 'Imperial College London',
-        degree: 'B.Eng. in Computing & Software Engineering',
+        institution: 'Indian Institute of Technology (IIT) Bombay',
+        degree: 'B.Tech in Computer Science & Engineering',
         period: '2013 — 2017',
-        score: 'First Class Honours',
-        honors: 'Distinguished Dissertation in Distributed Algorithms'
+        score: 'First Class with Distinction',
+        honors: 'Distinguished Undergraduate Thesis in Distributed Computing'
       }
     ]
   },
@@ -382,44 +396,44 @@ export const DEMO_DATASETS = {
     name: 'Experience-Focused',
     badge: 'Career & Leadership Archetype',
     person: {
-      fullName: 'Sarah Jenkins',
-      handle: '@sjenkins_vp',
-      headline: 'VP of Engineering & Distributed Infrastructure Lead',
-      status: 'Building high-velocity, empathetic engineering organizations',
-      bio: 'Engineering leader with 12+ years scaling teams from 15 to 220 engineers. Proven track record leading infrastructure, platform engineering, and developer experience.',
-      location: 'New York, NY',
-      githubUrl: 'https://github.com/sarahjenkins-demo',
-      email: 'sarah.jenkins@example.com',
+      fullName: 'Ritu Sen',
+      handle: '@ritusencore_vp',
+      headline: 'VP of Engineering & Distributed Infrastructure Leader',
+      status: 'Leading high-velocity, empathetic engineering organizations at scale',
+      bio: 'Engineering executive with 13+ years scaling teams from 20 to 250+ engineers. Proven track record leading infrastructure, platform engineering, and developer experience across hyperscale distributed systems.',
+      location: 'Hyderabad, India',
+      githubUrl: 'https://github.com/ritusencore-dev',
+      email: 'ritu.sen@folioryn.dev',
       archetypeNote: 'Experience Timeline Archetype'
     },
     projects: [
       {
-        title: 'Global Engineering Velocity Scorecard',
-        description: 'Open-source DORA metrics framework measuring lead time, deployment frequency, MTTR, and change failure rates.',
-        tags: ['DORA Metrics', 'Engineering Leadership', 'Python', 'Grafana'],
-        repo_url: 'https://github.com/sarahjenkins-demo/velocity-scorecard',
+        title: 'Enterprise DORA Engineering Velocity Scorecard',
+        description: 'Production-grade operational telemetry platform measuring deployment frequency, lead time for changes, MTTR, and change failure rates across 80+ engineering teams.',
+        tags: ['DORA Metrics', 'Engineering Leadership', 'Python', 'Grafana', 'Kafka'],
+        repo_url: 'https://github.com/ritusencore-dev/velocity-scorecard',
         live_url: 'https://velocity-scorecard.folioryn.dev',
         featured: true
       },
       {
-        title: 'Platform Engineering Onboarding Playbook',
-        description: 'Comprehensive operational guide reducing new engineer onboarding ramp-up from 6 weeks to 8 business days.',
-        tags: ['Developer Experience', 'Internal Developer Platform', 'Docs'],
-        repo_url: 'https://github.com/sarahjenkins-demo/dev-playbook',
+        title: 'Platform Engineering Onboarding Playbook & IDP',
+        description: 'Internal developer platform blueprint reducing new engineer onboarding ramp-up from 6 weeks to 6 business days across 600+ developers.',
+        tags: ['Developer Experience', 'Internal Developer Platform', 'Docs', 'Kubernetes'],
+        repo_url: 'https://github.com/ritusencore-dev/dev-playbook',
         live_url: 'https://devplaybook.folioryn.dev',
         featured: true
       },
       {
-        title: 'Cloud Cost Governance Automation',
-        description: 'Automated Kubernetes pod auto-stopping and rightsizing saving $1.2M annually across AWS and GCP fleets.',
+        title: 'Cloud Cost Governance & FinOps Automation',
+        description: 'Automated Kubernetes pod auto-stopping and rightsizing saving $2.4M annually across AWS and GCP multi-tenant clusters.',
         tags: ['FinOps', 'Kubernetes', 'Go', 'AWS Cost Explorer'],
-        repo_url: 'https://github.com/sarahjenkins-demo/finops-autostop',
+        repo_url: 'https://github.com/ritusencore-dev/finops-autostop',
         live_url: '',
         featured: false
       }
     ],
     skills: [
-      { category: 'Executive Leadership', items: ['Scaling Engineering Orgs (15 -> 200+)', 'Budget & FinOps Governance', 'Hiring & Retention', 'Culture & DEI'] },
+      { category: 'Executive Leadership', items: ['Scaling Engineering Orgs (20 -> 250+)', 'Budget & FinOps Governance', 'Hiring & Retention', 'Culture & DEI'] },
       { category: 'Operational Rigor', items: ['DORA Metrics Implementation', 'Incident Post-Mortems', 'SOC2 / ISO 27001 Compliance', 'On-Call Operations'] },
       { category: 'Platform Domains', items: ['Cloud Infrastructure (AWS/GCP)', 'Kubernetes & Service Meshes', 'CI/CD Pipelines', 'Distributed Ledgers'] },
       { category: 'Engineering Strategy', items: ['Build vs. Buy Frameworks', 'Vendor Negotiations', 'Tech Debt Prioritization'] }
@@ -429,13 +443,13 @@ export const DEMO_DATASETS = {
         role: 'VP of Engineering',
         organization: 'Nexus Financial Cloud',
         period: '2022 — Present',
-        description: 'Lead an engineering organization of 140+ engineers across 12 distributed squads. Drove SOC2 Type II compliance and 99.995% service availability SLA.'
+        description: 'Lead an engineering organization of 180+ engineers across 15 distributed squads. Drove SOC2 Type II compliance and 99.995% service availability SLA.'
       },
       {
         role: 'Director of Platform Engineering',
         organization: 'CloudScale Technologies',
         period: '2018 — 2022',
-        description: 'Scaled internal developer platform used by 500+ developers. Reduced deployment cycles from bi-weekly releases to 45 deployments per day.'
+        description: 'Scaled internal developer platform used daily by 700+ developers. Reduced deployment cycles from bi-weekly releases to 50+ production deployments per day.'
       },
       {
         role: 'Senior Staff Infrastructure Engineer',
@@ -446,11 +460,18 @@ export const DEMO_DATASETS = {
     ],
     education: [
       {
-        institution: 'Columbia University',
-        degree: 'B.S. in Computer Engineering',
-        period: '2010 — 2014',
-        score: 'Magna Cum Laude',
-        honors: 'Tau Beta Pi Engineering Honor Society'
+        institution: 'Indian Institute of Science (IISc), Bangalore',
+        degree: 'M.Tech in Computer Science & Systems Engineering',
+        period: '2012 — 2014',
+        score: 'Gold Medalist &bull; CGPA 9.90 / 10.0',
+        honors: 'Highest Academic Standing across Systems Specialization'
+      },
+      {
+        institution: 'Jadavpur University',
+        degree: 'B.E. in Computer Science and Engineering',
+        period: '2008 — 2012',
+        score: 'First Class with Honors (Top 1%)',
+        honors: 'University Academic Excellence Award'
       }
     ]
   }

@@ -118,12 +118,12 @@ test('6-Template Showroom: js/template-demo.js has 6 complete fictional datasets
     assert.ok(demoJs.includes(`'${t}':`), `Template dataset for ${t} must exist`);
   });
 
-  assert.ok(demoJs.includes('Sophia Lin'), 'Minimal Professional persona must be present');
-  assert.ok(demoJs.includes('Marcus Kane'), 'Developer persona must be present');
-  assert.ok(demoJs.includes('Aarav Patel'), 'Student persona must be present');
-  assert.ok(demoJs.includes('Elena Rostova'), 'Creative persona must be present');
-  assert.ok(demoJs.includes('Julian Rivera'), 'Editorial persona must be present');
-  assert.ok(demoJs.includes('Sarah Jenkins'), 'Experience persona must be present');
+  assert.ok(demoJs.includes('Sunny Singh'), 'Flagship Minimal Professional persona (Sunny Singh) must be present');
+  assert.ok(demoJs.includes('Aditya Sharma'), 'Developer persona (Aditya Sharma) must be present');
+  assert.ok(demoJs.includes('Vineet Verma'), 'Student persona (Vineet Verma) must be present');
+  assert.ok(demoJs.includes('Aayush Kashyap'), 'Creative persona (Aayush Kashyap) must be present');
+  assert.ok(demoJs.includes('Kabir Mehra'), 'Editorial persona (Kabir Mehra) must be present');
+  assert.ok(demoJs.includes('Ritu Sen'), 'Experience persona (Ritu Sen) must be present');
   assert.ok(demoJs.includes('handleUseTemplate'), 'Must include handleUseTemplate handler');
 });
 
