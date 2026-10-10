@@ -95,6 +95,10 @@
               <span>ATS Resume (PDF)</span>
               <span aria-hidden="true">&nearr;</span>
             </a>
+            <button type="button" id="share-portfolio-btn" class="btn btn-secondary btn-card" aria-label="Share public portfolio">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="margin-right: 4px;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+              <span>Share Portfolio</span>
+            </button>
             <a href="#" data-builder-target="github_url" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="display: none;">
               <span>GitHub Profile</span>
               <span aria-hidden="true">&nearr;</span>
@@ -197,6 +201,9 @@
 
           <!-- Direct Inbound Contact Form -->
           <form id="portfolio-contact-form" style="max-width: 520px; margin: 0 auto; text-align: left; background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-6);">
+            <!-- Spam Honeypot Field -->
+            <input type="text" name="website_hp" id="contact-hp" style="display:none !important; position:absolute; left:-9999px;" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-3);">
               <div>
                 <label for="contact-name" class="form-label">Your Name</label>

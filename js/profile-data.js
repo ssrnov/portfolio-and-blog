@@ -150,10 +150,13 @@ export const DEFAULT_PROJECTS = [
 ];
 
 export const DEFAULT_PUBLISH_SETTINGS = {
+  status: "published",
   isPublished: true,
   publicSlug: "sunny",
   templateId: "minimal-professional",
   publishedAt: "2026-10-09T18:00:00.000Z",
+  previewToken: null,
+  previewTokenExpiresAt: null,
   sectionVisibility: {
     hero: true,
     about: true,
@@ -671,7 +674,19 @@ export function getPublishSettings() {
 
 export function savePublishSettings(settings) {
   const current = getPublishSettings();
-  const updated = { ...current, ...settings, updatedAt: new Date().toISOString() };
+  let status = settings.status || current.status || (settings.isPublished !== false ? 'published' : 'draft');
+  if (settings.isPublished !== undefined && !settings.status) {
+    status = settings.isPublished ? 'published' : 'unpublished';
+  }
+  const isPublished = status === 'published';
+
+  const updated = {
+    ...current,
+    ...settings,
+    status,
+    isPublished,
+    updatedAt: new Date().toISOString()
+  };
   const user = getActiveUser();
   const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
   const isSunny = !user || user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
@@ -737,24 +752,240 @@ export function recordPageView(path = window.location.pathname) {
 }
 
 // ==========================================
-// Profile Completion Calculator
+// Profile Completion Calculator & Suggestions (Feature 8)
 // ==========================================
-export function calculateProfileCompletion() {
+export function getProfileCompletionDetails() {
   const profile = getProfile();
   const education = getEducation();
   const skills = getSkills();
   const projects = getProjects();
   const experiences = getExperiences();
 
-  let score = 0;
-  if (profile.fullName && profile.username) score += 20;
-  if (profile.headline && profile.bio && profile.bio.length > 15) score += 20;
-  if (education.length > 0) score += 15;
-  if (skills.length > 0) score += 15;
-  if (projects.length > 0) score += 20;
-  if (experiences.length > 0) score += 10;
+  const suggestions = [
+    {
+      id: 'bio',
+      title: 'Add a profile summary / bio (>15 characters)',
+      category: 'Profile',
+      link: '/dashboard/builder/',
+      done: !!(profile.headline && profile.bio && profile.bio.trim().length > 15)
+    },
+    {
+      id: 'projects',
+      title: 'Add at least 2 featured projects',
+      category: 'Portfolio',
+      link: '/dashboard/projects/',
+      done: projects.filter(p => p.title && p.title.trim().length > 0).length >= 2
+    },
+    {
+      id: 'skills',
+      title: 'Add at least 3 technical skills',
+      category: 'Competencies',
+      link: '/dashboard/skills/',
+      done: skills.filter(s => s.name && s.name.trim().length > 0).length >= 3
+    },
+    {
+      id: 'education',
+      title: 'Add university or education history',
+      category: 'Academic',
+      link: '/dashboard/education/',
+      done: education.filter(e => e.institution && e.institution.trim().length > 0).length > 0
+    },
+    {
+      id: 'experience',
+      title: 'Add work experience or internship achievements',
+      category: 'Career',
+      link: '/dashboard/experience/',
+      done: experiences.filter(x => x.organization && x.organization.trim().length > 0).length > 0
+    },
+    {
+      id: 'social',
+      title: 'Connect GitHub or professional profile link',
+      category: 'Integrations',
+      link: '/dashboard/settings/',
+      done: !!(profile.githubUrl || profile.linkedinUrl || profile.websiteUrl)
+    },
+    {
+      id: 'email',
+      title: 'Provide a primary inquiries contact email',
+      category: 'Contact',
+      link: '/dashboard/settings/',
+      done: !!(profile.email && profile.email.includes('@'))
+    }
+  ];
 
-  return Math.min(score, 100);
+  const completedCount = suggestions.filter(s => s.done).length;
+  const percentage = Math.round((completedCount / suggestions.length) * 100);
+
+  return {
+    percentage,
+    completedCount,
+    totalCount: suggestions.length,
+    suggestions
+  };
+}
+
+export function calculateProfileCompletion() {
+  return getProfileCompletionDetails().percentage;
+}
+
+// ==========================================
+// Feature 3: Tokenized Private Preview Helpers
+// ==========================================
+export function generatePreviewToken(slug) {
+  const currentSettings = getPublishSettings();
+  const token = 'prev_' + Math.random().toString(36).substring(2, 10) + '_' + Date.now().toString(36);
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // 24-hr expiry
+  const cleanSlug = slug || currentSettings.publicSlug || 'user';
+
+  savePublishSettings({
+    previewToken: token,
+    previewTokenExpiresAt: expiresAt
+  });
+
+  return {
+    token,
+    expiresAt,
+    previewUrl: `/u/${encodeURIComponent(cleanSlug)}?preview_token=${encodeURIComponent(token)}`
+  };
+}
+
+export function verifyPreviewToken(slug, token) {
+  if (!slug || !token) return false;
+  const userData = getUserDataBySlug(slug);
+  if (!userData || !userData.publishSettings) return false;
+
+  const settings = userData.publishSettings;
+  if (!settings.previewToken || settings.previewToken !== token) return false;
+  if (settings.previewTokenExpiresAt && new Date(settings.previewTokenExpiresAt).getTime() < Date.now()) {
+    return false; // Token has expired
+  }
+  return true;
+}
+
+export function revokePreviewToken() {
+  savePublishSettings({
+    previewToken: null,
+    previewTokenExpiresAt: null
+  });
+  return true;
+}
+
+// ==========================================
+// Feature 4: One-Click Portfolio Duplicate
+// ==========================================
+export function duplicatePortfolio(customTitle = '') {
+  const user = getActiveUser();
+  if (!user) {
+    throw new Error('Authentication required to duplicate a portfolio.');
+  }
+
+  const currentProfile = getProfile();
+  const baseSlug = (currentProfile.username || user.username || 'portfolio').toLowerCase();
+
+  // Find a unique slug with collision avoidance
+  let candidateSlug = `${baseSlug}-copy`;
+  let counter = 1;
+  const rawUsers = localStorage.getItem('profilefolio_users');
+  const existingUsers = rawUsers ? JSON.parse(rawUsers) : [];
+
+  while (
+    candidateSlug === 'sunny' ||
+    existingUsers.some(u => (u.username || '').toLowerCase() === candidateSlug) ||
+    localStorage.getItem(`profilefolio_clone_${candidateSlug}_bundle`)
+  ) {
+    counter++;
+    candidateSlug = `${baseSlug}-copy-${counter}`;
+  }
+
+  const duplicateId = 'port_clone_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+  const clonedTitle = customTitle || `${currentProfile.fullName || 'User'} (Copy)`;
+
+  // Deep clone data with newly assigned IDs
+  const clonedProfile = {
+    ...currentProfile,
+    username: candidateSlug,
+    fullName: clonedTitle,
+    displayName: clonedTitle,
+    portfolioUrl: `https://folioryn.dev/u/${candidateSlug}`
+  };
+
+  const clonedEducation = getEducation().map(e => ({
+    ...e,
+    id: 'edu_clone_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5)
+  }));
+
+  const clonedSkills = getSkills().map(s => ({
+    ...s,
+    id: 'sk_clone_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5)
+  }));
+
+  const clonedExperiences = getExperiences().map(x => ({
+    ...x,
+    id: 'exp_clone_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5)
+  }));
+
+  const clonedCertifications = getCertifications().map(c => ({
+    ...c,
+    id: 'cert_clone_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5)
+  }));
+
+  const clonedProjects = getProjects().map(p => ({
+    ...p,
+    id: 'proj_clone_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5)
+  }));
+
+  // Duplicate is Draft by default
+  const clonedPublish = {
+    ...getPublishSettings(),
+    status: 'draft',
+    isPublished: false,
+    publicSlug: candidateSlug,
+    publishedAt: null
+  };
+
+  // Register in user's cloned portfolios registry
+  const uid = user.id || (user.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
+  const userCopiesKey = `profilefolio_user_${uid}_clones`;
+  const existingCopies = JSON.parse(localStorage.getItem(userCopiesKey) || '[]');
+  const copyRecord = {
+    id: duplicateId,
+    slug: candidateSlug,
+    title: clonedTitle,
+    createdAt: new Date().toISOString(),
+    status: 'draft',
+    profile: clonedProfile,
+    education: clonedEducation,
+    skills: clonedSkills,
+    experiences: clonedExperiences,
+    certifications: clonedCertifications,
+    projects: clonedProjects,
+    publishSettings: clonedPublish
+  };
+  existingCopies.unshift(copyRecord);
+  localStorage.setItem(userCopiesKey, JSON.stringify(existingCopies));
+
+  // Also make it immediately discoverable in multi-tenant resolver
+  localStorage.setItem(`profilefolio_clone_${candidateSlug}_bundle`, JSON.stringify(copyRecord));
+
+  return {
+    success: true,
+    duplicateId,
+    slug: candidateSlug,
+    title: clonedTitle,
+    status: 'draft',
+    createdAt: copyRecord.createdAt
+  };
+}
+
+export function getUserClones() {
+  const user = getActiveUser();
+  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
+  try {
+    const raw = localStorage.getItem(`profilefolio_user_${uid}_clones`);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
 }
 
 // ==========================================
@@ -776,7 +1007,25 @@ export function getUserDataBySlug(slug) {
     };
   }
 
-  // Lookup in local users registry
+  // 1. Check if it's a cloned portfolio bundle
+  try {
+    const rawClone = localStorage.getItem(`profilefolio_clone_${cleanSlug}_bundle`);
+    if (rawClone) {
+      const bundle = JSON.parse(rawClone);
+      return {
+        profile: bundle.profile,
+        education: bundle.education || [],
+        skills: bundle.skills || [],
+        experiences: bundle.experiences || [],
+        certifications: bundle.certifications || [],
+        projects: bundle.projects || [],
+        articles: bundle.articles || [],
+        publishSettings: bundle.publishSettings || { status: 'draft', isPublished: false, templateId: "minimal-professional", publicSlug: cleanSlug }
+      };
+    }
+  } catch (e) {}
+
+  // 2. Lookup in local users registry
   try {
     const rawUsers = localStorage.getItem('profilefolio_users');
     const users = rawUsers ? JSON.parse(rawUsers) : [];
@@ -811,7 +1060,7 @@ export function getUserDataBySlug(slug) {
       certifications: rawCert ? JSON.parse(rawCert) : [],
       projects: rawProj ? JSON.parse(rawProj) : [],
       articles: rawArticles ? JSON.parse(rawArticles) : [],
-      publishSettings: rawPub ? JSON.parse(rawPub) : { isPublished: true, templateId: "minimal-professional", publicSlug: matched.username }
+      publishSettings: rawPub ? JSON.parse(rawPub) : { status: 'published', isPublished: true, templateId: "minimal-professional", publicSlug: matched.username }
     };
   } catch (e) {
     return null;
@@ -873,4 +1122,247 @@ export function saveBlogArticles(articles) {
 
   return articles;
 }
+
+// ==========================================
+// Feature 9: Profile Data Import & Export Engine
+// ==========================================
+export function exportProfileData() {
+  const profile = getProfile();
+  const user = getActiveUser();
+
+  // Strip sensitive credentials, passwords, tokens, and private inbox messages
+  const sanitizedProfile = { ...profile };
+  delete sanitizedProfile.password;
+  delete sanitizedProfile.password_hash;
+  delete sanitizedProfile.security_question;
+  delete sanitizedProfile.security_answer;
+
+  const exportBundle = {
+    schemaVersion: "folioryn_backup_v1",
+    exportedAt: new Date().toISOString(),
+    ownerUsername: profile.username || user?.username || 'user',
+    profile: sanitizedProfile,
+    education: getEducation(),
+    skills: getSkills(),
+    experiences: getExperiences(),
+    certifications: getCertifications(),
+    projects: getProjects(),
+    articles: getBlogArticles(),
+    publishSettings: getPublishSettings()
+  };
+
+  return exportBundle;
+}
+
+export function validateImportData(bundle) {
+  const errors = [];
+  if (!bundle || typeof bundle !== 'object') {
+    return { valid: false, errors: ['Invalid JSON format: root must be an object.'] };
+  }
+
+  if (bundle.schemaVersion !== 'folioryn_backup_v1') {
+    errors.push(`Unsupported or missing schemaVersion: expected "folioryn_backup_v1", received "${bundle.schemaVersion || 'none'}".`);
+  }
+
+  if (!bundle.profile || typeof bundle.profile !== 'object') {
+    errors.push('Missing or invalid "profile" object in backup data.');
+  }
+
+  if (bundle.education && !Array.isArray(bundle.education)) {
+    errors.push('"education" field must be an array.');
+  }
+
+  if (bundle.skills && !Array.isArray(bundle.skills)) {
+    errors.push('"skills" field must be an array.');
+  }
+
+  if (bundle.projects && !Array.isArray(bundle.projects)) {
+    errors.push('"projects" field must be an array.');
+  }
+
+  if (bundle.experiences && !Array.isArray(bundle.experiences)) {
+    errors.push('"experiences" field must be an array.');
+  }
+
+  const summary = {
+    profileName: bundle.profile?.fullName || bundle.profile?.displayName || 'Unknown',
+    projectCount: Array.isArray(bundle.projects) ? bundle.projects.length : 0,
+    skillCount: Array.isArray(bundle.skills) ? bundle.skills.length : 0,
+    educationCount: Array.isArray(bundle.education) ? bundle.education.length : 0,
+    experienceCount: Array.isArray(bundle.experiences) ? bundle.experiences.length : 0,
+    articleCount: Array.isArray(bundle.articles) ? bundle.articles.length : 0
+  };
+
+  return {
+    valid: errors.length === 0,
+    errors,
+    summary
+  };
+}
+
+export function importProfileData(bundle, strategy = 'merge') {
+  const validation = validateImportData(bundle);
+  if (!validation.valid) {
+    throw new Error(`Import validation failed:\n- ${validation.errors.join('\n- ')}`);
+  }
+
+  const user = getActiveUser();
+  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
+
+  // 1. Safety Rollback Snapshot before applying changes
+  const rollbackSnapshot = {
+    timestamp: new Date().toISOString(),
+    profile: getProfile(),
+    education: getEducation(),
+    skills: getSkills(),
+    experiences: getExperiences(),
+    certifications: getCertifications(),
+    projects: getProjects(),
+    articles: getBlogArticles(),
+    publishSettings: getPublishSettings()
+  };
+  localStorage.setItem(`folioryn_import_rollback_${uid}`, JSON.stringify(rollbackSnapshot));
+
+  // 2. Apply import with user ownership enforcement
+  if (strategy === 'replace') {
+    if (bundle.profile) {
+      saveProfile({
+        ...bundle.profile,
+        username: user?.username || bundle.profile.username || 'user',
+        email: user?.email || bundle.profile.email || ''
+      });
+    }
+    if (Array.isArray(bundle.education)) saveEducation(bundle.education);
+    if (Array.isArray(bundle.skills)) saveSkills(bundle.skills);
+    if (Array.isArray(bundle.experiences)) saveExperiences(bundle.experiences);
+    if (Array.isArray(bundle.certifications)) saveCertifications(bundle.certifications);
+    if (Array.isArray(bundle.projects)) saveProjects(bundle.projects);
+    if (Array.isArray(bundle.articles)) saveBlogArticles(bundle.articles);
+    if (bundle.publishSettings) savePublishSettings(bundle.publishSettings);
+  } else {
+    // Merge strategy: update profile fields and append non-duplicate records
+    if (bundle.profile) {
+      const currentProf = getProfile();
+      saveProfile({
+        ...currentProf,
+        ...bundle.profile,
+        username: currentProf.username || user?.username,
+        email: currentProf.email || user?.email
+      });
+    }
+
+    if (Array.isArray(bundle.education)) {
+      const currentEdu = getEducation();
+      const existingInstitutions = new Set(currentEdu.map(e => (e.institution || '').toLowerCase()));
+      const toAdd = bundle.education.filter(e => !existingInstitutions.has((e.institution || '').toLowerCase()));
+      saveEducation([...currentEdu, ...toAdd]);
+    }
+
+    if (Array.isArray(bundle.skills)) {
+      const currentSkills = getSkills();
+      const existingNames = new Set(currentSkills.map(s => (s.name || '').toLowerCase()));
+      const toAdd = bundle.skills.filter(s => !existingNames.has((s.name || '').toLowerCase()));
+      saveSkills([...currentSkills, ...toAdd]);
+    }
+
+    if (Array.isArray(bundle.projects)) {
+      const currentProjects = getProjects();
+      const existingTitles = new Set(currentProjects.map(p => (p.title || '').toLowerCase()));
+      const toAdd = bundle.projects.filter(p => !existingTitles.has((p.title || '').toLowerCase()));
+      saveProjects([...currentProjects, ...toAdd]);
+    }
+
+    if (Array.isArray(bundle.experiences)) {
+      const currentExp = getExperiences();
+      const existingOrgs = new Set(currentExp.map(x => (x.organization || '').toLowerCase()));
+      const toAdd = bundle.experiences.filter(x => !existingOrgs.has((x.organization || '').toLowerCase()));
+      saveExperiences([...currentExp, ...toAdd]);
+    }
+  }
+
+  return {
+    success: true,
+    strategy,
+    appliedAt: new Date().toISOString(),
+    summary: validation.summary
+  };
+}
+
+export function rollbackLastImport() {
+  const user = getActiveUser();
+  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
+  const raw = localStorage.getItem(`folioryn_import_rollback_${uid}`);
+  if (!raw) return false;
+
+  try {
+    const snapshot = JSON.parse(raw);
+    if (snapshot.profile) saveProfile(snapshot.profile);
+    if (snapshot.education) saveEducation(snapshot.education);
+    if (snapshot.skills) saveSkills(snapshot.skills);
+    if (snapshot.experiences) saveExperiences(snapshot.experiences);
+    if (snapshot.certifications) saveCertifications(snapshot.certifications);
+    if (snapshot.projects) saveProjects(snapshot.projects);
+    if (snapshot.articles) saveBlogArticles(snapshot.articles);
+    if (snapshot.publishSettings) savePublishSettings(snapshot.publishSettings);
+    localStorage.removeItem(`folioryn_import_rollback_${uid}`);
+    return true;
+  } catch (e) {
+    console.error('Rollback failed:', e);
+    return false;
+  }
+}
+
+// ==========================================
+// Feature 6: Inbound Contact Messages Storage & Management
+// ==========================================
+export function getContactMessages() {
+  const user = getActiveUser();
+  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
+  const scopedKey = `profilefolio_user_${uid}_messages`;
+  try {
+    const raw = localStorage.getItem(scopedKey);
+    if (raw) return JSON.parse(raw);
+
+    // Fallback for Sunny
+    if (user?.username === 'sunny' || uid === 'usr_mock_sunny_9921') {
+      const legacyRaw = localStorage.getItem('profilefolio_contact_messages');
+      if (legacyRaw) return JSON.parse(legacyRaw);
+    }
+    return [];
+  } catch (e) {
+    return [];
+  }
+}
+
+export function saveContactMessages(messages) {
+  const user = getActiveUser();
+  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
+  const scopedKey = `profilefolio_user_${uid}_messages`;
+  localStorage.setItem(scopedKey, JSON.stringify(messages));
+  if (user?.username === 'sunny' || uid === 'usr_mock_sunny_9921') {
+    localStorage.setItem('profilefolio_contact_messages', JSON.stringify(messages));
+  }
+  return messages;
+}
+
+export function deleteContactMessage(messageId) {
+  const messages = getContactMessages().filter(m => m.id !== messageId);
+  saveContactMessages(messages);
+  return messages;
+}
+
+export function markContactMessageRead(messageId, isRead = true) {
+  const messages = getContactMessages().map(m => {
+    if (m.id === messageId) return { ...m, is_read: isRead };
+    return m;
+  });
+  saveContactMessages(messages);
+  return messages;
+}
+
+export function clearAllContactMessages() {
+  saveContactMessages([]);
+  return [];
+}
+
 

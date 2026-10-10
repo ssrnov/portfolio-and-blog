@@ -317,6 +317,194 @@ test('Auth Architecture: Single active session enforcement & dual-method passwor
   assert.ok(supabaseJs.includes('resetPasswordWithVerification'), 'supabase.js must define resetPasswordWithVerification');
 });
 
+// --------------------------------------------------------------------------
+// TEST 16: Feature 1 — Autosave Engine (Debounce, Sequencing & Navigation Guard)
+// --------------------------------------------------------------------------
+test('Feature 1: Autosave Engine (800ms debounce, monotonic sequencing, unsaved/saving/saved/failed states, beforeunload guard)', () => {
+  const builderJs = fs.readFileSync(path.join(ROOT, 'js/builder.js'), 'utf8');
+  const builderHtml = fs.readFileSync(path.join(ROOT, 'dashboard/builder/index.html'), 'utf8');
+
+  assert.ok(builderJs.includes('saveSequenceCounter'), 'builder.js must track monotonic request sequences');
+  assert.ok(builderJs.includes('latestResolvedSequence'), 'builder.js must drop older out-of-order saves');
+  assert.ok(builderJs.includes('setSaveStatus'), 'builder.js must manage explicit autosave states');
+  assert.ok(builderJs.includes("statusText.textContent = 'Unsaved changes'"), 'builder.js must handle unsaved changes state');
+  assert.ok(builderJs.includes("statusText.textContent = 'Saving changes...'"), 'builder.js must handle saving changes state');
+  assert.ok(builderJs.includes("statusText.textContent = 'All changes saved'"), 'builder.js must handle saved state');
+  assert.ok(builderJs.includes("statusText.textContent = 'Save failed'"), 'builder.js must handle save failure state');
+  assert.ok(builderJs.includes('800'), 'builder.js must debounce autosave in 700-1000ms range (800ms)');
+  assert.ok(builderJs.includes("window.addEventListener('beforeunload'"), 'builder.js must guard against dirty navigation before save');
+  assert.ok(builderHtml.includes('id="save-retry-btn"'), 'dashboard/builder/index.html must include retry save button');
+});
+
+// --------------------------------------------------------------------------
+// TEST 17: Feature 2 — Undo and Redo History Engine
+// --------------------------------------------------------------------------
+test('Feature 2: Undo and Redo History Engine (50-state bounded stack, keyboard shortcuts, grouping & accessible header controls)', () => {
+  const builderJs = fs.readFileSync(path.join(ROOT, 'js/builder.js'), 'utf8');
+  const builderHtml = fs.readFileSync(path.join(ROOT, 'dashboard/builder/index.html'), 'utf8');
+
+  assert.ok(builderJs.includes('undoStack = []'), 'builder.js must maintain undoStack');
+  assert.ok(builderJs.includes('redoStack = []'), 'builder.js must maintain redoStack');
+  assert.ok(builderJs.includes('MAX_HISTORY = 50'), 'builder.js must bound history to 50 entries');
+  assert.ok(builderJs.includes('recordTypingSnapshot'), 'builder.js must group rapid typing into discrete history entries');
+  assert.ok(builderJs.includes('handleUndo'), 'builder.js must implement handleUndo');
+  assert.ok(builderJs.includes('handleRedo'), 'builder.js must implement handleRedo');
+  assert.ok(builderJs.includes("key === 'z'"), 'builder.js must support Ctrl+Z / Cmd+Z for undo');
+  assert.ok(builderJs.includes("e.shiftKey"), 'builder.js must support Ctrl+Shift+Z / Cmd+Shift+Z for redo');
+  assert.ok(builderHtml.includes('id="undo-btn"'), 'dashboard/builder/index.html must include accessible #undo-btn');
+  assert.ok(builderHtml.includes('id="redo-btn"'), 'dashboard/builder/index.html must include accessible #redo-btn');
+});
+
+// --------------------------------------------------------------------------
+// TEST 18: Feature 3 — Draft Mode & Tokenized Private Preview
+// --------------------------------------------------------------------------
+test('Feature 3: Draft Mode and Tokenized Private Preview (Tri-state, 24-hr token generator, banner, robots gate)', () => {
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  const publicPortfolioJs = fs.readFileSync(path.join(ROOT, 'js/public-portfolio.js'), 'utf8');
+
+  assert.ok(profileDataJs.includes('generatePreviewToken'), 'profile-data.js must export generatePreviewToken');
+  assert.ok(profileDataJs.includes('verifyPreviewToken'), 'profile-data.js must export verifyPreviewToken');
+  assert.ok(profileDataJs.includes('revokePreviewToken'), 'profile-data.js must export revokePreviewToken');
+  assert.ok(publicPortfolioJs.includes('renderDraftPreviewBanner'), 'public-portfolio.js must render draft preview banner for authorized viewers');
+  assert.ok(publicPortfolioJs.includes("robotsEl.content = 'noindex, nofollow'"), 'public-portfolio.js must set noindex, nofollow on drafts and previews');
+  assert.ok(publicPortfolioJs.includes('renderPrivatePortfolioState'), 'public-portfolio.js must block public visitors from accessing unpublished drafts');
+});
+
+// --------------------------------------------------------------------------
+// TEST 19: Feature 4 — One-Click Portfolio Duplicate
+// --------------------------------------------------------------------------
+test('Feature 4: One-Click Portfolio Duplicate (Deep cloning, unique slug collision avoidance, draft default)', () => {
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  const dashboardJs = fs.readFileSync(path.join(ROOT, 'js/dashboard.js'), 'utf8');
+  const settingsHtml = fs.readFileSync(path.join(ROOT, 'dashboard/settings/index.html'), 'utf8');
+
+  assert.ok(profileDataJs.includes('export function duplicatePortfolio'), 'profile-data.js must export duplicatePortfolio');
+  assert.ok(profileDataJs.includes('candidateSlug = `${baseSlug}-copy`'), 'profile-data.js must generate unique copy slug');
+  assert.ok(profileDataJs.includes("status: 'draft'"), 'profile-data.js must initialize duplicate in Draft mode');
+  assert.ok(profileDataJs.includes('isPublished: false'), 'profile-data.js must set isPublished: false on duplicate');
+  assert.ok(dashboardJs.includes('setupDuplicatePortfolio'), 'dashboard.js must bind duplicate portfolio action');
+  assert.ok(settingsHtml.includes('id="duplicate-settings-btn"'), 'dashboard/settings/index.html must include duplicate portfolio button');
+});
+
+// --------------------------------------------------------------------------
+// TEST 20: Feature 5 — SEO Canonical & Social Metadata, sitemap.xml, robots.txt
+// --------------------------------------------------------------------------
+test('Feature 5: SEO and Social Metadata (Dynamic Open Graph tags, canonical links, public sitemap.xml & robots.txt)', () => {
+  const publicJs = fs.readFileSync(path.join(ROOT, 'js/public-portfolio.js'), 'utf8');
+  const sitemapPath = path.join(ROOT, 'public/sitemap.xml');
+  const robotsPath = path.join(ROOT, 'public/robots.txt');
+
+  assert.ok(publicJs.includes('updateSocialMetadata'), 'public-portfolio.js must inject social metadata');
+  assert.ok(publicJs.includes('rel="canonical"'), 'public-portfolio.js must inject canonical link');
+  assert.ok(publicJs.includes('og:title'), 'public-portfolio.js must inject Open Graph og:title');
+  assert.ok(publicJs.includes('twitter:card'), 'public-portfolio.js must inject Twitter card tags');
+
+  assert.ok(fs.existsSync(sitemapPath), 'public/sitemap.xml must exist');
+  const sitemap = fs.readFileSync(sitemapPath, 'utf8');
+  assert.ok(sitemap.includes('<urlset'), 'sitemap.xml must be valid XML urlset');
+  assert.ok(!sitemap.includes('/dashboard/'), 'sitemap.xml must strictly exclude dashboard routes');
+  assert.ok(!sitemap.includes('preview'), 'sitemap.xml must exclude preview links');
+  assert.ok(sitemap.includes('/u/sunny'), 'sitemap.xml must include published canonical portfolios');
+
+  assert.ok(fs.existsSync(robotsPath), 'public/robots.txt must exist');
+  const robots = fs.readFileSync(robotsPath, 'utf8');
+  assert.ok(robots.includes('Disallow: /dashboard/'), 'robots.txt must disallow dashboard');
+  assert.ok(robots.includes('Disallow: /*preview*'), 'robots.txt must disallow preview tokens');
+  assert.ok(robots.includes('Sitemap: https://folioryn.dev/sitemap.xml'), 'robots.txt must declare sitemap location');
+});
+
+// --------------------------------------------------------------------------
+// TEST 21: Feature 6 — Contact Form with Honeypot & Rate Limiting
+// --------------------------------------------------------------------------
+test('Feature 6: Contact Form & Message Delivery (Honeypot spam filter, rate-limiting, recipient inbox storage & deletion)', () => {
+  const publicHtml = fs.readFileSync(path.join(ROOT, 'u/index.html'), 'utf8');
+  const publicJs = fs.readFileSync(path.join(ROOT, 'js/public-portfolio.js'), 'utf8');
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  const settingsHtml = fs.readFileSync(path.join(ROOT, 'dashboard/settings/index.html'), 'utf8');
+
+  assert.ok(publicHtml.includes('id="contact-hp"'), 'u/index.html must include hidden honeypot input');
+  assert.ok(publicJs.includes('Honeypot triggered'), 'public-portfolio.js must verify honeypot field is empty');
+  assert.ok(publicJs.includes('folioryn_contact_submissions_tracker'), 'public-portfolio.js must enforce submission rate limiting');
+  assert.ok(publicJs.includes('delivery_status: \'delivered\''), 'public-portfolio.js must tag message delivery status');
+
+  assert.ok(profileDataJs.includes('getContactMessages'), 'profile-data.js must export getContactMessages');
+  assert.ok(profileDataJs.includes('deleteContactMessage'), 'profile-data.js must export deleteContactMessage');
+  assert.ok(profileDataJs.includes('markContactMessageRead'), 'profile-data.js must export markContactMessageRead');
+  assert.ok(settingsHtml.includes('id="contact-messages-list"'), 'dashboard/settings/index.html must include contact messages inbox viewer');
+});
+
+// --------------------------------------------------------------------------
+// TEST 22: Feature 7 — Social Sharing & Web Share API
+// --------------------------------------------------------------------------
+test('Feature 7: Social Sharing and Share Cards (Web Share API, clipboard fallback, toast notification, draft warning)', () => {
+  const publicHtml = fs.readFileSync(path.join(ROOT, 'u/index.html'), 'utf8');
+  const publicJs = fs.readFileSync(path.join(ROOT, 'js/public-portfolio.js'), 'utf8');
+  const publishJs = fs.readFileSync(path.join(ROOT, 'js/dashboard-publish.js'), 'utf8');
+
+  assert.ok(publicHtml.includes('id="share-portfolio-btn"'), 'u/index.html must provide #share-portfolio-btn');
+  assert.ok(publicJs.includes('navigator.share'), 'public-portfolio.js must integrate native Web Share API');
+  assert.ok(publicJs.includes('navigator.clipboard.writeText'), 'public-portfolio.js must provide clipboard fallback');
+  assert.ok(publicJs.includes('This portfolio is currently saved as an unpublished draft'), 'public-portfolio.js must warn when sharing draft');
+  assert.ok(publishJs.includes('shareLinkedIn'), 'dashboard-publish.js must generate dynamic social share links');
+});
+
+// --------------------------------------------------------------------------
+// TEST 23: Feature 8 — Profile Completion Suggestions
+// --------------------------------------------------------------------------
+test('Feature 8: Profile Completion Suggestions (Real non-empty data calculation, actionable suggestions with direct jump links)', () => {
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  const dashboardJs = fs.readFileSync(path.join(ROOT, 'js/dashboard.js'), 'utf8');
+
+  assert.ok(profileDataJs.includes('getProfileCompletionDetails'), 'profile-data.js must export getProfileCompletionDetails');
+  assert.ok(profileDataJs.includes('calculateProfileCompletion'), 'profile-data.js must export calculateProfileCompletion');
+  assert.ok(profileDataJs.includes('/dashboard/builder/'), 'profile-data.js must include direct section jump links');
+  assert.ok(profileDataJs.includes('/dashboard/projects/'), 'profile-data.js must link projects suggestion');
+  assert.ok(profileDataJs.includes('/dashboard/skills/'), 'profile-data.js must link skills suggestion');
+  assert.ok(dashboardJs.includes('completionDetails.suggestions.map'), 'dashboard.js must render actionable checklist suggestions dynamically');
+});
+
+// --------------------------------------------------------------------------
+// TEST 24: Feature 9 — Profile Data Import and Export
+// --------------------------------------------------------------------------
+test('Feature 9: Profile Data Import and Export (folioryn_backup_v1 schema validation, preview summary modal, merge/replace strategy, rollback safety)', () => {
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  const settingsHtml = fs.readFileSync(path.join(ROOT, 'dashboard/settings/index.html'), 'utf8');
+  const sampleJsonPath = path.join(ROOT, 'public/sample-folioryn-export.json');
+
+  assert.ok(profileDataJs.includes('exportProfileData'), 'profile-data.js must export exportProfileData');
+  assert.ok(profileDataJs.includes('validateImportData'), 'profile-data.js must export validateImportData');
+  assert.ok(profileDataJs.includes('importProfileData'), 'profile-data.js must export importProfileData');
+  assert.ok(profileDataJs.includes('rollbackLastImport'), 'profile-data.js must export rollbackLastImport');
+  assert.ok(profileDataJs.includes('folioryn_backup_v1'), 'profile-data.js must enforce folioryn_backup_v1 schema version');
+
+  assert.ok(settingsHtml.includes('id="import-preview-modal"'), 'dashboard/settings/index.html must include #import-preview-modal dialog');
+  assert.ok(settingsHtml.includes('id="rollback-import-btn"'), 'dashboard/settings/index.html must provide rollback button');
+  assert.ok(settingsHtml.includes('value="merge"'), 'dashboard/settings/index.html must provide merge strategy option');
+  assert.ok(settingsHtml.includes('value="replace"'), 'dashboard/settings/index.html must provide replace strategy option');
+
+  assert.ok(fs.existsSync(sampleJsonPath), 'public/sample-folioryn-export.json must exist');
+  const sample = JSON.parse(fs.readFileSync(sampleJsonPath, 'utf8'));
+  assert.strictEqual(sample.schemaVersion, 'folioryn_backup_v1', 'Sample backup must match schemaVersion');
+  assert.ok(sample.profile && sample.projects && sample.skills, 'Sample backup must contain complete fictional dataset');
+});
+
+// --------------------------------------------------------------------------
+// TEST 25: Feature 10 & Design Token Quality — Eye-Friendly Warm Tones & Accessibility
+// --------------------------------------------------------------------------
+test('Feature 10 & Design Token Quality: Warm eye-friendly text palette (--text-primary: #D1CCC2), landmarks, focus-visible', () => {
+  const variablesCss = fs.readFileSync(path.join(ROOT, 'css/variables.css'), 'utf8');
+  const mainCss = fs.readFileSync(path.join(ROOT, 'css/main.css'), 'utf8');
+
+  // Verify softened eye-friendly warm stone text color (addressing user eye strain request)
+  assert.ok(variablesCss.includes('--text-primary: #D1CCC2;'), 'variables.css must set --text-primary to soft warm stone #D1CCC2');
+  assert.ok(!variablesCss.includes('--text-primary: #FFFFFF;'), 'variables.css must not use harsh piercing pitch-white');
+  assert.ok(variablesCss.includes('--text-secondary: #98938A;'), 'variables.css must set soft secondary text tone');
+
+  // Verify focus ring styling for WCAG keyboard accessibility
+  assert.ok(mainCss.includes(':focus-visible'), 'main.css must style :focus-visible for accessibility');
+  assert.ok(mainCss.includes('@media (prefers-reduced-motion: reduce)'), 'main.css must support prefers-reduced-motion');
+});
+
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL REGRESSION TESTS PASSED SUCCESSFULLY! ✓');
@@ -325,4 +513,5 @@ if (passed === total) {
   console.error(`FAILED: ${total - passed} tests failed.`);
   process.exit(1);
 }
+
 

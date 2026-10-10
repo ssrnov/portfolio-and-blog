@@ -55,6 +55,9 @@ CREATE TABLE IF NOT EXISTS public.portfolios (
   slug TEXT UNIQUE NOT NULL,
   template_id TEXT NOT NULL DEFAULT 'minimal', -- 'minimal', 'terminal', 'editorial'
   is_published BOOLEAN NOT NULL DEFAULT false,
+  status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('draft', 'published', 'unpublished')),
+  preview_token TEXT,
+  preview_token_expires_at TIMESTAMPTZ,
   custom_domain TEXT UNIQUE,
   seo_title TEXT,
   seo_description TEXT,
@@ -196,6 +199,7 @@ CREATE TABLE IF NOT EXISTS public.contact_messages (
   subject TEXT,
   message TEXT NOT NULL,
   is_read BOOLEAN NOT NULL DEFAULT false,
+  delivery_status TEXT DEFAULT 'sent' CHECK (delivery_status IN ('pending', 'sent', 'failed')),
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
@@ -235,7 +239,14 @@ CREATE POLICY "Users can update their own profile"
 -- Anyone can read published portfolios
 CREATE POLICY "Published portfolios are publicly viewable"
   ON public.portfolios FOR SELECT
-  USING (is_published = true OR auth.uid() = user_id);
+  USING (
+    (is_published = true AND status = 'published')
+    OR auth.uid() = user_id
+    OR (
+      preview_token IS NOT NULL 
+      AND preview_token_expires_at > now()
+    )
+  );
 
 CREATE POLICY "Users can insert their own portfolios"
   ON public.portfolios FOR INSERT

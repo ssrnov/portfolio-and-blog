@@ -39,18 +39,20 @@ function initPublishControls() {
 
   // Publish Status Toggle
   if (publishToggle && statusBadge) {
-    publishToggle.checked = settings.isPublished !== false;
-    updateStatusVisuals(publishToggle.checked, statusBadge);
+    const isCurrentlyLive = settings.isPublished !== false && settings.status !== 'draft' && settings.status !== 'unpublished';
+    publishToggle.checked = isCurrentlyLive;
+    updateStatusVisuals(isCurrentlyLive, statusBadge);
 
     publishToggle.addEventListener('change', (e) => {
       const isPublished = e.target.checked;
-      savePublishSettings({ isPublished });
+      const newStatus = isPublished ? 'published' : 'draft';
+      savePublishSettings({ status: newStatus, isPublished });
       updateStatusVisuals(isPublished, statusBadge);
-      showToast(isPublished ? 'Portfolio is now LIVE and accessible!' : 'Portfolio unpublished. Set to private draft.');
+      showToast(isPublished ? 'Portfolio is now LIVE and accessible!' : 'Portfolio set to private draft mode.');
     });
   }
 
-  // Social Share Buttons
+  // Social Share Buttons (Feature 7)
   const shareLinkedIn = document.getElementById('share-linkedin');
   const shareTwitter = document.getElementById('share-twitter');
   const shareWhatsapp = document.getElementById('share-whatsapp');
