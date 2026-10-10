@@ -30,6 +30,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.warn('Session verification in settings:', err);
   }
 
+  // Strictly block entry if not logged in
+  if (!activeUser) {
+    const target = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.replace(`/login/?redirect=${target}&auth=required`);
+    return;
+  }
+
   const profile = getProfile();
   const publishSettings = getPublishSettings();
 

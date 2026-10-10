@@ -47,6 +47,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.warn('Session verification notice:', err);
   }
 
+  // Check URL params for auth requirement banner
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('auth') === 'required') {
+    showAuthAlert('Authentication required: Please sign in to access your dashboard.', 'error');
+  }
+
   // Setup Password Visibility Toggles
   setupPasswordToggles();
 
@@ -147,9 +153,22 @@ function initLoginForm(form) {
       }
 
       await authService.signInWithPassword(email, password);
-      showAuthAlert('Signed in successfully! Redirecting to Dashboard...', 'success');
+      showAuthAlert('Signed in successfully! Redirecting...', 'success');
+      const params = new URLSearchParams(window.location.search);
+      const redirectParam = params.get('redirect');
+      let target = '/dashboard/';
+      if (redirectParam) {
+        try {
+          const decoded = decodeURIComponent(redirectParam);
+          if (decoded.startsWith('/') && !decoded.startsWith('//')) {
+            target = decoded;
+          }
+        } catch (e) {
+          target = '/dashboard/';
+        }
+      }
       setTimeout(() => {
-        window.location.href = '/dashboard/';
+        window.location.href = target;
       }, 500);
     } catch (err) {
       showAuthAlert(err.message || 'Invalid email or password. Please try again.', 'error');
@@ -491,7 +510,15 @@ function clearFieldError(fieldId) {
  */
 function showAuthAlert(message, type = 'error') {
   clearAuthAlert();
-  const alert = document.getElementById('auth-alert-box');
+  let alert = document.getElementById('auth-alert-box');
+  if (!alert) {
+    alert = document.createElement('div');
+    alert.id = 'auth-alert-box';
+    const form = document.getElementById('login-form') || document.getElementById('signup-form') || document.querySelector('form');
+    if (form && form.parentNode) {
+      form.parentNode.insertBefore(alert, form);
+    }
+  }
   if (!alert) return;
 
   alert.style.display = 'flex';

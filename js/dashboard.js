@@ -28,6 +28,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.warn('Session check in dashboard:', err);
   }
 
+  // Strictly block entry if not logged in
+  if (!activeUser) {
+    const target = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.replace(`/login/?redirect=${target}&auth=required`);
+    return;
+  }
+
   // Load user data from user-scoped storage and backend
   const profile = getProfile();
   const education = getEducation();

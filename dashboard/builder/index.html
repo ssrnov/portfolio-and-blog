@@ -24,6 +24,20 @@
   <script>
     (function () {
       document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      try {
+        var raw = localStorage.getItem('profilefolio_session') ||
+                  localStorage.getItem('ssrnovx_mock_session') ||
+                  localStorage.getItem('profilefolio_active_user');
+        var user = raw ? JSON.parse(raw) : null;
+        if (!user || (!user.id && !user.username && !user.email)) {
+          var target = encodeURIComponent(window.location.pathname + window.location.search);
+          window.location.replace('/login/?redirect=' + target + '&auth=required');
+        }
+      } catch (e) {
+        var target = encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.replace('/login/?redirect=' + target + '&auth=required');
+      }
     })();
   </script>
 </head>

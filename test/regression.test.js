@@ -214,6 +214,52 @@ test('Desktop Navbar: .mobile-drawer-actions is strictly hidden on desktop to pr
   );
 });
 
+// --------------------------------------------------------------------------
+// TEST 13: Dashboard Route Protection — Strict Login Requirement (No Entry Without Auth)
+// --------------------------------------------------------------------------
+test('Dashboard Route Protection: unauthenticated entry strictly blocked & redirected to login', () => {
+  const mainJs = fs.readFileSync(path.join(ROOT, 'js/main.js'), 'utf8');
+  const dashboardJs = fs.readFileSync(path.join(ROOT, 'js/dashboard.js'), 'utf8');
+  const authJs = fs.readFileSync(path.join(ROOT, 'js/auth.js'), 'utf8');
+
+  // 1. Verify checkDashboardAuth in js/main.js redirects to login
+  assert.ok(mainJs.includes('checkDashboardAuth'), 'checkDashboardAuth must be defined');
+  assert.ok(mainJs.includes("window.location.replace(`/login/?redirect="), 'checkDashboardAuth must redirect unauthenticated users to login');
+  assert.ok(!mainJs.includes("usr_mock_sunny_9921"), 'checkDashboardAuth must NOT auto-bootstrap mock sunny session when unauthenticated');
+
+  // 2. Verify dashboard overview controller guards entry
+  assert.ok(dashboardJs.includes('if (!activeUser)'), 'dashboard.js must guard against unauthenticated users');
+  assert.ok(dashboardJs.includes("window.location.replace(`/login/?redirect="), 'dashboard.js must redirect unauthenticated users');
+
+  // 3. Verify auth controller handles auth=required notice
+  assert.ok(authJs.includes("auth === 'required'") || authJs.includes("urlParams.get('auth') === 'required'"), 'auth.js must display notice for required auth');
+
+  // 4. Verify all 11 dashboard pages have synchronous head auth guard
+  const dashboardPages = [
+    'dashboard/index.html',
+    'dashboard/analytics/index.html',
+    'dashboard/blog/index.html',
+    'dashboard/builder/index.html',
+    'dashboard/education/index.html',
+    'dashboard/experience/index.html',
+    'dashboard/projects/index.html',
+    'dashboard/publish/index.html',
+    'dashboard/resume/index.html',
+    'dashboard/settings/index.html',
+    'dashboard/skills/index.html'
+  ];
+
+  dashboardPages.forEach(page => {
+    const pagePath = path.join(ROOT, page);
+    assert.ok(fs.existsSync(pagePath), `${page} must exist`);
+    const html = fs.readFileSync(pagePath, 'utf8');
+    assert.ok(
+      html.includes("window.location.replace('/login/?redirect="),
+      `${page} must include synchronous head auth guard redirecting to login`
+    );
+  });
+});
+
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL REGRESSION TESTS PASSED SUCCESSFULLY! ✓');
@@ -222,3 +268,4 @@ if (passed === total) {
   console.error(`FAILED: ${total - passed} tests failed.`);
   process.exit(1);
 }
+

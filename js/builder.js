@@ -40,7 +40,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     activeUser = getActiveUser();
   }
 
-  const uid = activeUser?.id || (activeUser?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'demo');
+  // Strictly block entry if not logged in
+  if (!activeUser) {
+    const target = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.replace(`/login/?redirect=${target}&auth=required`);
+    return;
+  }
+
+  const uid = activeUser.id || (activeUser.username === 'sunny' ? 'usr_mock_sunny_9921' : 'demo');
   DRAFT_KEY = `profilefolio_user_${uid}_builder_draft`;
 
   // Load existing draft or user profile

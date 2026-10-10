@@ -53,30 +53,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /**
  * Route protection guard for /dashboard/* pages
+ * Strictly blocks unauthorized entry into dashboard and redirects to login.
  */
 function checkDashboardAuth() {
   const isDashboard = window.location.pathname.includes('/dashboard');
-  if (!isDashboard) return;
+  if (!isDashboard) return true;
 
-  const session = localStorage.getItem('profilefolio_session') ||
-                  localStorage.getItem('ssrnovx_mock_session') ||
-                  localStorage.getItem('profilefolio_active_user');
-
-  // If no session exists, seamlessly bootstrap the active demo user session (Sunny)
-  // so the dashboard always renders with full interactive features and never stays blank
-  if (!session) {
-    const defaultUser = {
-      id: 'usr_mock_sunny_9921',
-      email: 'sunny@folioryn.dev',
-      username: 'sunny',
-      display_name: 'Sunny',
-      headline: 'Staff Systems & Frontend Architect',
-      theme_preference: 'dark'
-    };
-    localStorage.setItem('profilefolio_session', JSON.stringify(defaultUser));
-    localStorage.setItem('profilefolio_active_user', JSON.stringify(defaultUser));
-    localStorage.setItem('ssrnovx_mock_session', JSON.stringify(defaultUser));
+  try {
+    const raw = localStorage.getItem('profilefolio_session') ||
+                localStorage.getItem('ssrnovx_mock_session') ||
+                localStorage.getItem('profilefolio_active_user');
+    const user = raw ? JSON.parse(raw) : null;
+    if (!user || (!user.id && !user.username && !user.email)) {
+      const target = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.replace(`/login/?redirect=${target}&auth=required`);
+      return false;
+    }
+  } catch (e) {
+    const target = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.replace(`/login/?redirect=${target}&auth=required`);
+    return false;
   }
+  return true;
 }
 
 /**
