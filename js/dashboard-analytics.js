@@ -40,7 +40,7 @@ function renderAnalyticsDashboard() {
               <span style="color: var(--text-secondary);">${r.count} views (${pct}%)</span>
             </div>
             <div style="height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden;">
-              <div style="width: ${pct}%; height: 100%; background: #F5F5F5; border-radius: 3px;"></div>
+              <div style="width: ${pct}%; height: 100%; background: var(--accent-primary); border-radius: 3px;"></div>
             </div>
           </div>
         `;

@@ -1,7 +1,7 @@
 /* ==========================================================================
    PROFILEFOLIO — CURATED MONOCHROME TEMPLATES ENGINE
    6 Distinct, Highly Specialized Developer Portfolio Styles
-   Strict Dark-Only Monochrome Aesthetics (#080909 / #141515 / #F5F5F5)
+   Strict Dark-Only Monochrome Aesthetics (#080909 / #141515 / #EDE8E1 Warm White)
    ========================================================================== */
 
 /* ==========================================================================
@@ -13,7 +13,7 @@
 .template-minimal-professional,
 [data-template="minimal"],
 .template-minimal {
-  --template-accent: #F5F5F5;
+  --template-accent: #EDE8E1;
   --template-border: #292A2A;
 }
 
@@ -78,7 +78,7 @@
 [data-template="terminal"] .logo-text::after,
 .template-terminal .logo-text::after {
   content: " $";
-  color: #F5F5F5;
+  color: #EDE8E1;
 }
 
 [data-template="developer-portfolio"] h1[data-builder-target="headline"]::before,
@@ -124,7 +124,7 @@
 [data-template="terminal"] .badge,
 .template-terminal .badge {
   background-color: #141515 !important;
-  color: #F5F5F5 !important;
+  color: #EDE8E1 !important;
   border: 1px solid #292A2A !important;
   border-radius: 2px !important;
   font-family: var(--font-mono) !important;
@@ -144,7 +144,7 @@
 .template-student-portfolio .education-card {
   border: 1px solid var(--border-color);
   background: var(--bg-surface);
-  border-left: 3px solid #F5F5F5;
+  border-left: 3px solid #EDE8E1;
   border-radius: var(--radius-md);
   padding: var(--space-6);
   margin-bottom: var(--space-4);
@@ -157,7 +157,7 @@
   gap: 6px;
   background: #191A1A;
   border: 1px solid var(--border-hover);
-  color: #F5F5F5;
+  color: #EDE8E1;
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
@@ -181,7 +181,7 @@
    ========================================================================== */
 [data-template="creative-portfolio"],
 .template-creative-portfolio {
-  --creative-contrast: #FFFFFF;
+  --creative-contrast: #EDE8E1;
 }
 
 [data-template="creative-portfolio"] h1,
@@ -203,7 +203,7 @@
 
 [data-template="creative-portfolio"] .project-card:hover,
 .template-creative-portfolio .project-card:hover {
-  border-color: #F5F5F5;
+  border-color: #EDE8E1;
   transform: translateY(-4px);
 }
 
@@ -212,7 +212,7 @@
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.12em;
-  color: #F5F5F5;
+  color: #EDE8E1;
   text-transform: uppercase;
 }
 
@@ -259,7 +259,7 @@
 .template-editorial-portfolio .project-card:hover,
 [data-template="editorial"] .project-card:hover,
 .template-editorial .project-card:hover {
-  border-color: #F5F5F5 !important;
+  border-color: #EDE8E1 !important;
 }
 
 [data-template="editorial-portfolio"] .badge,
@@ -304,7 +304,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #F5F5F5;
+  background: #EDE8E1;
   border: 2px solid #080909;
 }
 
@@ -312,7 +312,7 @@
 .template-experience-focused .company-badge {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: #F5F5F5;
+  color: #EDE8E1;
   background: #141515;
   border: 1px solid var(--border-color);
   padding: 2px 8px;

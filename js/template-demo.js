@@ -624,7 +624,7 @@ export function applyTemplateDemo(templateId) {
       <div class="experience-timeline" style="display: flex; flex-direction: column; gap: var(--space-6);">
         ${data.experience.map(exp => `
           <div style="position: relative; padding-left: 20px; border-left: 2px solid var(--border-color);">
-            <div class="timeline-node" style="position: absolute; left: -6px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #F5F5F5;"></div>
+            <div class="timeline-node" style="position: absolute; left: -6px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-primary);"></div>
             <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 4px;">
               <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0;">
                 ${escapeHtml(exp.role)} &bull; <span style="color: var(--text-secondary);">${escapeHtml(exp.organization)}</span>

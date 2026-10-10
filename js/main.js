@@ -554,8 +554,8 @@ function initActiveNavLink() {
 function initConsoleBanner() {
   console.log(
     '%cProfileFolio%c\nYour Profile. Your Portfolio. Your Stories.\nMulti-User Portfolio Builder & Professional Blog Platform',
-    'font-weight: bold; font-size: 14px; color: #F5F5F5; background: #080909; padding: 4px 8px; border: 1px solid #292A2A; border-radius: 4px;',
-    'font-size: 11px; color: #A3A3A3; margin-top: 4px;'
+    'font-weight: bold; font-size: 14px; color: #EDE8E1; background: #080909; padding: 4px 8px; border: 1px solid #292A2A; border-radius: 4px;',
+    'font-size: 11px; color: #A8A39D; margin-top: 4px;'
   );
 }
 
