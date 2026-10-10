@@ -3,6 +3,8 @@
    SSRNovX — Multi-User Portfolio & Resume Builder
    ========================================================================== */
 
+@import './mobile.css';
+
 /* --------------------------------------------------------------------------
    Auth Layout (Login, Signup, Recovery)
    -------------------------------------------------------------------------- */
@@ -793,8 +795,10 @@
   }
 
   .a4-preview-canvas a {
-    text-decoration: none !important;
+    text-decoration: underline !important;
     color: #000000 !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
   }
 }
 
@@ -988,8 +992,8 @@
 
 .form-input:focus {
   outline: none;
-  border-color: #F5F5F5;
-  box-shadow: 0 0 0 1px #F5F5F5;
+  border-color: var(--focus-ring);
+  box-shadow: 0 0 0 1px var(--focus-ring);
 }
 
 .form-input.is-invalid {
@@ -1065,11 +1069,11 @@
 }
 
 .strength-meter-bar.active-good {
-  background-color: #A3A3A3;
+  background-color: var(--text-secondary);
 }
 
 .strength-meter-bar.active-strong {
-  background-color: #F5F5F5;
+  background-color: var(--accent-primary);
 }
 
 .strength-guidance-text {
@@ -1095,7 +1099,7 @@
   width: 16px;
   height: 16px;
   margin-top: 2px;
-  accent-color: #F5F5F5;
+  accent-color: var(--accent-primary);
   background-color: var(--bg-tertiary);
   border: 1px solid var(--border-color);
   border-radius: 4px;
@@ -1109,7 +1113,7 @@
 }
 
 .auth-checkbox-label a:hover {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 /* Responsive Collapse */

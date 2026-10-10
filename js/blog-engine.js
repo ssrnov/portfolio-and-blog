@@ -307,8 +307,8 @@ function parseMarkdownToHTML(md) {
   html = html.replace(/\*(.*?)\*/gim, '<em style="color: var(--text-secondary);">$1</em>');
 
   // Code blocks & inline code
-  html = html.replace(/\`\`\`(\w+)?\n([\s\S]*?)\`\`\`/gim, '<pre style="background: #191A1A; border: 1px solid #292A2A; padding: 10px; border-radius: 4px; overflow-x: auto; font-family: var(--font-mono); font-size: 11px; margin: 10px 0;"><code style="color: #F5F5F5;">$2</code></pre>');
-  html = html.replace(/\`([^`]+)\`/gim, '<code style="font-family: var(--font-mono); font-size: 0.9em; background: #191A1A; border: 1px solid #292A2A; padding: 2px 4px; border-radius: 3px; color: #F5F5F5;">$1</code>');
+  html = html.replace(/\`\`\`(\w+)?\n([\s\S]*?)\`\`\`/gim, '<pre style="background: #191A1A; border: 1px solid #292A2A; padding: 10px; border-radius: 4px; overflow-x: auto; font-family: var(--font-mono); font-size: 11px; margin: 10px 0;"><code style="color: var(--code-text);">$2</code></pre>');
+  html = html.replace(/\`([^`]+)\`/gim, '<code style="font-family: var(--font-mono); font-size: 0.9em; background: #191A1A; border: 1px solid #292A2A; padding: 2px 4px; border-radius: 3px; color: var(--code-text);">$1</code>');
 
   // Lists
   html = html.replace(/^\- (.*$)/gim, '<li style="margin-left: 1rem; color: var(--text-secondary);">$1</li>');

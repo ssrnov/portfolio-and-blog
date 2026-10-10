@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-template="minimal-professional">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Template Demo Preview — Folioryn</title>
+  <meta name="description" content="Explore live working demo of Folioryn portfolio templates with realistic sample data." />
+  <meta name="robots" content="noindex, follow" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080909' stroke='%23292A2A' stroke-width='2'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%23EDE8E1' text-anchor='middle'>F</text></svg>" />
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/templates.css" />
+  <link rel="stylesheet" href="/css/mobile.css" />
+
+  <script>
+    document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+</head>
+<body class="template-minimal-professional">
+
+  <!-- =========================================================================
+       PERSISTENT DEMO CONTROLLER BANNER
+       ========================================================================= -->
+  <aside id="demo-controller-bar" style="position: sticky; top: 0; z-index: 10000; background: rgba(12, 13, 14, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-color); padding: 10px 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding: 0;">
+      
+      <!-- Left: Demo Identity & Back Link -->
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <a href="/templates/" class="btn btn-secondary btn-sm" style="padding: 5px 12px; font-size: 11px; display: inline-flex; align-items: center; gap: 6px;">
+          <span>&larr;</span>
+          <span>Return to Template Gallery</span>
+        </a>
+
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge" style="background: rgba(237, 232, 225, 0.08); border-color: var(--border-hover); font-size: 10px; color: var(--text-primary); font-family: var(--font-mono);">
+            ⚡ DEMO PREVIEW MODE
+          </span>
+          <span id="demo-template-badge" style="font-size: 12px; font-weight: 700; color: var(--text-primary);">
+            Minimal Professional
+          </span>
+        </div>
+      </div>
+
+      <!-- Center: Template Switcher Pills -->
+      <div class="demo-switcher-tabs" style="display: flex; gap: 6px; overflow-x: auto; max-width: 100%; padding-bottom: 2px;">
+        <button type="button" class="demo-switch-btn active" data-template="minimal-professional">Minimal</button>
+        <button type="button" class="demo-switch-btn" data-template="developer-portfolio">Developer</button>
+        <button type="button" class="demo-switch-btn" data-template="student-portfolio">Student</button>
+        <button type="button" class="demo-switch-btn" data-template="creative-portfolio">Creative</button>
+        <button type="button" class="demo-switch-btn" data-template="editorial-portfolio">Editorial</button>
+        <button type="button" class="demo-switch-btn" data-template="experience-focused">Experience</button>
+      </div>
+
+      <!-- Right: Use This Template Action -->
+      <div>
+        <button type="button" id="use-template-action-btn" class="btn btn-primary btn-sm" style="padding: 6px 16px; font-weight: 700; font-size: 12px;">
+          <span>Use This Template</span>
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       DYNAMIC PORTFOLIO CANVAS
+       ========================================================================= -->
+  <div id="demo-portfolio-canvas">
+    <!-- Header -->
+    <header class="site-header" role="banner" style="position: relative;">
+      <div class="header-inner container" style="display: flex; justify-content: space-between; align-items: center; height: 4rem;">
+        <a href="#hero" class="logo" aria-label="Portfolio Home" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+          <span class="logo-mark" style="width: 24px; height: 24px; border-radius: 4px; background: var(--accent-primary); color: #080909; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px;">@</span>
+          <span class="logo-text" id="demo-logo-name" style="font-weight: 800; font-size: 1.1rem; color: var(--text-primary);">Sophia Lin</span>
+        </a>
+
+        <nav class="nav-desktop" aria-label="Portfolio sections" style="display: flex; gap: var(--space-6); font-size: var(--text-sm);">
+          <a href="#about" class="nav-link">About</a>
+          <a href="#education" class="nav-link">Education</a>
+          <a href="#projects" class="nav-link">Projects</a>
+          <a href="#skills" class="nav-link">Skills</a>
+          <a href="#experience" class="nav-link">Experience</a>
+          <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <!-- Hero Section -->
+      <section id="hero" class="section-py" style="padding-top: var(--space-16); padding-bottom: var(--space-16); border-bottom: 1px solid var(--border-color);">
+        <div class="container" style="max-width: 860px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: var(--space-4);">
+            <span class="pulsing-dot"></span>
+            <span id="demo-status-text" style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);">Available for select consulting &amp; advisory</span>
+          </div>
+
+          <h1 id="demo-headline" style="font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 900; line-height: 1.1; margin-bottom: var(--space-4); letter-spacing: -0.04em; color: var(--text-primary);">
+            Staff Systems Architect &amp; Distributed Engineering Lead
+          </h1>
+
+          <p id="demo-bio" style="font-size: var(--text-lg); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-6); max-width: 680px;">
+            Designing resilient cloud runtimes, zero-trust infrastructure, and low-latency data pipelines. Fictional sample profile demonstrating the Minimal Professional archetype.
+          </p>
+
+          <div style="display: flex; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-6);">
+            <a href="#projects" class="btn btn-primary">
+              <span>View Projects</span>
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+            <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+            <a href="#experience" class="btn btn-secondary">Experience</a>
+          </div>
+
+          <div id="demo-meta-bar" style="display: flex; gap: var(--space-6); font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-muted); padding-top: var(--space-4); border-top: 1px solid var(--border-color); flex-wrap: wrap;">
+            <span id="demo-location">📍 San Francisco, CA</span>
+            <span id="demo-github">💻 github.com/sophialin-demo</span>
+            <span id="demo-archetype-note">🎨 Minimal Professional Archetype</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects Section -->
+      <section id="projects" class="section-py" style="padding-top: var(--space-16); padding-bottom: var(--space-16); border-bottom: 1px solid var(--border-color);">
+        <div class="container">
+          <div class="section-header" style="margin-bottom: var(--space-8);">
+            <span class="section-label">Selected Works</span>
+            <h2 class="section-title">Projects &amp; Systems</h2>
+          </div>
+
+          <div id="demo-projects-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-6);">
+            <!-- Rendered by js/template-demo.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Skills Section -->
+      <section id="skills" class="section-py" style="padding-top: var(--space-16); padding-bottom: var(--space-16); border-bottom: 1px solid var(--border-color);">
+        <div class="container">
+          <div class="section-header" style="margin-bottom: var(--space-8);">
+            <span class="section-label">Competencies</span>
+            <h2 class="section-title">Technical Expertise</h2>
+          </div>
+
+          <div id="demo-skills-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-6);">
+            <!-- Rendered by js/template-demo.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Experience Section -->
+      <section id="experience" class="section-py" style="padding-top: var(--space-16); padding-bottom: var(--space-16); border-bottom: 1px solid var(--border-color);">
+        <div class="container" style="max-width: 860px;">
+          <div class="section-header" style="margin-bottom: var(--space-8);">
+            <span class="section-label">Timeline</span>
+            <h2 class="section-title">Work &amp; Leadership</h2>
+          </div>
+
+          <div id="demo-experience-container">
+            <!-- Rendered by js/template-demo.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Education Section -->
+      <section id="education" class="section-py" style="padding-top: var(--space-16); padding-bottom: var(--space-16); border-bottom: 1px solid var(--border-color);">
+        <div class="container" style="max-width: 860px;">
+          <div class="section-header" style="margin-bottom: var(--space-8);">
+            <span class="section-label">Academics</span>
+            <h2 class="section-title">Education &amp; Credentials</h2>
+          </div>
+
+          <div id="demo-education-container">
+            <!-- Rendered by js/template-demo.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contact" class="section-py" style="padding-top: var(--space-16); padding-bottom: var(--space-16);">
+        <div class="container" style="max-width: 680px; text-align: center;">
+          <span class="section-label">Let's Connect</span>
+          <h2 class="section-title">Get In Touch</h2>
+          <p style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-6);">
+            Have an engineering proposal or want to collaborate? Send a message through this demonstration form.
+          </p>
+
+          <form id="demo-contact-form" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); text-align: left;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4);">
+              <div>
+                <label class="form-label" for="demo-name">Your Name</label>
+                <input type="text" id="demo-name" class="form-input" placeholder="Alex Taylor" required />
+              </div>
+              <div>
+                <label class="form-label" for="demo-email">Your Email</label>
+                <input type="email" id="demo-email" class="form-input" placeholder="alex@company.com" required />
+              </div>
+            </div>
+            <div style="margin-bottom: var(--space-4);">
+              <label class="form-label" for="demo-msg">Message</label>
+              <textarea id="demo-msg" rows="3" class="form-textarea" placeholder="Hello, I would like to discuss..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              <span>Send Message</span>
+              <span aria-hidden="true">&rarr;</span>
+            </button>
+            <div id="demo-contact-status" style="display: none; margin-top: 10px; font-size: 11px; font-family: var(--font-mono); text-align: center; color: #22c55e;">
+              ✓ Message simulated successfully in Demo Mode!
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" style="border-top: 1px solid var(--border-color); padding: var(--space-8) 0; font-size: var(--text-xs); color: var(--text-muted);">
+      <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+        <div>
+          <span>&copy; 2026 Folioryn Template Showroom &bull; Fictional Demo Data</span>
+        </div>
+        <div>
+          <a href="/templates/" style="color: var(--text-primary); text-decoration: underline;">Back to Gallery</a>
+          <span style="margin: 0 8px;">&bull;</span>
+          <a href="/signup/" style="color: var(--text-primary); text-decoration: underline;">Build Your Portfolio</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <style>
+    .demo-switch-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all var(--transition-fast);
+    }
+    .demo-switch-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+    }
+    .demo-switch-btn.active {
+      background: var(--accent-primary);
+      color: #080909;
+      border-color: var(--accent-primary);
+      font-weight: 700;
+    }
+  </style>
+
+  <script type="module" src="/js/template-demo.js"></script>
+</body>
+</html>

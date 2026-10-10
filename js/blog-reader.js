@@ -92,7 +92,7 @@ function parseMarkdownToHTML(md) {
   html = html.replace(/\*(.*?)\*/gim, '<em style="color: var(--text-secondary);">$1</em>');
 
   // Inline Code
-  html = html.replace(/\`([^`]+)\`/gim, '<code style="font-family: var(--font-mono); font-size: 0.88em; background: #191A1A; border: 1px solid #292A2A; padding: 2px 6px; border-radius: 4px; color: #F5F5F5;">$1</code>');
+  html = html.replace(/\`([^`]+)\`/gim, '<code style="font-family: var(--font-mono); font-size: 0.88em; background: #191A1A; border: 1px solid #292A2A; padding: 2px 6px; border-radius: 4px; color: var(--code-text);">$1</code>');
 
   // Lists
   html = html.replace(/^\- (.*$)/gim, '<li style="margin-left: 1.5rem; margin-bottom: 0.35rem; color: var(--text-secondary); list-style-type: disc;">$1</li>');

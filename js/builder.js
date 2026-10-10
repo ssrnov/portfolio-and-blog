@@ -288,7 +288,7 @@ function bindPublishButton() {
       publishBtn.innerHTML = '<span>✓ Published Live!</span>';
       publishBtn.style.backgroundColor = '#16a34a';
       publishBtn.style.borderColor = '#16a34a';
-      publishBtn.style.color = '#ffffff';
+      publishBtn.style.color = '#EDE8E1';
 
       setTimeout(() => {
         publishBtn.innerHTML = '<span>Publish Live</span>';

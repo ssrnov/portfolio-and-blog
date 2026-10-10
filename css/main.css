@@ -3,6 +3,8 @@
    SSRNovX Portfolio & Blog — Base Styles, Layout & Minimal Homepage
    ========================================================================== */
 
+@import './mobile.css';
+
 /* Modern CSS Reset & Baseline */
 *, *::before, *::after {
   box-sizing: border-box;

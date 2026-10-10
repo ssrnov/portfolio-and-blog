@@ -1,6 +1,6 @@
 -- ==============================================================================
--- SSRNovX Multi-User SaaS Platform — Complete Database Schema & RLS
--- Copy and paste this directly into Supabase Dashboard -> SQL Editor
+-- SSRNovX Multi-User SaaS Platform — Initial Database Schema & RLS Policies
+-- Compatible with Supabase PostgreSQL (Postgres 15+)
 -- ==============================================================================
 
 -- 0. Extensions
@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Index for fast username lookup
 CREATE INDEX IF NOT EXISTS idx_profiles_username ON public.profiles(username);
 
 CREATE TRIGGER set_profiles_updated_at
@@ -215,19 +216,23 @@ ALTER TABLE public.blog_posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.contact_messages ENABLE ROW LEVEL SECURITY;
 
 -- 3.1 Profiles RLS
+-- Anyone can view public profile info
 CREATE POLICY "Public profiles are viewable by everyone"
   ON public.profiles FOR SELECT
   USING (true);
 
+-- Authenticated users can insert their own profile
 CREATE POLICY "Users can insert their own profile"
   ON public.profiles FOR INSERT
   WITH CHECK (auth.uid() = id);
 
+-- Users can update their own profile
 CREATE POLICY "Users can update their own profile"
   ON public.profiles FOR UPDATE
   USING (auth.uid() = id);
 
 -- 3.2 Portfolios RLS
+-- Anyone can read published portfolios
 CREATE POLICY "Published portfolios are publicly viewable"
   ON public.portfolios FOR SELECT
   USING (is_published = true OR auth.uid() = user_id);
@@ -347,10 +352,12 @@ CREATE POLICY "Authors can manage their own blog posts"
   USING (auth.uid() = user_id);
 
 -- 3.9 Contact Messages RLS
+-- Anyone can send a contact message
 CREATE POLICY "Anyone can submit a contact message"
   ON public.contact_messages FOR INSERT
   WITH CHECK (true);
 
+-- Only portfolio owner can read messages
 CREATE POLICY "Portfolio owners can view and manage their messages"
   ON public.contact_messages FOR ALL
   USING (
@@ -372,20 +379,24 @@ DECLARE
   user_full_name TEXT;
   avatar_val TEXT;
 BEGIN
+  -- Extract username from metadata or email prefix
   user_full_name := COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1));
   base_username := COALESCE(NEW.raw_user_meta_data->>'user_name', NEW.raw_user_meta_data->>'preferred_username', split_part(NEW.email, '@', 1));
   
+  -- Clean username: alphanumeric, lowercase, dashes only
   clean_username := lower(regexp_replace(base_username, '[^a-zA-Z0-9_-]', '', 'g'));
   IF clean_username = '' THEN
     clean_username := 'user_' || substr(NEW.id::text, 1, 8);
   END IF;
 
+  -- Ensure uniqueness
   WHILE EXISTS (SELECT 1 FROM public.profiles WHERE username = clean_username) LOOP
     clean_username := clean_username || '_' || floor(random() * 900 + 100)::text;
   END LOOP;
 
   avatar_val := COALESCE(NEW.raw_user_meta_data->>'avatar_url', NEW.raw_user_meta_data->>'picture', NULL);
 
+  -- 1. Create Profile
   INSERT INTO public.profiles (
     id,
     username,
@@ -402,6 +413,7 @@ BEGIN
     NEW.raw_user_meta_data->>'user_name'
   );
 
+  -- 2. Create Initial Default Portfolio
   INSERT INTO public.portfolios (
     user_id,
     title,
@@ -424,6 +436,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+-- Trigger execution on auth.users insert
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users

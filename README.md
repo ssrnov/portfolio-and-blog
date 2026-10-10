@@ -8,7 +8,7 @@ Folioryn is a modern, high-performance multi-user portfolio builder and personal
 - **Framework & Bundler:** Vite 6 Multi-Page Application (MPA)
 - **Frontend Stack:** Semantic HTML5, Vanilla CSS3 Design System (`#080909`), Vanilla JavaScript (ES Modules)
 - **Multi-User Architecture:** User-scoped namespaces (`profilefolio_user_{userId}_*`) with client-side session management and Supabase data access layer parity.
-- **Design Aesthetic:** Focused monochromatic developer-tool design system (`#080909`, `#101111`, `#141515`, `#F5F5F5`, `#A3A3A3`, `#292A2A`).
+- **Design Aesthetic:** Focused monochromatic developer-tool design system (`#080909`, `#101111`, `#141515`, `#EDE8E1` warm white, `#A8A39D`, `#292A2A`).
 - **Deployment Platform:** [Vercel](https://vercel.com/) (configured with multi-page entry points via `vercel.json`)
 
 ---

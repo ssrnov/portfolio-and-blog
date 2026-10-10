@@ -4,7 +4,12 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/templates/demo", "destination": "/templates/demo.html" },
+    { "source": "/templates/demo/", "destination": "/templates/demo.html" },
+    { "source": "/u/:username/resume", "destination": "/dashboard/resume/index.html" },
+    { "source": "/u/:username/resume/", "destination": "/dashboard/resume/index.html" },
     { "source": "/u/:username", "destination": "/u/index.html" },
-    { "source": "/u/:username/resume", "destination": "/dashboard/resume/index.html" }
+    { "source": "/u/:username/", "destination": "/u/index.html" },
+    { "source": "/u/:username/:section*", "destination": "/u/index.html" }
   ]
 }
