@@ -3,17 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign Up | SSRNovX Studio</title>
-  <meta name="description" content="Create your free SSRNovX account to build and publish your developer portfolio." />
+  <title>Create Your Account — Folioryn</title>
+  <meta name="description" content="Create your Folioryn account and bring your projects, experience, and ideas together in one professional space." />
   <meta name="robots" content="noindex, nofollow" />
 
+  <!-- Open Graph -->
+  <meta property="og:title" content="Create Your Account — Folioryn" />
+  <meta property="og:description" content="Build your portfolio, showcase projects, publish articles, and generate your resume with Folioryn." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://folioryn.dev/signup/" />
+
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000000'/><text x='16' y='22' font-family='monospace' font-size='18' font-weight='bold' fill='%23ffffff' text-anchor='middle'>S</text></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080909' stroke='%23292A2A' stroke-width='2'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%23F5F5F5' text-anchor='middle'>F</text></svg>" />
 
   <!-- Fonts & Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   
   <link rel="stylesheet" href="/css/variables.css" />
   <link rel="stylesheet" href="/css/main.css" />
@@ -21,113 +27,237 @@
   <link rel="stylesheet" href="/css/dashboard.css" />
 
   <script>
-    (function () {
-      const storedTheme = localStorage.getItem('theme');
-      if (storedTheme) {
-        document.documentElement.setAttribute('data-theme', storedTheme);
-      } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-      }
-    })();
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
   </script>
 </head>
 <body class="auth-page">
 
-  <div class="auth-container">
-    <div class="auth-card">
+  <main class="auth-split-wrapper" role="main">
+    
+    <!-- Left Section: Brand & Introduction -->
+    <section class="auth-intro-pane" aria-labelledby="intro-heading">
+      <a href="/" class="auth-intro-brand" aria-label="Folioryn Home">
+        <div class="auth-intro-logo" aria-hidden="true">F</div>
+        <div>
+          <span style="font-weight: 800; font-size: 1.35rem; color: var(--text-primary); letter-spacing: -0.02em;">Folioryn</span>
+          <div style="font-size: 0.8rem; color: var(--text-secondary); font-style: italic; margin-top: 1px;">Your Identity. Your Portfolio. Your Story.</div>
+        </div>
+      </a>
+
+      <h2 id="intro-heading" class="auth-intro-title">
+        Build your next chapter.
+      </h2>
+
+      <p class="auth-intro-lead">
+        Create your account and bring your projects, experience, and ideas together in one professional space.
+      </p>
+
+      <!-- Three Compact Benefits -->
+      <ul class="auth-benefits-list" aria-label="Platform Benefits">
+        <li class="auth-benefit-item">
+          <span class="auth-benefit-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </span>
+          <span>Build your personal portfolio.</span>
+        </li>
+        <li class="auth-benefit-item">
+          <span class="auth-benefit-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </span>
+          <span>Showcase projects and skills.</span>
+        </li>
+        <li class="auth-benefit-item">
+          <span class="auth-benefit-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </span>
+          <span>Publish articles and create your resume.</span>
+        </li>
+      </ul>
+
+      <div class="auth-intro-footer-note">
+        <span class="pulsing-dot" style="width: 6px; height: 6px;"></span>
+        <span>Free for developers &bull; Privacy-first &bull; No lock-in</span>
+      </div>
+    </section>
+
+    <!-- Right Section: Signup Form Card -->
+    <section class="auth-card-signup" aria-labelledby="form-heading">
       <div class="auth-header">
-        <a href="/" class="auth-brand" aria-label="SSRNovX Home">
-          <span>SSRNovX</span>
-          <span class="brand-badge">Studio</span>
-        </a>
-        <h1 class="auth-title">Create Account</h1>
-        <p class="auth-subtitle">Publish your developer portfolio &amp; resume in minutes.</p>
+        <h1 id="form-heading" class="auth-title">Create your account</h1>
+        <p class="auth-subtitle">Start building your professional presence.</p>
       </div>
 
-      <!-- 1-Click GitHub OAuth Button -->
-      <button type="button" class="oauth-btn" id="github-oauth-btn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-        </svg>
-        <span>Sign up with GitHub</span>
-      </button>
-
-      <div class="auth-divider">
-        <span>OR REGISTRATION</span>
-      </div>
+      <!-- Live Server / Form Alert Box -->
+      <div id="auth-alert-box" style="display: none;" role="alert"></div>
 
       <!-- Registration Form -->
-      <form id="signup-form" novalidate>
-        <div class="form-group" style="margin-bottom: var(--space-4);">
-          <label for="signup-name" class="form-label">Full Name</label>
+      <form id="signup-form" novalidate autocomplete="on">
+        
+        <!-- 1. Full Name -->
+        <div class="form-group-compact">
+          <label for="signup-name" class="form-label">Full name</label>
           <input
             type="text"
             id="signup-name"
             name="name"
             class="form-input"
-            placeholder="Alex Morgan"
+            placeholder="Jane Doe"
             required
             autocomplete="name"
+            aria-describedby="name-error"
           />
+          <div class="field-error-msg" id="name-error" role="alert"></div>
         </div>
 
-        <div class="form-group" style="margin-bottom: var(--space-4);">
-          <label for="signup-username" class="form-label">Choose Username Slug</label>
-          <div style="display: flex; align-items: center; background-color: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden;">
-            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); padding: 0 var(--space-3); background-color: var(--bg-secondary); border-right: 1px solid var(--border-color); height: 100%; display: flex; align-items: center;">
-              /u/
-            </span>
+        <!-- 2. Username -->
+        <div class="form-group-compact">
+          <div class="form-label-row">
+            <label for="signup-username" class="form-label">Username</label>
+            <span id="username-availability-badge" style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);"></span>
+          </div>
+          <div class="form-input-wrapper">
+            <span class="form-input-prefix">/u/</span>
             <input
               type="text"
               id="signup-username"
               name="username"
-              class="form-input"
-              placeholder="alex"
+              class="form-input form-input-prefixed"
+              placeholder="janedoe"
               required
-              style="border: none; border-radius: 0;"
               autocomplete="username"
+              spellcheck="false"
+              aria-describedby="username-hint username-error"
             />
           </div>
+          <div class="field-hint" id="username-hint">3–24 characters: lowercase letters, numbers, hyphens.</div>
+          <div class="field-error-msg" id="username-error" role="alert"></div>
         </div>
 
-        <div class="form-group" style="margin-bottom: var(--space-4);">
-          <label for="signup-email" class="form-label">Email Address</label>
+        <!-- 3. Email Address -->
+        <div class="form-group-compact">
+          <label for="signup-email" class="form-label">Email address</label>
           <input
             type="email"
             id="signup-email"
             name="email"
             class="form-input"
-            placeholder="developer@example.com"
+            placeholder="jane@example.com"
             required
             autocomplete="email"
+            aria-describedby="email-error"
           />
+          <div class="field-error-msg" id="email-error" role="alert"></div>
         </div>
 
-        <div class="form-group" style="margin-bottom: var(--space-6);">
-          <label for="signup-password" class="form-label">Create Password</label>
-          <input
-            type="password"
-            id="signup-password"
-            name="password"
-            class="form-input"
-            placeholder="At least 8 characters"
-            required
-            autocomplete="new-password"
-          />
+        <!-- 4. Password -->
+        <div class="form-group-compact">
+          <label for="signup-password" class="form-label">Password</label>
+          <div class="form-input-wrapper">
+            <input
+              type="password"
+              id="signup-password"
+              name="password"
+              class="form-input"
+              placeholder="Create a password"
+              required
+              autocomplete="new-password"
+              style="padding-right: 40px;"
+              aria-describedby="password-strength-container password-error"
+            />
+            <button
+              type="button"
+              id="toggle-signup-password-btn"
+              class="password-toggle-btn"
+              aria-label="Toggle password visibility"
+              title="Show / hide password"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Password Strength Meter -->
+          <div class="password-strength-container" id="password-strength-container">
+            <div class="strength-meter-bars" aria-hidden="true">
+              <div class="strength-meter-bar" id="strength-bar-1"></div>
+              <div class="strength-meter-bar" id="strength-bar-2"></div>
+              <div class="strength-meter-bar" id="strength-bar-3"></div>
+              <div class="strength-meter-bar" id="strength-bar-4"></div>
+            </div>
+            <div class="strength-guidance-text" id="strength-text">Minimum 8 characters with letters and numbers.</div>
+          </div>
+          <div class="field-error-msg" id="password-error" role="alert"></div>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%;">
-          <span>Create Free Account</span>
+        <!-- 5. Confirm Password -->
+        <div class="form-group-compact">
+          <label for="signup-confirm-password" class="form-label">Confirm password</label>
+          <div class="form-input-wrapper">
+            <input
+              type="password"
+              id="signup-confirm-password"
+              name="confirmPassword"
+              class="form-input"
+              placeholder="Re-enter your password"
+              required
+              autocomplete="new-password"
+              style="padding-right: 40px;"
+              aria-describedby="confirm-password-error"
+            />
+            <button
+              type="button"
+              id="toggle-confirm-password-btn"
+              class="password-toggle-btn"
+              aria-label="Toggle confirm password visibility"
+              title="Show / hide password"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <div class="field-error-msg" id="confirm-password-error" role="alert"></div>
+        </div>
+
+        <!-- 6. Terms Checkbox -->
+        <div class="form-group-compact" style="margin-bottom: var(--space-5);">
+          <label class="auth-checkbox-label">
+            <input type="checkbox" id="signup-terms" name="terms" required aria-describedby="terms-error" />
+            <span>I agree to the <a href="/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+          </label>
+          <div class="field-error-msg" id="terms-error" role="alert"></div>
+        </div>
+
+        <!-- 7. Submit Action -->
+        <button type="submit" id="signup-submit-btn" class="btn btn-primary" style="width: 100%; height: 42px; justify-content: center; font-weight: 700;">
+          <span id="signup-btn-text">Create account</span>
           <span aria-hidden="true">&rarr;</span>
         </button>
       </form>
 
+      <!-- 8. Sign In Redirect Link -->
       <div class="auth-footer">
-        Already have an account? <a href="/login" class="auth-link">Sign in</a>
+        Already have an account? <a href="/login/" class="auth-link">Sign in</a>
       </div>
-    </div>
-  </div>
+    </section>
+
+  </main>
 
   <script type="module" src="/js/main.js"></script>
   <script type="module" src="/js/auth.js"></script>

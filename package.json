@@ -1,9 +1,9 @@
 {
-  "name": "ssrnovx-portfolio-and-blog",
+  "name": "folioryn",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
-  "description": "Personal Portfolio and Blog for SSRNovX - TechSpace BuildLab B04",
+  "description": "Folioryn — Multi-User Portfolio Builder & Publishing Platform",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

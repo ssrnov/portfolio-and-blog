@@ -1,12 +1,11 @@
 /**
- * SSRNovX — Markdown Blog Engine & Parser
+ * Folioryn — Markdown Blog Engine & Parser
  * Converts markdown to semantic HTML with XSS sanitization, syntax formatting,
- * reading time calculation, and local/database draft persistence.
+ * reading time calculation, and user-scoped draft & publish persistence.
  */
 
 import { authService } from './supabase.js';
-
-const BLOG_STORAGE_KEY = 'ssrnovx_blog_articles';
+import { getBlogArticles, saveBlogArticles, getActiveUser } from './profile-data.js';
 
 let articles = [];
 let currentArticleIndex = 0;
@@ -15,62 +14,65 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadArticles();
   setupEditorListeners();
   renderArticlesList();
-  loadArticleIntoEditor(0);
+  if (articles.length > 0) {
+    loadArticleIntoEditor(0);
+  } else {
+    resetEditorFields();
+  }
 });
 
 function loadArticles() {
-  const saved = localStorage.getItem(BLOG_STORAGE_KEY);
-  if (saved) {
-    try {
-      articles = JSON.parse(saved);
-    } catch (e) {
-      articles = [];
-    }
-  }
-
-  if (articles.length === 0) {
-    articles = [
-      {
-        id: 'post_1',
-        title: 'Zero-Dependency Vanilla JavaScript in 2026',
-        slug: 'zero-dependency-vanilla-javascript',
-        tags: 'JavaScript, Architecture, Web Standards',
-        excerpt: 'Why native browser APIs and modular ES modules are outperforming bloated single-page framework runtimes.',
-        content: `# Zero-Dependency Vanilla JavaScript in 2026\n\nModern browsers have evolved into extraordinary application runtimes. With native **Web Components**, custom events, CSS variables, and fetch streams, the need for 300KB runtime frameworks has vanished for high-speed developer platforms.\n\n## 1. Native Reactivity Without Virtual DOM\n\nBy leveraging standard DOM events and \`postMessage\`, we achieve zero-latency bidirectional synchronization with negligible memory footprint.\n\n\`\`\`javascript\nwindow.addEventListener('message', (event) => {\n  if (event.data?.type === 'UPDATE') {\n    applyChanges(event.data.payload);\n  }\n});\n\`\`\`\n\n> The fastest code is the code the browser already knows how to run natively.\n\n## 2. Production Performance Metrics\n\n- Zero hydration delay (Time to Interactive under 100ms)\n- 100/100 Lighthouse Performance scores\n- Universal compatibility across modern mobile and desktop browsers`,
-        isPublished: true,
-        updatedAt: new Date().toISOString(),
-      },
-    ];
-    saveArticles();
-  }
+  articles = getBlogArticles();
 }
 
 function saveArticles() {
-  localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(articles));
+  saveBlogArticles(articles);
 }
 
-function setupEditorListeners() {
+function resetEditorFields() {
   const titleInput = document.getElementById('post-title');
   const slugInput = document.getElementById('post-slug');
   const tagsInput = document.getElementById('post-tags');
   const excerptInput = document.getElementById('post-excerpt');
   const markdownTextarea = document.getElementById('post-markdown');
+  const previewContainer = document.getElementById('markdown-preview-pane');
+  const readingTimeEl = document.getElementById('reading-time-indicator');
+
+  if (titleInput) titleInput.value = '';
+  if (slugInput) slugInput.value = '';
+  if (tagsInput) tagsInput.value = '';
+  if (excerptInput) excerptInput.value = '';
+  if (markdownTextarea) markdownTextarea.value = '';
+  if (readingTimeEl) readingTimeEl.textContent = '0 min read • 0 words';
+  if (previewContainer) {
+    previewContainer.innerHTML = '<p style="color: var(--text-muted); font-style: italic;">Start typing markdown on the left...</p>';
+  }
+}
+
+function setupEditorListeners() {
+  const titleInput = document.getElementById('post-title');
+  const slugInput = document.getElementById('post-slug');
+  const markdownTextarea = document.getElementById('post-markdown');
   const publishBtn = document.getElementById('publish-post-btn');
+  const draftBtn = document.getElementById('save-draft-btn');
+  const deleteBtn = document.getElementById('delete-post-btn');
   const newPostBtn = document.getElementById('new-post-btn');
 
   // Live Auto Slug Generator from Title
   titleInput?.addEventListener('input', (e) => {
-    if (!slugInput.getAttribute('data-manual')) {
+    if (!slugInput?.getAttribute('data-manual')) {
       slugInput.value = e.target.value
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '');
     }
     updateLivePreview();
+    updateViewPublicLink();
   });
 
   slugInput?.addEventListener('input', () => {
     slugInput.setAttribute('data-manual', 'true');
+    updateViewPublicLink();
   });
 
   // Markdown Textarea Live Preview & Reading Time
@@ -78,14 +80,43 @@ function setupEditorListeners() {
     updateLivePreview();
   });
 
-  // Publish / Save Button
+  // Publish Button
   publishBtn?.addEventListener('click', () => {
-    saveCurrentEditorState();
-    publishBtn.textContent = '✓ Saved & Published!';
+    saveCurrentEditorState(true);
+    publishBtn.textContent = '✓ Published!';
     setTimeout(() => {
       publishBtn.textContent = 'Publish Article';
     }, 2000);
     renderArticlesList();
+    updateViewPublicLink();
+  });
+
+  // Save Draft Button
+  draftBtn?.addEventListener('click', () => {
+    saveCurrentEditorState(false);
+    draftBtn.textContent = '✓ Saved Draft!';
+    setTimeout(() => {
+      draftBtn.textContent = 'Save Draft';
+    }, 2000);
+    renderArticlesList();
+    updateViewPublicLink();
+  });
+
+  // Delete Article Button
+  deleteBtn?.addEventListener('click', () => {
+    if (!articles[currentArticleIndex]) return;
+    const title = articles[currentArticleIndex].title || 'this article';
+    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
+      articles.splice(currentArticleIndex, 1);
+      currentArticleIndex = 0;
+      saveArticles();
+      renderArticlesList();
+      if (articles.length > 0) {
+        loadArticleIntoEditor(0);
+      } else {
+        resetEditorFields();
+      }
+    }
   });
 
   // New Post Button
@@ -102,20 +133,42 @@ function setupEditorListeners() {
       updatedAt: new Date().toISOString(),
     };
     articles.unshift(newPost);
+    currentArticleIndex = 0;
     saveArticles();
     renderArticlesList();
     loadArticleIntoEditor(0);
   });
 }
 
-function saveCurrentEditorState() {
-  if (!articles[currentArticleIndex]) return;
-
-  const title = document.getElementById('post-title')?.value || 'Untitled';
-  const slug = document.getElementById('post-slug')?.value || 'untitled';
-  const tags = document.getElementById('post-tags')?.value || '';
-  const excerpt = document.getElementById('post-excerpt')?.value || '';
+function saveCurrentEditorState(publishOverride) {
+  const title = document.getElementById('post-title')?.value.trim() || 'Untitled';
+  const slug = document.getElementById('post-slug')?.value.trim() || 'untitled';
+  const tags = document.getElementById('post-tags')?.value.trim() || '';
+  const excerpt = document.getElementById('post-excerpt')?.value.trim() || '';
   const content = document.getElementById('post-markdown')?.value || '';
+
+  if (!articles[currentArticleIndex]) {
+    // If no articles exist yet, create one
+    if (!title && !content) return;
+    const newPost = {
+      id: 'post_' + Date.now(),
+      title: title || 'New Technical Article',
+      slug: slug || 'new-article',
+      tags,
+      excerpt,
+      content,
+      isPublished: Boolean(publishOverride),
+      updatedAt: new Date().toISOString()
+    };
+    articles.push(newPost);
+    currentArticleIndex = 0;
+    saveArticles();
+    return;
+  }
+
+  const isPublished = publishOverride !== undefined 
+    ? publishOverride 
+    : articles[currentArticleIndex].isPublished;
 
   articles[currentArticleIndex] = {
     ...articles[currentArticleIndex],
@@ -124,6 +177,7 @@ function saveCurrentEditorState() {
     tags,
     excerpt,
     content,
+    isPublished,
     updatedAt: new Date().toISOString(),
   };
 
@@ -133,7 +187,10 @@ function saveCurrentEditorState() {
 function loadArticleIntoEditor(index) {
   currentArticleIndex = index;
   const post = articles[index];
-  if (!post) return;
+  if (!post) {
+    resetEditorFields();
+    return;
+  }
 
   const titleInput = document.getElementById('post-title');
   const slugInput = document.getElementById('post-slug');
@@ -142,12 +199,24 @@ function loadArticleIntoEditor(index) {
   const markdownTextarea = document.getElementById('post-markdown');
 
   if (titleInput) titleInput.value = post.title;
-  if (slugInput) slugInput.value = post.slug;
+  if (slugInput) {
+    slugInput.value = post.slug;
+    slugInput.removeAttribute('data-manual');
+  }
   if (tagsInput) tagsInput.value = post.tags;
   if (excerptInput) excerptInput.value = post.excerpt;
   if (markdownTextarea) markdownTextarea.value = post.content;
 
   updateLivePreview();
+  updateViewPublicLink();
+}
+
+function updateViewPublicLink() {
+  const post = articles[currentArticleIndex];
+  const viewLink = document.getElementById('view-public-post-btn');
+  if (viewLink && post) {
+    viewLink.href = `/blog/sample-article/?slug=${encodeURIComponent(post.slug)}`;
+  }
 }
 
 function updateLivePreview() {
@@ -155,14 +224,13 @@ function updateLivePreview() {
   const previewContainer = document.getElementById('markdown-preview-pane');
   const readingTimeEl = document.getElementById('reading-time-indicator');
 
-  // 1. Calculate reading time (200 words/min average)
+  // Calculate reading time (200 words/min average)
   const words = content.trim().split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(1, Math.ceil(words / 200));
   if (readingTimeEl) {
-    readingTimeEl.textContent = `${minutes} min read &bull; ${words} words`;
+    readingTimeEl.textContent = `${minutes} min read • ${words} words`;
   }
 
-  // 2. Parse and render HTML
   if (previewContainer) {
     previewContainer.innerHTML = parseMarkdownToHTML(content);
   }
@@ -173,6 +241,15 @@ function renderArticlesList() {
   if (!listContainer) return;
 
   listContainer.innerHTML = '';
+
+  if (articles.length === 0) {
+    listContainer.innerHTML = `
+      <div style="padding: var(--space-6); text-align: center; color: var(--text-muted); font-size: 11px;">
+        No articles drafted yet.<br/><span style="color: var(--text-secondary); margin-top: 4px; display: inline-block;">Click <strong>+ New Article</strong> to write your first post.</span>
+      </div>
+    `;
+    return;
+  }
 
   articles.forEach((art, idx) => {
     const item = document.createElement('div');
@@ -186,11 +263,13 @@ function renderArticlesList() {
 
     item.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-        <strong style="font-size: var(--text-xs); color: var(--text-primary);">${art.title}</strong>
-        <span class="brand-badge" style="font-size: 9px;">${art.isPublished ? 'Published' : 'Draft'}</span>
+        <strong style="font-size: var(--text-xs); color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${escapeHtml(art.title)}</strong>
+        <span class="badge" style="font-size: 9px; flex-shrink: 0; ${art.isPublished ? 'color: #22c55e;' : 'color: var(--text-muted);'}">
+          ${art.isPublished ? '✓ Published' : 'Draft'}
+        </span>
       </div>
-      <p style="font-size: 11px; color: var(--text-muted); margin: 0; font-family: var(--font-mono);">
-        /blog/${art.slug}
+      <p style="font-size: 11px; color: var(--text-muted); margin: 0; font-family: var(--font-mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+        /blog/${escapeHtml(art.slug)}
       </p>
     `;
 
@@ -207,48 +286,45 @@ function renderArticlesList() {
   });
 }
 
-/**
- * Lightweight, safe client-side Markdown Parser with sanitization
- */
 function parseMarkdownToHTML(md) {
   if (!md) return '<p style="color: var(--text-muted); font-style: italic;">Start typing markdown on the left...</p>';
 
-  // 1. Sanitize raw HTML tags to prevent XSS injection
   let html = md
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
-  // 2. Code blocks (```language ... ```)
-  html = html.replace(/```([a-zA-Z0-9_]*)\n([\s\S]*?)```/g, (match, lang, code) => {
-    return `<pre class="code-block"><code class="language-${lang}">${code.trim()}</code></pre>`;
-  });
+  // Headings
+  html = html.replace(/^### (.*$)/gim, '<h3 style="font-size: var(--text-base); font-weight: 700; margin-top: 1rem; color: var(--text-primary);">$1</h3>');
+  html = html.replace(/^## (.*$)/gim, '<h2 style="font-size: var(--text-lg); font-weight: 800; margin-top: 1.25rem; color: var(--text-primary); border-bottom: 1px solid var(--border-subtle); padding-bottom: 4px;">$1</h2>');
+  html = html.replace(/^# (.*$)/gim, '<h1 style="font-size: var(--text-xl); font-weight: 900; margin-top: 1.5rem; color: var(--text-primary);">$1</h1>');
 
-  // 3. Inline code (`code`)
-  html = html.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+  // Blockquotes
+  html = html.replace(/^\> (.*$)/gim, '<blockquote style="border-left: 2px solid var(--accent-primary); padding-left: 8px; margin: 1rem 0; color: var(--text-secondary); font-style: italic; background: var(--bg-surface); padding: 8px 12px; border-radius: var(--radius-sm);">$1</blockquote>');
 
-  // 4. Headings (# H1, ## H2, ### H3)
-  html = html.replace(/^### (.*$)/gim, '<h3 style="font-size: 1.25rem; font-weight: 700; margin: 1.25rem 0 0.5rem 0; color: var(--text-primary);">$1</h3>');
-  html = html.replace(/^## (.*$)/gim, '<h2 style="font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 0.75rem 0; color: var(--text-primary);">$1</h2>');
-  html = html.replace(/^# (.*$)/gim, '<h1 style="font-size: 2rem; font-weight: 800; margin: 0 0 1rem 0; letter-spacing: -0.03em; color: var(--text-primary);">$1</h1>');
+  // Bold & Italic
+  html = html.replace(/\*\*(.*?)\*\*/gim, '<strong style="color: var(--text-primary); font-weight: 700;">$1</strong>');
+  html = html.replace(/\*(.*?)\*/gim, '<em style="color: var(--text-secondary);">$1</em>');
 
-  // 5. Blockquotes (> quote)
-  html = html.replace(/^\> (.*$)/gim, '<blockquote style="border-left: 3px solid var(--text-primary); margin: 1rem 0; padding: 0.5rem 1rem; background-color: var(--bg-secondary); color: var(--text-secondary); font-style: italic;">$1</blockquote>');
+  // Code blocks & inline code
+  html = html.replace(/\`\`\`(\w+)?\n([\s\S]*?)\`\`\`/gim, '<pre style="background: #191A1A; border: 1px solid #292A2A; padding: 10px; border-radius: 4px; overflow-x: auto; font-family: var(--font-mono); font-size: 11px; margin: 10px 0;"><code style="color: #F5F5F5;">$2</code></pre>');
+  html = html.replace(/\`([^`]+)\`/gim, '<code style="font-family: var(--font-mono); font-size: 0.9em; background: #191A1A; border: 1px solid #292A2A; padding: 2px 4px; border-radius: 3px; color: #F5F5F5;">$1</code>');
 
-  // 6. Bold & Italics
-  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  // Lists
+  html = html.replace(/^\- (.*$)/gim, '<li style="margin-left: 1rem; color: var(--text-secondary);">$1</li>');
 
-  // 7. Unordered lists (- item)
-  html = html.replace(/^\- (.*$)/gim, '<li style="margin-left: 1.25rem; margin-bottom: 0.25rem;">$1</li>');
+  // Paragraphs
+  html = html.replace(/\n\s*\n/g, '</p><p style="line-height: 1.6; margin-bottom: 0.75rem; color: var(--text-secondary);"><p>');
 
-  // 8. Paragraphs
-  html = html.split('\n\n').map((para) => {
-    if (para.startsWith('<h') || para.startsWith('<pre') || para.startsWith('<blockquote') || para.startsWith('<li')) {
-      return para;
-    }
-    return `<p style="margin-bottom: 1rem; line-height: 1.7; color: var(--text-secondary);">${para}</p>`;
-  }).join('');
+  return `<div style="line-height: 1.6; color: var(--text-secondary);">${html}</div>`;
+}
 
-  return html;
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }

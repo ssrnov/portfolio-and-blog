@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Explore Portfolios | Folioryn</title>
+  <meta name="title" content="Explore Portfolios | Folioryn" />
+  <meta name="description" content="Discover inspiring developer, student, and designer portfolios built and published with Folioryn." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080909'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%23F5F5F5' text-anchor='middle'>F</text></svg>" />
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+
+  <script>
+    (function () {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo" aria-label="Folioryn Home" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+        <span style="width: 28px; height: 28px; border-radius: var(--radius-sm); background: #F5F5F5; color: #080909; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px;">F</span>
+        <span style="font-weight: 800; font-size: 1.25rem; color: var(--text-primary); letter-spacing: -0.02em;">Folioryn</span>
+      </a>
+
+      <div class="nav-right">
+        <nav class="site-nav" role="navigation" aria-label="Main Navigation">
+          <ul class="nav-links" id="nav-menu">
+            <li><a href="/" class="nav-link">Home</a></li>
+            <li><a href="/features/" class="nav-link">Features</a></li>
+            <li><a href="/templates/" class="nav-link">Templates</a></li>
+            <li><a href="/explore/" class="nav-link active">Explore</a></li>
+            <li><a href="/blog/" class="nav-link">Blog</a></li>
+            <li><a href="/about/" class="nav-link">About</a></li>
+          </ul>
+        </nav>
+
+        <a href="/login/" class="btn btn-secondary btn-sm">Sign In</a>
+        <a href="/signup/" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    
+    <section class="section-py" style="text-align: center; border-bottom: 1px solid var(--border-color); padding-top: var(--space-16);">
+      <div class="container" style="max-width: 760px;">
+        <span class="badge" style="font-family: var(--font-mono); margin-bottom: var(--space-4);">DISCOVERY DIRECTORY</span>
+        <h1 style="font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 800; line-height: 1.15; margin-bottom: var(--space-4); color: var(--text-primary); letter-spacing: -0.03em;">
+          Explore Published Portfolios
+        </h1>
+        <p style="font-size: var(--text-lg); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-6);">
+          Browse verified member portfolios, student projects, open-source repositories, and technical writing published on Folioryn.
+        </p>
+
+        <!-- Search Bar -->
+        <div style="max-width: 520px; margin: 0 auto; display: flex; gap: var(--space-2);">
+          <input type="text" id="explore-search-input" placeholder="Search by name, skill, university, or keyword..." class="form-input" style="flex: 1;" />
+          <button type="button" id="explore-search-btn" class="btn btn-primary btn-card">Search</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Grid with Filters -->
+    <section class="section-py">
+      <div class="container">
+        
+        <!-- Filter Bar -->
+        <div class="template-filters-bar" style="justify-content: center; margin-bottom: var(--space-8); display: flex; gap: var(--space-2); flex-wrap: wrap;">
+          <button type="button" class="template-filter-btn active" data-explore-filter="all">All Portfolios</button>
+          <button type="button" class="template-filter-btn" data-explore-filter="student">Students</button>
+          <button type="button" class="template-filter-btn" data-explore-filter="engineering">Software Engineers</button>
+          <button type="button" class="template-filter-btn" data-explore-filter="design">Designers</button>
+          <button type="button" class="template-filter-btn" data-explore-filter="ai">AI / Systems</button>
+        </div>
+
+        <div class="curated-profiles-grid" id="explore-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-6);">
+          
+          <!-- Profile 1: Sunny (Main Demo Profile) -->
+          <div class="curated-profile-card" data-category="engineering student" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-3);">
+                <div style="width: 44px; height: 44px; border-radius: var(--radius-sm); background: #191A1A; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: var(--font-mono); color: #F5F5F5; font-size: 16px;">
+                  S
+                </div>
+                <div>
+                  <h2 style="font-size: var(--text-base); font-weight: 700; margin: 0; color: var(--text-primary);">Sunny</h2>
+                  <p style="font-size: 11px; color: var(--text-muted); margin: 0; font-family: var(--font-mono);">Full-Stack Systems Engineer &bull; SRM University</p>
+                </div>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3); line-height: 1.6;">
+                B.Tech in CSE. Architecting scalable web systems, distributed backends, and multi-user developer tools.
+              </p>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--space-4);">
+                <span class="badge" style="font-size: 10px;">JavaScript</span>
+                <span class="badge" style="font-size: 10px;">Node.js</span>
+                <span class="badge" style="font-size: 10px;">PostgreSQL</span>
+                <span class="badge" style="font-size: 10px;">Supabase</span>
+              </div>
+            </div>
+            <div>
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-3); margin-bottom: var(--space-3); font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+                Live at: <strong>folioryn.dev/u/sunny</strong>
+              </div>
+              <a href="/u/sunny" class="btn btn-primary btn-sm" style="width: 100%; text-align: center;">View Portfolio &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Profile 2: Priya Sharma (Student / AI) -->
+          <div class="curated-profile-card" data-category="student ai" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-3);">
+                <div style="width: 44px; height: 44px; border-radius: var(--radius-sm); background: #191A1A; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: var(--font-mono); color: #F5F5F5; font-size: 14px;">
+                  PS
+                </div>
+                <div>
+                  <h2 style="font-size: var(--text-base); font-weight: 700; margin: 0; color: var(--text-primary);">Priya Sharma</h2>
+                  <p style="font-size: 11px; color: var(--text-muted); margin: 0; font-family: var(--font-mono);">CS Undergrad &bull; IIT Delhi &bull; CGPA 9.6</p>
+                </div>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3); line-height: 1.6;">
+                Researcher in Transformer Interpretability &amp; Distributed Training Systems.
+              </p>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--space-4);">
+                <span class="badge" style="font-size: 10px;">Python</span>
+                <span class="badge" style="font-size: 10px;">PyTorch</span>
+                <span class="badge" style="font-size: 10px;">CUDA</span>
+                <span class="badge" style="font-size: 10px;">C++</span>
+              </div>
+            </div>
+            <div>
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-3); margin-bottom: var(--space-3); font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+                Live at: <strong>folioryn.dev/u/priya</strong>
+              </div>
+              <a href="/u/sunny" class="btn btn-secondary btn-sm" style="width: 100%; text-align: center;">View Sample Profile &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Profile 3: Liam Vance (Frontend) -->
+          <div class="curated-profile-card" data-category="engineering design" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-3);">
+                <div style="width: 44px; height: 44px; border-radius: var(--radius-sm); background: #191A1A; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: var(--font-mono); color: #F5F5F5; font-size: 14px;">
+                  LV
+                </div>
+                <div>
+                  <h2 style="font-size: var(--text-base); font-weight: 700; margin: 0; color: var(--text-primary);">Liam Vance</h2>
+                  <p style="font-size: 11px; color: var(--text-muted); margin: 0; font-family: var(--font-mono);">Senior Design Technologist &bull; Remote</p>
+                </div>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3); line-height: 1.6;">
+                Crafting fluid WebGL interfaces, procedural typography, and spatial audio visualization.
+              </p>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--space-4);">
+                <span class="badge" style="font-size: 10px;">Three.js</span>
+                <span class="badge" style="font-size: 10px;">GLSL</span>
+                <span class="badge" style="font-size: 10px;">TypeScript</span>
+                <span class="badge" style="font-size: 10px;">Web Audio</span>
+              </div>
+            </div>
+            <div>
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-3); margin-bottom: var(--space-3); font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+                Live at: <strong>folioryn.dev/u/liam</strong>
+              </div>
+              <a href="/u/sunny" class="btn btn-secondary btn-sm" style="width: 100%; text-align: center;">View Sample Profile &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Profile 4: Maya Lin (Design) -->
+          <div class="curated-profile-card" data-category="design" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-3);">
+                <div style="width: 44px; height: 44px; border-radius: var(--radius-sm); background: #191A1A; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: var(--font-mono); color: #F5F5F5; font-size: 14px;">
+                  ML
+                </div>
+                <div>
+                  <h2 style="font-size: var(--text-base); font-weight: 700; margin: 0; color: var(--text-primary);">Maya Lin</h2>
+                  <p style="font-size: 11px; color: var(--text-muted); margin: 0; font-family: var(--font-mono);">Lead Product Designer &bull; London</p>
+                </div>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3); line-height: 1.6;">
+                End-to-end design systems, accessibility guidelines, and high-frequency fintech interfaces.
+              </p>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--space-4);">
+                <span class="badge" style="font-size: 10px;">Figma</span>
+                <span class="badge" style="font-size: 10px;">Design Systems</span>
+                <span class="badge" style="font-size: 10px;">Accessibility</span>
+              </div>
+            </div>
+            <div>
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-3); margin-bottom: var(--space-3); font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+                Live at: <strong>folioryn.dev/u/mayalin</strong>
+              </div>
+              <a href="/u/sunny" class="btn btn-secondary btn-sm" style="width: 100%; text-align: center;">View Sample Profile &rarr;</a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Complete Platform Footer -->
+  <footer class="site-footer" role="contentinfo" style="border-top: 1px solid var(--border-color); background-color: var(--bg-primary); padding-top: var(--space-12); padding-bottom: var(--space-8);">
+    <div class="container">
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-8); margin-bottom: var(--space-12);">
+        
+        <!-- Brand Summary -->
+        <div style="grid-column: span 1.5;">
+          <a href="/" class="brand-logo" style="margin-bottom: var(--space-3); display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
+            <span style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #F5F5F5; color: #080909; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">F</span>
+            <span style="font-weight: 800; font-size: 1.15rem; color: var(--text-primary);">Folioryn</span>
+          </a>
+          <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); max-width: 280px; margin-bottom: var(--space-3);">
+            YOUR IDENTITY. YOUR PORTFOLIO. YOUR STORY.
+          </p>
+          <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+            Multi-User Portfolio Builder &amp; Blog Platform
+          </div>
+        </div>
+
+        <!-- Product Links -->
+        <div>
+          <h4 style="font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-primary); text-transform: uppercase; margin-bottom: var(--space-3);">Product</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-xs);">
+            <li><a href="/features/" class="footer-link">Features</a></li>
+            <li><a href="/templates/" class="footer-link">Template Gallery</a></li>
+            <li><a href="/dashboard/resume/" class="footer-link">Resume Builder</a></li>
+            <li><a href="/dashboard/builder/" class="footer-link">Portfolio Editor</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources Links -->
+        <div>
+          <h4 style="font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-primary); text-transform: uppercase; margin-bottom: var(--space-3);">Resources</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-xs);">
+            <li><a href="/blog/" class="footer-link">Articles &amp; Stories</a></li>
+            <li><a href="/u/sunny/" class="footer-link">Sample Portfolio</a></li>
+            <li><a href="/explore/" class="footer-link">Explore Profiles</a></li>
+          </ul>
+        </div>
+
+        <!-- Company & Legal Links -->
+        <div>
+          <h4 style="font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-primary); text-transform: uppercase; margin-bottom: var(--space-3);">Legal &amp; Support</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-xs);">
+            <li><a href="/about/" class="footer-link">About</a></li>
+            <li><a href="/contact/" class="footer-link">Contact</a></li>
+            <li><a href="/privacy/" class="footer-link">Privacy Policy</a></li>
+            <li><a href="/terms/" class="footer-link">Terms of Service</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div style="border-top: 1px solid var(--border-subtle); padding-top: var(--space-6); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); font-size: var(--text-xs); color: var(--text-muted);">
+        <p style="margin: 0;">&copy; 2026 Folioryn. All rights reserved.</p>
+        <div style="display: flex; gap: var(--space-4);">
+          <a href="/privacy/" class="footer-link">Privacy</a>
+          <a href="/terms/" class="footer-link">Terms</a>
+          <a href="/contact/" class="footer-link">Support</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

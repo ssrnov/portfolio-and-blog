@@ -1,141 +1,327 @@
 /* ==========================================================================
-   PORTFOLIO TEMPLATES THEME ENGINE
-   SSRNovX — Curated Developer Portfolio Templates
+   PROFILEFOLIO — CURATED MONOCHROME TEMPLATES ENGINE
+   6 Distinct, Highly Specialized Developer Portfolio Styles
+   Strict Dark-Only Monochrome Aesthetics (#080909 / #141515 / #F5F5F5)
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   1. Template: Terminal Hacker ([data-template="terminal"] / .template-terminal)
-   Unix terminal aesthetic, JetBrains Mono typography, scanline accents
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   1. MINIMAL PROFESSIONAL (Executive / Senior Software Engineer)
+   [data-template="minimal-professional"], .template-minimal-professional,
+   [data-template="minimal"], .template-minimal
+   ========================================================================== */
+[data-template="minimal-professional"],
+.template-minimal-professional,
+[data-template="minimal"],
+.template-minimal {
+  --template-accent: #F5F5F5;
+  --template-border: #292A2A;
+}
+
+[data-template="minimal-professional"] .hero-lead,
+.template-minimal-professional .hero-lead,
+[data-template="minimal"] .hero-lead,
+.template-minimal .hero-lead {
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  max-width: 680px;
+}
+
+[data-template="minimal-professional"] .project-card,
+.template-minimal-professional .project-card,
+[data-template="minimal"] .project-card,
+.template-minimal .project-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+[data-template="minimal-professional"] .project-card:hover,
+.template-minimal-professional .project-card:hover,
+[data-template="minimal"] .project-card:hover,
+.template-minimal .project-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   2. DEVELOPER PORTFOLIO / TERMINAL (Hacker / Systems Engineer)
+   [data-template="developer-portfolio"], .template-developer-portfolio,
+   [data-template="terminal"], .template-terminal
+   ========================================================================== */
+[data-template="developer-portfolio"],
+.template-developer-portfolio,
 [data-template="terminal"],
 .template-terminal {
-  --font-sans: 'JetBrains Mono', monospace !important;
   font-family: var(--font-mono) !important;
 }
 
+[data-template="developer-portfolio"] body,
+.template-developer-portfolio body,
 [data-template="terminal"] body,
-.template-terminal {
-  background-color: #0d1117 !important;
-  color: #c9d1d9 !important;
+.template-terminal body {
+  background-color: #080909 !important;
+  color: #A3A3A3 !important;
 }
 
-[data-template="terminal"] .site-header,
-.template-terminal .site-header {
-  background-color: rgba(13, 17, 23, 0.95) !important;
-  border-bottom: 1px solid #30363d !important;
-}
-
+[data-template="developer-portfolio"] .logo-text::before,
+.template-developer-portfolio .logo-text::before,
 [data-template="terminal"] .logo-text::before,
 .template-terminal .logo-text::before {
   content: "~/ ";
-  color: #58a6ff;
+  color: #737373;
 }
 
+[data-template="developer-portfolio"] .logo-text::after,
+.template-developer-portfolio .logo-text::after,
 [data-template="terminal"] .logo-text::after,
 .template-terminal .logo-text::after {
   content: " $";
-  color: #3fb950;
+  color: #F5F5F5;
 }
 
+[data-template="developer-portfolio"] h1[data-builder-target="headline"]::before,
+.template-developer-portfolio h1[data-builder-target="headline"]::before,
 [data-template="terminal"] h1[data-builder-target="headline"]::before,
 .template-terminal h1[data-builder-target="headline"]::before {
-  content: "> echo \"";
-  color: #58a6ff;
-  font-weight: 400;
-  font-size: 0.6em;
+  content: "> exec --profile \"";
+  color: #737373;
+  font-weight: 500;
+  font-size: 0.5em;
   display: block;
-  margin-bottom: 0.25rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
 }
 
+[data-template="developer-portfolio"] h1[data-builder-target="headline"]::after,
+.template-developer-portfolio h1[data-builder-target="headline"]::after,
 [data-template="terminal"] h1[data-builder-target="headline"]::after,
 .template-terminal h1[data-builder-target="headline"]::after {
   content: "\"";
-  color: #58a6ff;
+  color: #737373;
 }
 
+[data-template="developer-portfolio"] .project-card,
+.template-developer-portfolio .project-card,
 [data-template="terminal"] .project-card,
 .template-terminal .project-card {
-  background-color: #161b22 !important;
-  border: 1px solid #30363d !important;
+  background-color: #101111 !important;
+  border: 1px solid #292A2A !important;
   border-radius: 4px !important;
   box-shadow: none !important;
 }
 
+[data-template="developer-portfolio"] .project-card:hover,
+.template-developer-portfolio .project-card:hover,
 [data-template="terminal"] .project-card:hover,
 .template-terminal .project-card:hover {
-  border-color: #58a6ff !important;
+  border-color: #454545 !important;
 }
 
+[data-template="developer-portfolio"] .badge,
+.template-developer-portfolio .badge,
 [data-template="terminal"] .badge,
 .template-terminal .badge {
-  background-color: #21262d !important;
-  color: #79c0ff !important;
-  border: 1px solid #30363d !important;
+  background-color: #141515 !important;
+  color: #F5F5F5 !important;
+  border: 1px solid #292A2A !important;
+  border-radius: 2px !important;
   font-family: var(--font-mono) !important;
+  font-size: 11px !important;
 }
 
-[data-template="terminal"] .btn-primary,
-.template-terminal .btn-primary {
-  background-color: #238636 !important;
-  color: #ffffff !important;
-  border: 1px solid #2ea043 !important;
-  font-family: var(--font-mono) !important;
+/* ==========================================================================
+   3. STUDENT PORTFOLIO (Academic / Early Career / CGPA Highlight)
+   [data-template="student-portfolio"], .template-student-portfolio
+   ========================================================================== */
+[data-template="student-portfolio"],
+.template-student-portfolio {
+  --student-badge-bg: #141515;
 }
 
-[data-template="terminal"] .btn-primary:hover,
-.template-terminal .btn-primary:hover {
-  background-color: #2ea043 !important;
+[data-template="student-portfolio"] .education-card,
+.template-student-portfolio .education-card {
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  border-left: 3px solid #F5F5F5;
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  margin-bottom: var(--space-4);
 }
 
-[data-template="terminal"] .btn-secondary,
-.template-terminal .btn-secondary {
-  background-color: #21262d !important;
-  color: #c9d1d9 !important;
-  border: 1px solid #30363d !important;
-  font-family: var(--font-mono) !important;
+[data-template="student-portfolio"] .cgpa-pill,
+.template-student-portfolio .cgpa-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #191A1A;
+  border: 1px solid var(--border-hover);
+  color: #F5F5F5;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
 }
 
-[data-template="terminal"] .btn-secondary:hover,
-.template-terminal .btn-secondary:hover {
-  border-color: #8b949e !important;
-  background-color: #30363d !important;
+[data-template="student-portfolio"] .coursework-tag,
+.template-student-portfolio .coursework-tag {
+  background-color: #101111;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
 }
 
-/* --------------------------------------------------------------------------
-   2. Template: Clean Editorial ([data-template="editorial"] / .template-editorial)
-   High-density architectural layout, grid borders, high contrast
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   4. CREATIVE PORTFOLIO (Visual / Interaction / Designer-Developer)
+   [data-template="creative-portfolio"], .template-creative-portfolio
+   ========================================================================== */
+[data-template="creative-portfolio"],
+.template-creative-portfolio {
+  --creative-contrast: #FFFFFF;
+}
+
+[data-template="creative-portfolio"] h1,
+[data-template="creative-portfolio"] h2,
+.template-creative-portfolio h1,
+.template-creative-portfolio h2 {
+  font-weight: 900 !important;
+  letter-spacing: -0.05em !important;
+}
+
+[data-template="creative-portfolio"] .project-card,
+.template-creative-portfolio .project-card {
+  background: #141515;
+  border: 1px solid #292A2A;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: border-color var(--transition-normal), transform var(--transition-normal);
+}
+
+[data-template="creative-portfolio"] .project-card:hover,
+.template-creative-portfolio .project-card:hover {
+  border-color: #F5F5F5;
+  transform: translateY(-4px);
+}
+
+[data-template="creative-portfolio"] .section-label,
+.template-creative-portfolio .section-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #F5F5F5;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   5. EDITORIAL PORTFOLIO (Architect / Technical Author)
+   [data-template="editorial-portfolio"], .template-editorial-portfolio,
+   [data-template="editorial"], .template-editorial
+   ========================================================================== */
+[data-template="editorial-portfolio"],
+.template-editorial-portfolio,
+[data-template="editorial"],
+.template-editorial {
+  --editorial-line: #292A2A;
+}
+
+[data-template="editorial-portfolio"] h1,
+[data-template="editorial-portfolio"] h2,
+[data-template="editorial-portfolio"] h3,
+.template-editorial-portfolio h1,
+.template-editorial-portfolio h2,
+.template-editorial-portfolio h3,
 [data-template="editorial"] h1,
 [data-template="editorial"] h2,
 [data-template="editorial"] h3,
 .template-editorial h1,
 .template-editorial h2,
 .template-editorial h3 {
-  letter-spacing: -0.05em !important;
+  letter-spacing: -0.04em !important;
   font-weight: 800 !important;
   text-transform: none !important;
 }
 
+[data-template="editorial-portfolio"] .project-card,
+.template-editorial-portfolio .project-card,
 [data-template="editorial"] .project-card,
 .template-editorial .project-card {
   border-radius: 0 !important;
   border: 1px solid var(--border-color) !important;
-  transition: transform 0ms !important;
+  background-color: #080909 !important;
+  transition: border-color var(--transition-fast) !important;
 }
 
+[data-template="editorial-portfolio"] .project-card:hover,
+.template-editorial-portfolio .project-card:hover,
 [data-template="editorial"] .project-card:hover,
 .template-editorial .project-card:hover {
-  border-color: var(--text-primary) !important;
+  border-color: #F5F5F5 !important;
 }
 
+[data-template="editorial-portfolio"] .badge,
+.template-editorial-portfolio .badge,
 [data-template="editorial"] .badge,
 .template-editorial .badge {
   border-radius: 0 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.08em !important;
+  font-size: 10px !important;
 }
 
+[data-template="editorial-portfolio"] .btn,
+.template-editorial-portfolio .btn,
 [data-template="editorial"] .btn,
 .template-editorial .btn {
   border-radius: 0 !important;
+}
+
+/* ==========================================================================
+   6. EXPERIENCE FOCUSED (Career Progression / Engineering Lead)
+   [data-template="experience-focused"], .template-experience-focused
+   ========================================================================== */
+[data-template="experience-focused"],
+.template-experience-focused {
+  --timeline-border: #292A2A;
+}
+
+[data-template="experience-focused"] .experience-timeline,
+.template-experience-focused .experience-timeline {
+  position: relative;
+  padding-left: 28px;
+  border-left: 1px solid var(--border-color);
+  margin-left: 8px;
+}
+
+[data-template="experience-focused"] .timeline-node,
+.template-experience-focused .timeline-node {
+  position: absolute;
+  left: -33px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #F5F5F5;
+  border: 2px solid #080909;
+}
+
+[data-template="experience-focused"] .company-badge,
+.template-experience-focused .company-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #F5F5F5;
+  background: #141515;
+  border: 1px solid var(--border-color);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+[data-template="experience-focused"] .role-duration,
+.template-experience-focused .role-duration {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
 }

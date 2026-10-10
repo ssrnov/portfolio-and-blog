@@ -1,14 +1,14 @@
 /**
- * SSRNovX — Supabase Client & Data Access Layer
+ * ProfileFolio — Supabase Client & Multi-User Data Access Layer
  * Provides unified authentication, session listeners, and CRUD queries
- * with seamless local mock fallback when credentials are not yet configured.
+ * with seamless multi-user local mock fallback when credentials are not yet configured.
  */
 
 import { createClient } from '@supabase/supabase-js';
 
-// Environment Variables from Vite
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+// Environment Variables from Vite (safe in browser & test runtimes)
+const supabaseUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) || '';
+const supabaseAnonKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) || '';
 
 // Check if valid credentials exist
 export const isSupabaseConfigured = Boolean(
@@ -30,40 +30,112 @@ export const supabase = isSupabaseConfigured
   : null;
 
 // ==============================================================================
-// 1. Mock Local Storage Database (Fallback when offline/unconfigured)
+// 1. Multi-User Local Storage Registry & Fallback Database
 // ==============================================================================
-const MOCK_STORAGE_KEY = 'ssrnovx_mock_session';
-const MOCK_USER_PROFILE = {
+const SESSION_STORAGE_KEY = 'profilefolio_session';
+const USERS_REGISTRY_KEY = 'profilefolio_users';
+
+export const MOCK_USER_PROFILE = {
   id: 'usr_mock_sunny_9921',
-  email: 'sunny@ssrnovx.dev',
+  email: 'sunny@profilefolio.dev',
   username: 'sunny',
-  display_name: 'Sunny / SSRNovX',
+  display_name: 'Sunny',
   headline: 'Staff Systems & Frontend Architect',
   bio: 'Engineering scalable distributed architectures, zero-dependency high-performance web systems, and developer platforms.',
-  location: 'India (IST / UTC+5:30)',
+  location: 'Bangalore, India (IST / UTC+5:30)',
   avatar_url: '',
   github_handle: 'ssrnov',
   twitter_handle: 'ssrnov',
-  linkedin_url: 'https://linkedin.com',
-  website_url: 'https://ssrnovx.dev',
+  linkedin_url: 'https://linkedin.com/in/ssrnov',
+  website_url: 'https://profilefolio.dev/u/sunny',
   theme_preference: 'dark',
 };
+
+// Helper: Get registered local users
+function getLocalUsers() {
+  try {
+    const raw = localStorage.getItem(USERS_REGISTRY_KEY);
+    const users = raw ? JSON.parse(raw) : [];
+    // Ensure default sunny user exists in registry
+    if (!users.some(u => u.username === 'sunny')) {
+      users.unshift({ ...MOCK_USER_PROFILE });
+      localStorage.setItem(USERS_REGISTRY_KEY, JSON.stringify(users));
+    }
+    return users;
+  } catch (e) {
+    return [{ ...MOCK_USER_PROFILE }];
+  }
+}
+
+// Helper: Save user to local registry
+function saveLocalUser(user) {
+  const users = getLocalUsers();
+  const idx = users.findIndex(u => u.id === user.id || u.username === user.username);
+  if (idx !== -1) {
+    users[idx] = { ...users[idx], ...user };
+  } else {
+    users.push(user);
+  }
+  localStorage.setItem(USERS_REGISTRY_KEY, JSON.stringify(users));
+}
+
+/**
+ * Cryptographic SHA-256 password hasher using Web Crypto API.
+ * Never stores or transmits plaintext passwords.
+ */
+export async function hashPassword(password, salt = 'folioryn_v1_salt') {
+  const cryptoObj = (typeof globalThis !== 'undefined' && globalThis.crypto?.subtle) 
+    ? globalThis.crypto.subtle 
+    : (typeof window !== 'undefined' && window.crypto?.subtle ? window.crypto.subtle : null);
+
+  if (cryptoObj) {
+    try {
+      const encoder = new TextEncoder();
+      const data = encoder.encode((password || '') + ':' + salt);
+      const hashBuffer = await cryptoObj.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch {
+      // Fallback below
+    }
+  }
+  let hash = 0;
+  const str = (password || '') + ':' + salt;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return 'h_' + Math.abs(hash).toString(16);
+}
 
 // ==============================================================================
 // 2. Authentication Services
 // ==============================================================================
 export const authService = {
   /**
+   * Check if a username is available
+   */
+  async isUsernameAvailable(username) {
+    const clean = (username || '').trim().toLowerCase();
+    if (!clean || clean.length < 3) return false;
+    const users = getLocalUsers();
+    return !users.some(u => u.username && u.username.toLowerCase() === clean);
+  },
+
+  /**
    * Register with Email & Password
    */
   async signUp(email, password, { username, fullName }) {
+    const cleanUsername = (username || '').trim().toLowerCase();
+    const cleanEmail = (email || '').trim().toLowerCase();
+
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: cleanEmail,
         password,
         options: {
           data: {
-            user_name: username,
+            user_name: cleanUsername,
             full_name: fullName,
           },
         },
@@ -72,34 +144,153 @@ export const authService = {
       return data;
     }
 
-    // Mock fallback
-    const mockUser = {
-      ...MOCK_USER_PROFILE,
-      email,
-      username: username || 'user_' + Math.floor(Math.random() * 1000),
-      display_name: fullName || 'New Developer',
+    // Multi-User Local Mock Engine
+    const users = getLocalUsers();
+    const existing = users.find(u => u.username === cleanUsername || u.email.toLowerCase() === cleanEmail);
+    if (existing) {
+      throw new Error('An account with this username or email already exists.');
+    }
+
+    const passwordHash = await hashPassword(password);
+    const userId = 'usr_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+    const newUser = {
+      id: userId,
+      email: cleanEmail,
+      username: cleanUsername,
+      display_name: fullName || cleanUsername,
+      password_hash: passwordHash, // Stored as salted SHA-256 hash, NEVER plaintext
+      headline: 'Full-Stack Software Engineer & Builder',
+      bio: 'Architecting scalable web applications, distributed backend pipelines, and minimalist user interfaces.',
+      location: 'India',
+      avatar_url: '',
+      github_handle: '',
+      twitter_handle: '',
+      linkedin_url: '',
+      website_url: `https://folioryn.dev/u/${cleanUsername}`,
+      theme_preference: 'dark',
+      created_at: new Date().toISOString(),
     };
-    localStorage.setItem(MOCK_STORAGE_KEY, JSON.stringify(mockUser));
-    return { user: mockUser, session: { access_token: 'mock_jwt_token', user: mockUser } };
+
+    saveLocalUser(newUser);
+
+    // Seed user-scoped profile and publishing settings
+    const initialProfile = {
+      fullName: newUser.display_name,
+      displayName: newUser.display_name,
+      username: newUser.username,
+      headline: newUser.headline,
+      bio: newUser.bio,
+      location: newUser.location,
+      email: newUser.email,
+      phone: '',
+      organization: '',
+      availability: 'Open to opportunities',
+      portfolioUrl: `https://folioryn.dev/u/${newUser.username}`,
+      githubUrl: '',
+      linkedinUrl: '',
+      twitterUrl: '',
+      websiteUrl: `https://folioryn.dev/u/${newUser.username}`,
+      theme: 'dark'
+    };
+    localStorage.setItem(`profilefolio_user_${userId}_profile`, JSON.stringify(initialProfile));
+    localStorage.setItem(`profilefolio_user_${userId}_publish`, JSON.stringify({
+      isPublished: true,
+      publicSlug: newUser.username,
+      templateId: 'minimal-professional',
+      publishedAt: new Date().toISOString()
+    }));
+
+    const session = {
+      access_token: 'mock_jwt_' + userId,
+      user: newUser,
+    };
+    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(newUser));
+    localStorage.setItem('ssrnovx_mock_session', JSON.stringify(newUser));
+    localStorage.setItem('profilefolio_active_user', JSON.stringify(newUser));
+
+    return { user: newUser, session };
   },
 
   /**
    * Login with Email & Password
    */
   async signInWithPassword(email, password) {
+    const cleanEmail = (email || '').trim().toLowerCase();
+
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: cleanEmail,
         password,
       });
       if (error) throw error;
       return data;
     }
 
-    // Mock fallback
-    const mockUser = { ...MOCK_USER_PROFILE, email };
-    localStorage.setItem(MOCK_STORAGE_KEY, JSON.stringify(mockUser));
-    return { user: mockUser, session: { access_token: 'mock_jwt_token', user: mockUser } };
+    // Multi-User Local Mock Engine
+    const users = getLocalUsers();
+    // Allow login by email or username
+    let matchedUser = users.find(u => 
+      u.email.toLowerCase() === cleanEmail || 
+      u.username.toLowerCase() === cleanEmail
+    );
+
+    // If logging in as demo/sunny
+    if (!matchedUser && (cleanEmail === 'sunny' || cleanEmail.includes('sunny'))) {
+      matchedUser = { ...MOCK_USER_PROFILE };
+      saveLocalUser(matchedUser);
+    }
+
+    if (!matchedUser) {
+      // If user isn't in registry yet, bootstrap them
+      const bootstrapName = cleanEmail.split('@')[0];
+      matchedUser = {
+        id: 'usr_' + Date.now(),
+        email: cleanEmail.includes('@') ? cleanEmail : `${cleanEmail}@profilefolio.dev`,
+        username: bootstrapName.toLowerCase().replace(/[^a-z0-9_-]/g, ''),
+        display_name: bootstrapName.charAt(0).toUpperCase() + bootstrapName.slice(1),
+        headline: 'Developer & Systems Engineer',
+        bio: 'Building scalable modern software platforms.',
+        location: '',
+        github_handle: '',
+        theme_preference: 'dark',
+        created_at: new Date().toISOString()
+      };
+      saveLocalUser(matchedUser);
+    }
+
+    if (matchedUser && matchedUser.password_hash) {
+      const inputHash = await hashPassword(password);
+      if (inputHash !== matchedUser.password_hash) {
+        throw new Error('Invalid email or password. Please try again.');
+      }
+    }
+
+    const session = {
+      access_token: 'mock_jwt_' + matchedUser.id,
+      user: matchedUser,
+    };
+    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(matchedUser));
+    localStorage.setItem('ssrnovx_mock_session', JSON.stringify(matchedUser));
+    localStorage.setItem('profilefolio_active_user', JSON.stringify(matchedUser));
+
+    return { user: matchedUser, session };
+  },
+
+  /**
+   * Password Reset Request
+   */
+  async resetPasswordForEmail(email) {
+    const cleanEmail = (email || '').trim().toLowerCase();
+    if (isSupabaseConfigured && supabase) {
+      const { data, error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
+        redirectTo: `${window.location.origin}/login/?reset=true`,
+      });
+      if (error) throw error;
+      return data;
+    }
+
+    // Mock reset confirmation
+    return { success: true, email: cleanEmail, message: 'Password reset link sent.' };
   },
 
   /**
@@ -117,9 +308,10 @@ export const authService = {
       return data;
     }
 
-    // Mock OAuth redirect simulation
+    // Mock OAuth simulation
     const mockUser = { ...MOCK_USER_PROFILE, github_handle: 'ssrnov' };
-    localStorage.setItem(MOCK_STORAGE_KEY, JSON.stringify(mockUser));
+    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(mockUser));
+    localStorage.setItem('ssrnovx_mock_session', JSON.stringify(mockUser));
     window.location.href = '/dashboard/';
     return { user: mockUser };
   },
@@ -129,10 +321,16 @@ export const authService = {
    */
   async signOut() {
     if (isSupabaseConfigured && supabase) {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      try {
+        await supabase.auth.signOut();
+      } catch (e) {
+        console.warn('Supabase sign out error:', e);
+      }
     }
-    localStorage.removeItem(MOCK_STORAGE_KEY);
+    localStorage.removeItem(SESSION_STORAGE_KEY);
+    localStorage.removeItem('ssrnovx_mock_session');
+    localStorage.removeItem('buildlab_session');
+    localStorage.removeItem('profilefolio_active_user');
     window.location.href = '/login/';
   },
 
@@ -142,12 +340,13 @@ export const authService = {
   async getSession() {
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase.auth.getSession();
-      if (error) throw error;
-      return data.session;
+      if (!error && data?.session) return data.session;
     }
 
-    const stored = localStorage.getItem(MOCK_STORAGE_KEY);
-    return stored ? { access_token: 'mock_token', user: JSON.parse(stored) } : null;
+    const stored = localStorage.getItem(SESSION_STORAGE_KEY) || 
+                   localStorage.getItem('ssrnovx_mock_session') ||
+                   localStorage.getItem('profilefolio_active_user');
+    return stored ? { access_token: 'mock_jwt_token', user: JSON.parse(stored) } : null;
   },
 
   /**
@@ -156,12 +355,11 @@ export const authService = {
   async getUser() {
     if (isSupabaseConfigured && supabase) {
       const { data: { user }, error } = await supabase.auth.getUser();
-      if (error) throw error;
-      return user;
+      if (!error && user) return user;
     }
 
-    const stored = localStorage.getItem(MOCK_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : null;
+    const session = await this.getSession();
+    return session?.user || null;
   },
 
   /**
@@ -172,8 +370,7 @@ export const authService = {
       return supabase.auth.onAuthStateChange(callback);
     }
 
-    // Mock session check
-    const stored = localStorage.getItem(MOCK_STORAGE_KEY);
+    const stored = localStorage.getItem(SESSION_STORAGE_KEY) || localStorage.getItem('ssrnovx_mock_session');
     callback(stored ? 'SIGNED_IN' : 'SIGNED_OUT', stored ? { user: JSON.parse(stored) } : null);
     return {
       data: {
@@ -199,20 +396,28 @@ export const profileService = {
       if (error) throw error;
       return data;
     }
-    return MOCK_USER_PROFILE;
+    const users = getLocalUsers();
+    const found = users.find(u => u.id === userId);
+    return found || MOCK_USER_PROFILE;
   },
 
   async getProfileByUsername(username) {
+    const cleanUsername = (username || '').trim().toLowerCase();
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('username', username)
+        .eq('username', cleanUsername)
         .single();
       if (error) throw error;
       return data;
     }
-    return { ...MOCK_USER_PROFILE, username };
+
+    const users = getLocalUsers();
+    const found = users.find(u => u.username.toLowerCase() === cleanUsername);
+    if (found) return found;
+    if (cleanUsername === 'sunny') return { ...MOCK_USER_PROFILE };
+    return null;
   },
 
   async updateProfile(userId, updates) {
@@ -226,7 +431,26 @@ export const profileService = {
       if (error) throw error;
       return data;
     }
-    return { ...MOCK_USER_PROFILE, ...updates };
+
+    const users = getLocalUsers();
+    const idx = users.findIndex(u => u.id === userId);
+    let updated;
+    if (idx !== -1) {
+      updated = { ...users[idx], ...updates };
+      users[idx] = updated;
+    } else {
+      updated = { ...MOCK_USER_PROFILE, ...updates, id: userId };
+      users.push(updated);
+    }
+    localStorage.setItem(USERS_REGISTRY_KEY, JSON.stringify(users));
+
+    // Update active session if it matches
+    const active = await authService.getUser();
+    if (active && active.id === userId) {
+      localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(updated));
+    }
+
+    return updated;
   },
 };
 
@@ -244,34 +468,64 @@ export const portfolioService = {
       if (error) throw error;
       return data;
     }
+
+    const user = await profileService.getProfile(userId);
+    const slug = user?.username || 'sunny';
+    
+    // Check user-scoped publish settings
+    const rawSettings = localStorage.getItem(`profilefolio_user_${userId}_publish`) || 
+                        localStorage.getItem('profilefolio_publish_settings');
+    const settings = rawSettings ? JSON.parse(rawSettings) : { isPublished: true, templateId: 'minimal-professional' };
+
     return {
-      id: 'port_mock_1',
+      id: 'port_' + (userId || 'mock_1'),
       user_id: userId,
-      title: 'Sunny / SSRNovX Portfolio',
-      slug: 'sunny',
-      template_id: 'minimal',
-      is_published: true,
-      seo_title: 'Sunny — Developer Portfolio',
-      seo_description: 'Staff Systems & Frontend Architect',
+      title: `${user?.display_name || 'Developer'} Portfolio`,
+      slug,
+      template_id: settings.templateId || 'minimal-professional',
+      is_published: settings.isPublished !== false,
+      seo_title: `${user?.display_name || 'Developer'} — Folioryn`,
+      seo_description: user?.headline || 'Developer Portfolio',
     };
   },
 
   async getPortfolioBySlug(slug) {
+    const cleanSlug = (slug || '').trim().toLowerCase();
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase
         .from('portfolios')
         .select('*, profiles(*), projects(*), skills(*), experiences(*), education(*)')
-        .eq('slug', slug)
-        .eq('is_published', true)
+        .eq('slug', cleanSlug)
         .single();
       if (error) throw error;
       return data;
     }
+
+    // Local Multi-User Lookup
+    const user = await profileService.getProfileByUsername(cleanSlug);
+    if (!user) {
+      if (cleanSlug === 'sunny') {
+        return {
+          slug: 'sunny',
+          title: 'Sunny / SSRNovX',
+          template_id: 'minimal-professional',
+          is_published: true,
+          profiles: { ...MOCK_USER_PROFILE }
+        };
+      }
+      return null;
+    }
+
+    const rawSettings = localStorage.getItem(`profilefolio_user_${user.id}_publish`) ||
+                        localStorage.getItem('profilefolio_publish_settings');
+    const settings = rawSettings ? JSON.parse(rawSettings) : { isPublished: true, templateId: 'minimal-professional' };
+
     return {
-      slug,
-      title: 'Sunny / SSRNovX',
-      template_id: 'minimal',
-      is_published: true,
+      slug: user.username,
+      title: `${user.display_name} — Portfolio`,
+      template_id: settings.templateId || 'minimal-professional',
+      is_published: settings.isPublished !== false,
+      profiles: user
     };
   },
 
@@ -369,6 +623,25 @@ export const contactService = {
       if (error) throw error;
       return data;
     }
-    return { success: true, timestamp: new Date().toISOString() };
+
+    // Real local persistence for contact inquiries
+    try {
+      const raw = localStorage.getItem('profilefolio_contact_messages');
+      const messages = raw ? JSON.parse(raw) : [];
+      const newMsg = {
+        id: 'msg_' + Date.now(),
+        portfolio_id: portfolioId || 'global',
+        sender_name: senderName,
+        sender_email: senderEmail,
+        subject: subject || 'Portfolio Inquiry',
+        message,
+        received_at: new Date().toISOString()
+      };
+      messages.unshift(newMsg);
+      localStorage.setItem('profilefolio_contact_messages', JSON.stringify(messages));
+      return { success: true, message: newMsg };
+    } catch (e) {
+      return { success: true, timestamp: new Date().toISOString() };
+    }
   },
 };
