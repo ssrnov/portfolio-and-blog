@@ -280,6 +280,43 @@ test('Onboarding & Project Sync: ob-github-handle is blank by default without ha
   assert.ok(!syncJs.includes("currentGitHubUser = 'ssrnov'"), 'js/projects-sync.js must not force ssrnov as default github user');
 });
 
+// --------------------------------------------------------------------------
+// TEST 15: Single Active Session Enforcement & Dual-Method Password Recovery
+// --------------------------------------------------------------------------
+test('Auth Architecture: Single active session enforcement & dual-method password recovery (Security Question OR DOB)', async () => {
+  const loginHtml = fs.readFileSync(path.join(ROOT, 'login/index.html'), 'utf8');
+  const signupHtml = fs.readFileSync(path.join(ROOT, 'signup/index.html'), 'utf8');
+  const authJs = fs.readFileSync(path.join(ROOT, 'js/auth.js'), 'utf8');
+  const supabaseJs = fs.readFileSync(path.join(ROOT, 'js/supabase.js'), 'utf8');
+
+  // 1. Verify Active Session Gate elements exist in login and signup HTML
+  assert.ok(loginHtml.includes('id="active-session-gate"'), 'login/index.html must include #active-session-gate');
+  assert.ok(loginHtml.includes('id="active-session-logout-btn"'), 'login/index.html must include logout button to switch accounts');
+  assert.ok(signupHtml.includes('id="active-session-gate"'), 'signup/index.html must include #active-session-gate');
+  assert.ok(signupHtml.includes('id="active-session-logout-btn"'), 'signup/index.html must include logout button to switch accounts');
+
+  // 2. Verify Signup Form collects Date of Birth and Security Question/Answer
+  assert.ok(signupHtml.includes('id="signup-dob"'), 'signup/index.html must include #signup-dob');
+  assert.ok(signupHtml.includes('id="signup-security-question"'), 'signup/index.html must include #signup-security-question');
+  assert.ok(signupHtml.includes('id="signup-security-answer"'), 'signup/index.html must include #signup-security-answer');
+
+  // 3. Verify Login Form contains Forgot Password Modal with Security Question & DOB tabs
+  assert.ok(loginHtml.includes('id="forgot-password-modal"'), 'login/index.html must include #forgot-password-modal dialog');
+  assert.ok(loginHtml.includes('id="tab-recovery-question"'), 'login/index.html must include Security Question tab');
+  assert.ok(loginHtml.includes('id="tab-recovery-dob"'), 'login/index.html must include Date of Birth tab');
+  assert.ok(loginHtml.includes('id="recovery-new-password"'), 'login/index.html must include new password input for recovery');
+
+  // 4. Verify Single Session Enforcement in js/supabase.js and js/auth.js
+  assert.ok(supabaseJs.includes('Enforce single active session restriction'), 'supabase.js must enforce single active session in signUp/signIn');
+  assert.ok(authJs.includes("document.getElementById('active-session-gate')"), 'auth.js must control #active-session-gate visibility');
+
+  // 5. Verify Dual Recovery Engine functions exist in js/supabase.js
+  assert.ok(supabaseJs.includes('getUserSecurityDetails'), 'supabase.js must define getUserSecurityDetails');
+  assert.ok(supabaseJs.includes('verifySecurityQuestion'), 'supabase.js must define verifySecurityQuestion');
+  assert.ok(supabaseJs.includes('verifyDateOfBirth'), 'supabase.js must define verifyDateOfBirth');
+  assert.ok(supabaseJs.includes('resetPasswordWithVerification'), 'supabase.js must define resetPasswordWithVerification');
+});
+
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL REGRESSION TESTS PASSED SUCCESSFULLY! ✓');

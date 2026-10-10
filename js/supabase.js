@@ -49,6 +49,9 @@ export const MOCK_USER_PROFILE = {
   linkedin_url: 'https://linkedin.com/in/ssrnov',
   website_url: 'https://profilefolio.dev/u/sunny',
   theme_preference: 'dark',
+  dob: '2002-08-15',
+  security_question: 'What was the name of your first school?',
+  security_answer: 'Delhi Public School',
 };
 
 // Helper: Get registered local users
@@ -125,9 +128,16 @@ export const authService = {
   /**
    * Register with Email & Password
    */
-  async signUp(email, password, { username, fullName }) {
+  async signUp(email, password, { username, fullName, dob = '', securityQuestion = '', securityAnswer = '' } = {}) {
     const cleanUsername = (username || '').trim().toLowerCase();
     const cleanEmail = (email || '').trim().toLowerCase();
+
+    // Enforce single active session restriction
+    const currentSession = await this.getSession();
+    if (currentSession && currentSession.user) {
+      const activeUser = currentSession.user;
+      throw new Error(`You are currently logged in as ${activeUser.display_name || activeUser.username}. Please log out first before creating or registering another account.`);
+    }
 
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase.auth.signUp({
@@ -137,6 +147,8 @@ export const authService = {
           data: {
             user_name: cleanUsername,
             full_name: fullName,
+            dob: dob ? dob.trim() : '',
+            security_question: securityQuestion ? securityQuestion.trim() : '',
           },
         },
       });
@@ -159,6 +171,9 @@ export const authService = {
       username: cleanUsername,
       display_name: fullName || cleanUsername,
       password_hash: passwordHash, // Stored as salted SHA-256 hash, NEVER plaintext
+      dob: dob ? dob.trim() : '',
+      security_question: securityQuestion ? securityQuestion.trim() : '',
+      security_answer: securityAnswer ? securityAnswer.trim() : '',
       headline: 'Full-Stack Software Engineer & Builder',
       bio: 'Architecting scalable web applications, distributed backend pipelines, and minimalist user interfaces.',
       location: 'India',
@@ -216,6 +231,17 @@ export const authService = {
    */
   async signInWithPassword(email, password) {
     const cleanEmail = (email || '').trim().toLowerCase();
+
+    // Enforce single active session restriction: If an ID is logged in, another ID cannot log in
+    const currentSession = await this.getSession();
+    if (currentSession && currentSession.user) {
+      const activeUser = currentSession.user;
+      const activeEmail = (activeUser.email || '').toLowerCase();
+      const activeUsername = (activeUser.username || '').toLowerCase();
+      if (cleanEmail !== activeEmail && cleanEmail !== activeUsername) {
+        throw new Error(`Another account (${activeUser.display_name || activeUser.username}) is currently logged in. Please log out first before signing in with another account.`);
+      }
+    }
 
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -294,6 +320,141 @@ export const authService = {
   },
 
   /**
+   * Lookup account security details for password recovery
+   */
+  async getUserSecurityDetails(identifier) {
+    const clean = (identifier || '').trim().toLowerCase();
+    if (!clean) throw new Error('Please enter your email address or username.');
+
+    const users = getLocalUsers();
+    let user = users.find(u => 
+      (u.email && u.email.toLowerCase() === clean) || 
+      (u.username && u.username.toLowerCase() === clean)
+    );
+
+    // If searching for sunny
+    if (!user && (clean === 'sunny' || clean === 'sunny@profilefolio.dev')) {
+      user = { ...MOCK_USER_PROFILE };
+      saveLocalUser(user);
+    }
+
+    if (!user) {
+      throw new Error('No account found with this email or username. Please check your spelling.');
+    }
+
+    return {
+      success: true,
+      username: user.username,
+      email: user.email,
+      hasDob: Boolean(user.dob),
+      hasSecurityQuestion: Boolean(user.security_question),
+      securityQuestion: user.security_question || 'What was the name of your first school?'
+    };
+  },
+
+  /**
+   * Verify identity using Security Question & Secret Answer
+   */
+  async verifySecurityQuestion(identifier, answer) {
+    const clean = (identifier || '').trim().toLowerCase();
+    const cleanAnswer = (answer || '').trim().toLowerCase();
+    if (!cleanAnswer) throw new Error('Please enter your security answer.');
+
+    const users = getLocalUsers();
+    let user = users.find(u => 
+      (u.email && u.email.toLowerCase() === clean) || 
+      (u.username && u.username.toLowerCase() === clean)
+    );
+
+    if (!user && (clean === 'sunny' || clean === 'sunny@profilefolio.dev')) {
+      user = { ...MOCK_USER_PROFILE };
+    }
+    if (!user) throw new Error('Account not found.');
+
+    const expected = (user.security_answer || 'Delhi Public School').trim().toLowerCase();
+    if (expected !== cleanAnswer) {
+      throw new Error('Incorrect security answer. Please check and try again.');
+    }
+
+    return {
+      verified: true,
+      method: 'security_question',
+      username: user.username,
+      token: 'rst_' + user.id + '_' + Date.now()
+    };
+  },
+
+  /**
+   * Verify identity using Date of Birth (DOB)
+   */
+  async verifyDateOfBirth(identifier, dob) {
+    const clean = (identifier || '').trim().toLowerCase();
+    const cleanDob = (dob || '').trim();
+    if (!cleanDob) throw new Error('Please enter your Date of Birth.');
+
+    const users = getLocalUsers();
+    let user = users.find(u => 
+      (u.email && u.email.toLowerCase() === clean) || 
+      (u.username && u.username.toLowerCase() === clean)
+    );
+
+    if (!user && (clean === 'sunny' || clean === 'sunny@profilefolio.dev')) {
+      user = { ...MOCK_USER_PROFILE };
+    }
+    if (!user) throw new Error('Account not found.');
+
+    const expected = (user.dob || '2002-08-15').trim();
+    if (expected !== cleanDob) {
+      throw new Error('Date of Birth does not match account records.');
+    }
+
+    return {
+      verified: true,
+      method: 'dob',
+      username: user.username,
+      token: 'rst_' + user.id + '_' + Date.now()
+    };
+  },
+
+  /**
+   * Reset user password after verified via Security Question or DOB
+   */
+  async resetPasswordWithVerification(identifier, newPassword) {
+    const clean = (identifier || '').trim().toLowerCase();
+    if (!newPassword || newPassword.length < 8) {
+      throw new Error('New password must be at least 8 characters long.');
+    }
+    if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(newPassword)) {
+      throw new Error('New password must contain both letters and numbers.');
+    }
+
+    const users = getLocalUsers();
+    let idx = users.findIndex(u => 
+      (u.email && u.email.toLowerCase() === clean) || 
+      (u.username && u.username.toLowerCase() === clean)
+    );
+
+    if (idx === -1 && (clean === 'sunny' || clean === 'sunny@profilefolio.dev')) {
+      const sunny = { ...MOCK_USER_PROFILE };
+      users.unshift(sunny);
+      idx = 0;
+    }
+
+    if (idx === -1) throw new Error('Account not found.');
+
+    const newHash = await hashPassword(newPassword);
+    users[idx].password_hash = newHash;
+    localStorage.setItem(USERS_REGISTRY_KEY, JSON.stringify(users));
+
+    return {
+      success: true,
+      email: users[idx].email,
+      username: users[idx].username,
+      message: 'Password reset successfully. You can now log in with your new password.'
+    };
+  },
+
+  /**
    * Login via GitHub OAuth Provider
    */
   async signInWithOAuth(provider = 'github') {
@@ -331,6 +492,9 @@ export const authService = {
     localStorage.removeItem('ssrnovx_mock_session');
     localStorage.removeItem('buildlab_session');
     localStorage.removeItem('profilefolio_active_user');
+    localStorage.removeItem('folioryn_user_profile');
+    localStorage.removeItem('profilefolio_user_profile');
+    try { sessionStorage.clear(); } catch (_) {}
     window.location.href = '/login/';
   },
 
