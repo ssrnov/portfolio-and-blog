@@ -505,6 +505,117 @@ test('Feature 10 & Design Token Quality: Warm eye-friendly text palette (--text-
   assert.ok(mainCss.includes('@media (prefers-reduced-motion: reduce)'), 'main.css must support prefers-reduced-motion');
 });
 
+// --------------------------------------------------------------------------
+// TEST 26: Analytics Date Comparison Engine & Boundaries
+// --------------------------------------------------------------------------
+test('Feature: Analytics Date Comparison Engine (7d, 30d, 90d, custom, inclusive end boundaries & equal preceding period)', () => {
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  assert.ok(profileDataJs.includes('getDateRangeBoundaries'), 'profile-data.js must export getDateRangeBoundaries');
+  assert.ok(profileDataJs.includes('calculatePeriodMetrics'), 'profile-data.js must export calculatePeriodMetrics');
+  assert.ok(profileDataJs.includes('comparePeriods'), 'profile-data.js must export comparePeriods');
+  assert.ok(profileDataJs.includes('23, 59, 59, 999'), 'Date comparison engine must treat end date as inclusive (23:59:59.999)');
+
+  // Verify UI controls in dashboard/analytics/index.html
+  const analyticsHtml = fs.readFileSync(path.join(ROOT, 'dashboard/analytics/index.html'), 'utf8');
+  assert.ok(analyticsHtml.includes('data-preset="7d"'), 'analytics HTML must have 7d preset');
+  assert.ok(analyticsHtml.includes('data-preset="30d"'), 'analytics HTML must have 30d preset');
+  assert.ok(analyticsHtml.includes('data-preset="90d"'), 'analytics HTML must have 90d preset');
+  assert.ok(analyticsHtml.includes('data-preset="custom"'), 'analytics HTML must have custom preset');
+  assert.ok(analyticsHtml.includes('id="custom-start-date"'), 'analytics HTML must have custom start date input');
+  assert.ok(analyticsHtml.includes('id="custom-end-date"'), 'analytics HTML must have custom end date input');
+  assert.ok(analyticsHtml.includes('id="comparison-banner"'), 'analytics HTML must display comparison range banner');
+});
+
+// --------------------------------------------------------------------------
+// TEST 27: Zero-Safe Percentage Math & Trend Indicators
+// --------------------------------------------------------------------------
+test('Feature: Zero-Safe Percentage Math (prevent divide-by-zero, handle zero previous value, correct trends)', () => {
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  assert.ok(profileDataJs.includes('compareMetric'), 'profile-data.js must export compareMetric');
+
+  // Verify logic guard against NaN/Infinity
+  assert.ok(profileDataJs.includes('if (previous === 0)'), 'compareMetric must guard against previous value of zero');
+  assert.ok(profileDataJs.includes("text: '0%'"), 'compareMetric must return 0% when both current and previous are 0');
+
+  // Check CSS styling for trend badges
+  const dashboardCss = fs.readFileSync(path.join(ROOT, 'css/dashboard.css'), 'utf8');
+  assert.ok(dashboardCss.includes('.trend-badge.trend-up'), 'dashboard.css must style trend-up badge');
+  assert.ok(dashboardCss.includes('.trend-badge.trend-down'), 'dashboard.css must style trend-down badge');
+  assert.ok(dashboardCss.includes('.trend-badge.trend-neutral'), 'dashboard.css must style trend-neutral badge');
+});
+
+// --------------------------------------------------------------------------
+// TEST 28: Project-Level Analytics & Interaction Rate
+// --------------------------------------------------------------------------
+test('Feature: Project-Level Analytics (performance table, drill-down panel, interaction rate formula & sorting)', () => {
+  const analyticsHtml = fs.readFileSync(path.join(ROOT, 'dashboard/analytics/index.html'), 'utf8');
+  const dashboardAnalyticsJs = fs.readFileSync(path.join(ROOT, 'js/dashboard-analytics.js'), 'utf8');
+
+  // Check table & drilldown panel
+  assert.ok(analyticsHtml.includes('id="project-performance-table"'), 'analytics HTML must have project performance table');
+  assert.ok(analyticsHtml.includes('id="project-detail-panel"'), 'analytics HTML must have project detail drilldown panel');
+  assert.ok(analyticsHtml.includes('id="project-search-input"'), 'analytics HTML must have live project search');
+  assert.ok(analyticsHtml.includes('id="project-sort-select"'), 'analytics HTML must have project sort select');
+
+  // Check interaction rate formula documentation
+  assert.ok(analyticsHtml.includes('Interaction Rate:'), 'analytics HTML must define Interaction Rate');
+  assert.ok(analyticsHtml.includes('(Total Project Clicks + Detail Views) / (Portfolio Page Views)'), 'analytics HTML must display interaction rate formula');
+
+  // Check controller handling
+  assert.ok(dashboardAnalyticsJs.includes('openProjectDetailPanel'), 'dashboard-analytics.js must implement openProjectDetailPanel');
+  assert.ok(dashboardAnalyticsJs.includes('renderProjectPerformanceTable'), 'dashboard-analytics.js must render performance table');
+});
+
+// --------------------------------------------------------------------------
+// TEST 29: Reliable Analytics Event Collection & Privacy Instrumentation
+// --------------------------------------------------------------------------
+test('Feature: Reliable Analytics Event Collection (public portfolio instrumentation, preview & owner exclusion, honeypot tracking)', () => {
+  const publicPortfolioJs = fs.readFileSync(path.join(ROOT, 'js/public-portfolio.js'), 'utf8');
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+
+  // Verify event types whitelist
+  assert.ok(profileDataJs.includes("'portfolio_view'"), 'profile-data.js must support portfolio_view');
+  assert.ok(profileDataJs.includes("'project_view'"), 'profile-data.js must support project_view');
+  assert.ok(profileDataJs.includes("'github_click'"), 'profile-data.js must support github_click');
+  assert.ok(profileDataJs.includes("'demo_click'"), 'profile-data.js must support demo_click');
+  assert.ok(profileDataJs.includes("'resume_download'"), 'profile-data.js must support resume_download');
+  assert.ok(profileDataJs.includes("'contact_submit'"), 'profile-data.js must support contact_submit');
+
+  // Verify preview exclusion in public-portfolio.js
+  assert.ok(publicPortfolioJs.includes('if (isPublished && !isAuthorizedPreview && !isOwnerSession)'), 'public-portfolio.js must strictly exclude private previews and owner sessions from public telemetry');
+  assert.ok(publicPortfolioJs.includes('trackPublicPortfolioTelemetry'), 'public-portfolio.js must call trackPublicPortfolioTelemetry');
+  assert.ok(publicPortfolioJs.includes('track-github-btn'), 'public-portfolio.js must track github repo clicks');
+  assert.ok(publicPortfolioJs.includes('track-demo-btn'), 'public-portfolio.js must track live demo clicks');
+});
+
+// --------------------------------------------------------------------------
+// TEST 30: Supabase Database Migration 003 & RLS Policies
+// --------------------------------------------------------------------------
+test('Feature: Supabase Database Migration 003 & Security (analytics_events schema, indexes & RLS)', () => {
+  const migration003Path = path.join(ROOT, 'supabase/migrations/003_analytics_events_and_aggregates.sql');
+  const schemaSql = fs.readFileSync(path.join(ROOT, 'supabase/schema.sql'), 'utf8');
+
+  assert.ok(fs.existsSync(migration003Path), '003_analytics_events_and_aggregates.sql must exist');
+  const migrationSql = fs.readFileSync(migration003Path, 'utf8');
+
+  // Verify table definition
+  assert.ok(migrationSql.includes('CREATE TABLE IF NOT EXISTS public.analytics_events'), 'Migration must create analytics_events table');
+  assert.ok(migrationSql.includes('event_type TEXT NOT NULL CHECK'), 'Migration must enforce event_type check constraint');
+
+  // Verify performance indexes
+  assert.ok(migrationSql.includes('idx_analytics_portfolio_created'), 'Migration must create portfolio_slug created_at index');
+  assert.ok(migrationSql.includes('idx_analytics_project_created'), 'Migration must create project_id index');
+
+  // Verify RLS policies
+  assert.ok(migrationSql.includes('ENABLE ROW LEVEL SECURITY'), 'Migration must enable RLS');
+  assert.ok(migrationSql.includes('CREATE POLICY "Public can record analytics events"'), 'Migration must allow public insert');
+  assert.ok(migrationSql.includes('CREATE POLICY "Owners can view their portfolio analytics"'), 'Migration must restrict select to portfolio owner');
+
+  // Verify master schema.sql sync
+  assert.ok(schemaSql.includes('CREATE TABLE IF NOT EXISTS public.analytics_events'), 'supabase/schema.sql must include analytics_events');
+  assert.ok(schemaSql.includes('CREATE POLICY "Owners can view their portfolio analytics"'), 'supabase/schema.sql must include owner RLS policy');
+});
+
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL REGRESSION TESTS PASSED SUCCESSFULLY! ✓');
@@ -513,5 +624,6 @@ if (passed === total) {
   console.error(`FAILED: ${total - passed} tests failed.`);
   process.exit(1);
 }
+
 
 

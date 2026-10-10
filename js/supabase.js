@@ -809,3 +809,144 @@ export const contactService = {
     }
   },
 };
+
+// ==============================================================================
+// 7. Portfolio & Project Analytics Service
+// ==============================================================================
+export const analyticsService = {
+  /**
+   * Records a privacy-respecting telemetry event.
+   * Public-facing insert guarded by RLS in Supabase and localized user isolation.
+   */
+  async trackEvent({
+    portfolioSlug,
+    portfolioId = null,
+    projectId = null,
+    projectTitle = null,
+    eventType,
+    referrer = null,
+    deviceType = null
+  }) {
+    if (!portfolioSlug || !eventType) return false;
+
+    const eventRecord = {
+      id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+      portfolio_slug: portfolioSlug.toLowerCase(),
+      portfolio_id: portfolioId,
+      project_id: projectId ? String(projectId) : null,
+      project_title: projectTitle || null,
+      event_type: eventType,
+      referrer: referrer || null,
+      device_type: deviceType || 'desktop',
+      created_at: new Date().toISOString()
+    };
+
+    // 1. Supabase insert if configured
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { error } = await supabase
+          .from('analytics_events')
+          .insert([{
+            portfolio_slug: eventRecord.portfolio_slug,
+            portfolio_id: eventRecord.portfolio_id,
+            project_id: eventRecord.project_id,
+            project_title: eventRecord.project_title,
+            event_type: eventRecord.event_type,
+            referrer: eventRecord.referrer,
+            device_type: eventRecord.device_type,
+            created_at: eventRecord.created_at
+          }]);
+        if (error) console.warn('Supabase analytics track notice:', error.message);
+      } catch (e) {
+        console.warn('Supabase analytics track exception:', e);
+      }
+    }
+
+    // 2. Multi-tenant Local Persistence Fallback
+    try {
+      const storageKey = `profilefolio_events_${portfolioSlug.toLowerCase()}`;
+      const raw = localStorage.getItem(storageKey);
+      const events = raw ? JSON.parse(raw) : [];
+      events.unshift(eventRecord);
+      // Keep up to 3000 events per portfolio locally to prevent unbounded growth
+      if (events.length > 3000) events.length = 3000;
+      localStorage.setItem(storageKey, JSON.stringify(events));
+      return eventRecord;
+    } catch (e) {
+      return eventRecord;
+    }
+  },
+
+  /**
+   * Fetches events for an authenticated portfolio owner.
+   */
+  async getEvents({ portfolioSlug, startDate = null, endDate = null, projectId = null }) {
+    if (!portfolioSlug) return [];
+    const cleanSlug = portfolioSlug.toLowerCase();
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        let query = supabase
+          .from('analytics_events')
+          .select('*')
+          .eq('portfolio_slug', cleanSlug)
+          .order('created_at', { ascending: false });
+
+        if (startDate) query = query.gte('created_at', startDate);
+        if (endDate) query = query.lte('created_at', endDate);
+        if (projectId) query = query.eq('project_id', String(projectId));
+
+        const { data, error } = await query;
+        if (!error && data && data.length > 0) return data;
+      } catch (e) {
+        console.warn('Supabase getEvents fallback to local:', e);
+      }
+    }
+
+    // Read local events
+    try {
+      const storageKey = `profilefolio_events_${cleanSlug}`;
+      const raw = localStorage.getItem(storageKey);
+      let events = raw ? JSON.parse(raw) : [];
+
+      if (startDate) {
+        const startMs = new Date(startDate).getTime();
+        events = events.filter(e => new Date(e.created_at).getTime() >= startMs);
+      }
+      if (endDate) {
+        const endMs = new Date(endDate).getTime();
+        events = events.filter(e => new Date(e.created_at).getTime() <= endMs);
+      }
+      if (projectId) {
+        events = events.filter(e => String(e.project_id) === String(projectId));
+      }
+      return events;
+    } catch (e) {
+      return [];
+    }
+  },
+
+  async purgeEvents(portfolioSlug) {
+    if (!portfolioSlug) return false;
+    const cleanSlug = portfolioSlug.toLowerCase();
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase
+          .from('analytics_events')
+          .delete()
+          .eq('portfolio_slug', cleanSlug);
+      } catch (e) {
+        console.warn('Supabase purgeEvents exception:', e);
+      }
+    }
+
+    try {
+      localStorage.removeItem(`profilefolio_events_${cleanSlug}`);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+};
+

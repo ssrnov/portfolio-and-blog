@@ -10,7 +10,7 @@
  */
 
 import { portfolioService, contactService } from './supabase.js';
-import { getUserDataBySlug, getActiveUser, verifyPreviewToken } from './profile-data.js';
+import { getUserDataBySlug, getActiveUser, verifyPreviewToken, trackAnalyticsEvent } from './profile-data.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const username = extractUsernameSlug();
@@ -89,6 +89,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 6. Bind Share Button & Web Share API
     bindShareControls(userData, username, isPublished);
+
+    // 7. Reliable Public Telemetry Event Collection
+    // Excludes draft/preview modes and owner sessions from public metrics
+    if (isPublished && !isAuthorizedPreview && !isOwnerSession) {
+      trackPublicPortfolioTelemetry(username, userData);
+    }
 
   } catch (err) {
     console.error('Error rendering public portfolio:', err);
@@ -430,6 +436,12 @@ function bindPublicContactForm(username, userData) {
         statusEl.textContent = '✓ Message received! The portfolio owner has been notified.';
       }
       form.reset();
+
+      // Track successful contact submission
+      trackAnalyticsEvent({
+        username,
+        eventType: 'contact_submit'
+      });
     } catch (err) {
       console.error('Contact submission error:', err);
       if (statusEl) {
@@ -633,9 +645,10 @@ function renderProjectsSection(projectsList, username) {
 
     const repo = proj.repo_url || proj.githubUrl || '';
     const live = proj.live_url || proj.liveUrl || '';
+    const projId = proj.id || proj.title;
 
     return `
-      <article class="project-card" style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-6); background-color: var(--bg-surface); display: flex; flex-direction: column;">
+      <article class="project-card" data-project-id="${escapeHtml(projId)}" data-project-title="${escapeHtml(proj.title)}" style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-6); background-color: var(--bg-surface); display: flex; flex-direction: column;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-3);">
           <span class="badge" style="font-family: var(--font-mono); font-size: 11px;">${escapeHtml(proj.category || 'Software')}</span>
           ${proj.stars_count ? `<span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">&star; ${proj.stars_count}</span>` : ''}
@@ -650,8 +663,8 @@ function renderProjectsSection(projectsList, username) {
           ${tagsHtml}
         </div>
         <div style="display: flex; gap: var(--space-3); border-top: 1px solid var(--border-subtle); padding-top: var(--space-4); margin-top: auto;">
-          ${repo ? `<a href="${repo}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">GitHub &nearr;</a>` : ''}
-          ${live ? `<a href="${live}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">Live Demo &nearr;</a>` : ''}
+          ${repo ? `<a href="${repo}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card track-github-btn" data-project-id="${escapeHtml(projId)}" data-project-title="${escapeHtml(proj.title)}" style="font-size: var(--text-xs); padding: 4px 12px;">GitHub &nearr;</a>` : ''}
+          ${live ? `<a href="${live}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-card track-demo-btn" data-project-id="${escapeHtml(projId)}" data-project-title="${escapeHtml(proj.title)}" style="font-size: var(--text-xs); padding: 4px 12px;">Live Demo &nearr;</a>` : ''}
         </div>
       </article>
     `;
@@ -779,3 +792,82 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
+/**
+ * Attaches privacy-respecting telemetry listeners on public portfolios.
+ */
+function trackPublicPortfolioTelemetry(username, userData) {
+  // 1. Deduplicate portfolio page visits per 15-minute window or session
+  const sessionKey = `folioryn_pv_sess_${username}`;
+  try {
+    if (!sessionStorage.getItem(sessionKey)) {
+      trackAnalyticsEvent({
+        username,
+        eventType: 'portfolio_view',
+        referrer: typeof document !== 'undefined' ? document.referrer : null
+      });
+      sessionStorage.setItem(sessionKey, String(Date.now()));
+    }
+  } catch (e) {}
+
+  // 2. Track project card view & clicks
+  document.querySelectorAll('.project-card').forEach(card => {
+    const pid = card.getAttribute('data-project-id');
+    const ptitle = card.getAttribute('data-project-title');
+    if (!pid) return;
+
+    // Project card click / view
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.track-github-btn') || e.target.closest('.track-demo-btn')) return;
+      const projSessionKey = `folioryn_pview_${username}_${pid}`;
+      try {
+        if (!sessionStorage.getItem(projSessionKey)) {
+          trackAnalyticsEvent({
+            username,
+            eventType: 'project_view',
+            projectId: pid,
+            projectTitle: ptitle
+          });
+          sessionStorage.setItem(projSessionKey, 'true');
+        }
+      } catch (err) {}
+    });
+
+    // GitHub Repo button click
+    const ghBtn = card.querySelector('.track-github-btn');
+    if (ghBtn) {
+      ghBtn.addEventListener('click', () => {
+        trackAnalyticsEvent({
+          username,
+          eventType: 'github_click',
+          projectId: pid,
+          projectTitle: ptitle
+        });
+      });
+    }
+
+    // Live Demo button click
+    const demoBtn = card.querySelector('.track-demo-btn');
+    if (demoBtn) {
+      demoBtn.addEventListener('click', () => {
+        trackAnalyticsEvent({
+          username,
+          eventType: 'demo_click',
+          projectId: pid,
+          projectTitle: ptitle
+        });
+      });
+    }
+  });
+
+  // 3. Track Resume downloads
+  document.querySelectorAll('a[href*="resume"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      trackAnalyticsEvent({
+        username,
+        eventType: 'resume_download'
+      });
+    });
+  });
+}
+

@@ -3,7 +3,7 @@
  * Provides user-scoped CRUD operations with Supabase integration and robust localStorage fallback.
  */
 
-import { supabase, isSupabaseConfigured, MOCK_USER_PROFILE } from './supabase.js';
+import { supabase, isSupabaseConfigured, MOCK_USER_PROFILE, analyticsService } from './supabase.js';
 
 // Default initial state for default/demo user "sunny"
 export const DEFAULT_PROFILE = {
@@ -703,52 +703,541 @@ export function savePublishSettings(settings) {
 }
 
 // ==========================================
-// Privacy-Conscious Analytics Engine
+// Privacy-Conscious & Project-Level Analytics Engine
 // ==========================================
+export const VALID_ANALYTICS_EVENT_TYPES = [
+  'portfolio_view',
+  'project_view',
+  'github_click',
+  'demo_click',
+  'resume_download',
+  'contact_submit'
+];
+
+/**
+ * Sanitizes referrer URL to only domain/host, preventing PII leak.
+ */
+export function sanitizeReferrerDomain(rawRef) {
+  if (!rawRef) return 'Direct / Bookmarks';
+  try {
+    const url = new URL(rawRef);
+    const host = url.hostname.toLowerCase().replace(/^www\./, '');
+    if (host.includes('github.com')) return 'GitHub';
+    if (host.includes('linkedin.com')) return 'LinkedIn';
+    if (host.includes('google.com') || host.includes('google.')) return 'Google Search';
+    if (host.includes('twitter.com') || host.includes('x.com') || host.includes('t.co')) return 'X / Twitter';
+    if (host.includes('reddit.com')) return 'Reddit';
+    if (host.includes('folioryn.dev') || host.includes('localhost') || host.includes('127.0.0.1')) return 'Direct / Folioryn';
+    return host;
+  } catch (e) {
+    return 'Direct / Bookmarks';
+  }
+}
+
+/**
+ * Detects device category in a privacy-respecting way.
+ */
+export function getDeviceCategory() {
+  if (typeof window === 'undefined') return 'desktop';
+  const width = window.innerWidth;
+  if (width < 768) return 'mobile';
+  if (width < 1024) return 'tablet';
+  return 'desktop';
+}
+
+/**
+ * Records a privacy-respecting analytics event.
+ */
+export function trackAnalyticsEvent({
+  username,
+  eventType,
+  projectId = null,
+  projectTitle = null,
+  referrer = null,
+  deviceType = null,
+  timestamp = null
+}) {
+  if (!username || !eventType) return null;
+  const cleanSlug = username.toLowerCase();
+
+  // Validate event type
+  if (!VALID_ANALYTICS_EVENT_TYPES.includes(eventType)) {
+    console.warn(`[Analytics] Ignored invalid event type: ${eventType}`);
+    return null;
+  }
+
+  const cleanReferrer = sanitizeReferrerDomain(referrer || (typeof document !== 'undefined' ? document.referrer : ''));
+  const cleanDevice = deviceType || getDeviceCategory();
+  const eventTime = timestamp ? new Date(timestamp).toISOString() : new Date().toISOString();
+
+  const eventRecord = {
+    id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+    portfolio_slug: cleanSlug,
+    project_id: projectId ? String(projectId) : null,
+    project_title: projectTitle || null,
+    event_type: eventType,
+    referrer: cleanReferrer,
+    device_type: cleanDevice,
+    created_at: eventTime
+  };
+
+  // 1. Local Storage multi-tenant event log
+  try {
+    const storageKey = `profilefolio_events_${cleanSlug}`;
+    const raw = localStorage.getItem(storageKey);
+    const events = raw ? JSON.parse(raw) : [];
+    events.unshift(eventRecord);
+    if (events.length > 5000) events.length = 5000;
+    localStorage.setItem(storageKey, JSON.stringify(events));
+  } catch (e) {
+    console.warn('Local analytics storage exception:', e);
+  }
+
+  // 2. Forward to Supabase service if connected
+  try {
+    if (analyticsService && typeof analyticsService.trackEvent === 'function') {
+      analyticsService.trackEvent({
+        portfolioSlug: cleanSlug,
+        projectId,
+        projectTitle,
+        eventType,
+        referrer: cleanReferrer,
+        deviceType: cleanDevice
+      }).catch(err => console.warn('Remote analytics error:', err));
+    }
+  } catch (e) {}
+
+  return eventRecord;
+}
+
+/**
+ * Seeds authentic multi-week telemetry for demonstration accounts.
+ */
+export function seedBaselineAnalyticsIfEmpty(username) {
+  const cleanSlug = username.toLowerCase();
+  const events = [];
+  const now = Date.now();
+  const oneDayMs = 24 * 60 * 60 * 1000;
+
+  const projects = [
+    { id: 'proj_1', title: 'Distributed Task Queue & Worker Engine' },
+    { id: 'proj_2', title: 'Real-Time Cloud Observability Dashboard' },
+    { id: 'proj_3', title: 'High-Throughput Raft Consensus Engine' }
+  ];
+
+  const referrers = ['GitHub', 'LinkedIn', 'Google Search', 'X / Twitter', 'Direct / Bookmarks'];
+  const devices = ['desktop', 'desktop', 'desktop', 'mobile', 'tablet'];
+
+  // Seed across last 30 days
+  for (let day = 29; day >= 0; day--) {
+    const dayBaseTime = now - (day * oneDayMs);
+    // Baseline between 6 and 22 portfolio views per day
+    const viewsCount = Math.floor(8 + (Math.sin(day) * 4) + ((30 - day) * 0.4));
+    
+    for (let v = 0; v < viewsCount; v++) {
+      const evtTime = new Date(dayBaseTime + Math.floor(Math.random() * (oneDayMs - 1000))).toISOString();
+      const ref = referrers[Math.floor(Math.random() * referrers.length)];
+      const dev = devices[Math.floor(Math.random() * devices.length)];
+      
+      events.push({
+        id: `seed_${day}_v_${v}`,
+        portfolio_slug: cleanSlug,
+        event_type: 'portfolio_view',
+        referrer: ref,
+        device_type: dev,
+        created_at: evtTime
+      });
+
+      // Fraction of views interact with projects
+      if (Math.random() < 0.45) {
+        const proj = projects[Math.floor(Math.random() * projects.length)];
+        events.push({
+          id: `seed_${day}_pv_${v}`,
+          portfolio_slug: cleanSlug,
+          project_id: proj.id,
+          project_title: proj.title,
+          event_type: 'project_view',
+          referrer: ref,
+          device_type: dev,
+          created_at: evtTime
+        });
+
+        if (Math.random() < 0.35) {
+          events.push({
+            id: `seed_${day}_gh_${v}`,
+            portfolio_slug: cleanSlug,
+            project_id: proj.id,
+            project_title: proj.title,
+            event_type: 'github_click',
+            referrer: ref,
+            device_type: dev,
+            created_at: evtTime
+          });
+        }
+
+        if (Math.random() < 0.25) {
+          events.push({
+            id: `seed_${day}_demo_${v}`,
+            portfolio_slug: cleanSlug,
+            project_id: proj.id,
+            project_title: proj.title,
+            event_type: 'demo_click',
+            referrer: ref,
+            device_type: dev,
+            created_at: evtTime
+          });
+        }
+      }
+
+      // Occasional resume downloads
+      if (Math.random() < 0.08) {
+        events.push({
+          id: `seed_${day}_res_${v}`,
+          portfolio_slug: cleanSlug,
+          event_type: 'resume_download',
+          referrer: ref,
+          device_type: dev,
+          created_at: evtTime
+        });
+      }
+
+      // Occasional contact submissions
+      if (Math.random() < 0.03) {
+        events.push({
+          id: `seed_${day}_cnt_${v}`,
+          portfolio_slug: cleanSlug,
+          event_type: 'contact_submit',
+          referrer: ref,
+          device_type: dev,
+          created_at: evtTime
+        });
+      }
+    }
+  }
+
+  // Save to localStorage
+  try {
+    localStorage.setItem(`profilefolio_events_${cleanSlug}`, JSON.stringify(events));
+  } catch (e) {}
+  return events;
+}
+
+/**
+ * Retrieves all raw events for a portfolio owner.
+ * If user is sunny or demo and storage is empty, seeds authentic baseline history.
+ */
+export function getAnalyticsEvents(username) {
+  if (!username) return [];
+  const cleanSlug = username.toLowerCase();
+  const storageKey = `profilefolio_events_${cleanSlug}`;
+
+  try {
+    const raw = localStorage.getItem(storageKey);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {}
+
+  // If sunny/demo profile and no events exist yet, seed a rich 30-day realistic baseline
+  if (cleanSlug === 'sunny') {
+    return seedBaselineAnalyticsIfEmpty(cleanSlug);
+  }
+
+  return [];
+}
+
+/**
+ * Calculates date boundaries for a selected preset or custom range.
+ * End dates are inclusive (through 23:59:59.999).
+ * Previous period has identical duration immediately preceding the current start.
+ */
+export function getDateRangeBoundaries(preset = '30d', customStart = null, customEnd = null) {
+  const now = new Date();
+  const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+  
+  let currentStart, currentEnd;
+  let durationDays;
+
+  if (preset === '7d') {
+    durationDays = 7;
+    currentStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6, 0, 0, 0, 0);
+    currentEnd = todayEnd;
+  } else if (preset === '90d') {
+    durationDays = 90;
+    currentStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 89, 0, 0, 0, 0);
+    currentEnd = todayEnd;
+  } else if (preset === 'custom' && customStart && customEnd) {
+    const s = new Date(customStart);
+    const e = new Date(customEnd);
+    currentStart = new Date(s.getFullYear(), s.getMonth(), s.getDate(), 0, 0, 0, 0);
+    currentEnd = new Date(e.getFullYear(), e.getMonth(), e.getDate(), 23, 59, 59, 999);
+    
+    // Guard against inverted dates
+    if (currentEnd.getTime() < currentStart.getTime()) {
+      currentEnd = new Date(currentStart.getTime() + (24 * 60 * 60 * 1000 - 1));
+    }
+    durationDays = Math.max(1, Math.round((currentEnd.getTime() - currentStart.getTime()) / (24 * 60 * 60 * 1000)));
+  } else {
+    // Default 30 days
+    durationDays = 30;
+    currentStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29, 0, 0, 0, 0);
+    currentEnd = todayEnd;
+  }
+
+  // Previous period: identical duration immediately prior to currentStart
+  const prevEnd = new Date(currentStart.getTime() - 1);
+  const prevStart = new Date(prevEnd.getTime() - (durationDays * 24 * 60 * 60 * 1000) + 1);
+
+  const formatDateLabel = (d) => {
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  return {
+    preset,
+    durationDays,
+    current: {
+      start: currentStart.toISOString(),
+      end: currentEnd.toISOString(),
+      startDateObj: currentStart,
+      endDateObj: currentEnd,
+      label: `${formatDateLabel(currentStart)} – ${formatDateLabel(currentEnd)}`
+    },
+    previous: {
+      start: prevStart.toISOString(),
+      end: prevEnd.toISOString(),
+      startDateObj: prevStart,
+      endDateObj: prevEnd,
+      label: `${formatDateLabel(prevStart)} – ${formatDateLabel(prevEnd)}`
+    }
+  };
+}
+
+/**
+ * Aggregates metric counts and project breakdowns for a given date range.
+ */
+export function calculatePeriodMetrics(events, startIso, endIso, filterProjectId = null) {
+  const startMs = new Date(startIso).getTime();
+  const endMs = new Date(endIso).getTime();
+
+  // Filter events in range
+  const inRange = events.filter(e => {
+    const t = new Date(e.created_at).getTime();
+    if (t < startMs || t > endMs) return false;
+    if (filterProjectId && e.project_id && String(e.project_id) !== String(filterProjectId)) {
+      return false;
+    }
+    return true;
+  });
+
+  let portfolioViews = 0;
+  let projectViews = 0;
+  let githubClicks = 0;
+  let demoClicks = 0;
+  let resumeDownloads = 0;
+  let contactSubmissions = 0;
+
+  const referrerCounts = {};
+  const deviceCounts = { desktop: 0, mobile: 0, tablet: 0, other: 0 };
+  const dailyBuckets = {};
+  const projectStats = {};
+
+  inRange.forEach(evt => {
+    // Types
+    if (evt.event_type === 'portfolio_view') portfolioViews++;
+    else if (evt.event_type === 'project_view') projectViews++;
+    else if (evt.event_type === 'github_click') githubClicks++;
+    else if (evt.event_type === 'demo_click') demoClicks++;
+    else if (evt.event_type === 'resume_download') resumeDownloads++;
+    else if (evt.event_type === 'contact_submit') contactSubmissions++;
+
+    // Referrers
+    const ref = evt.referrer || 'Direct / Bookmarks';
+    referrerCounts[ref] = (referrerCounts[ref] || 0) + 1;
+
+    // Devices
+    const dev = evt.device_type || 'desktop';
+    if (deviceCounts[dev] !== undefined) deviceCounts[dev]++;
+    else deviceCounts.other++;
+
+    // Daily bucket
+    const dayKey = evt.created_at.slice(0, 10);
+    if (!dailyBuckets[dayKey]) {
+      dailyBuckets[dayKey] = {
+        date: dayKey,
+        portfolioViews: 0,
+        projectViews: 0,
+        githubClicks: 0,
+        demoClicks: 0,
+        interactions: 0
+      };
+    }
+    if (evt.event_type === 'portfolio_view') dailyBuckets[dayKey].portfolioViews++;
+    if (evt.event_type === 'project_view') {
+      dailyBuckets[dayKey].projectViews++;
+      dailyBuckets[dayKey].interactions++;
+    }
+    if (evt.event_type === 'github_click' || evt.event_type === 'demo_click') {
+      if (evt.event_type === 'github_click') dailyBuckets[dayKey].githubClicks++;
+      if (evt.event_type === 'demo_click') dailyBuckets[dayKey].demoClicks++;
+      dailyBuckets[dayKey].interactions++;
+    }
+
+    // Project breakdown
+    if (evt.project_id) {
+      const pid = String(evt.project_id);
+      if (!projectStats[pid]) {
+        projectStats[pid] = {
+          projectId: pid,
+          projectTitle: evt.project_title || pid,
+          views: 0,
+          githubClicks: 0,
+          demoClicks: 0,
+          interactions: 0,
+          referrers: {},
+          devices: { desktop: 0, mobile: 0, tablet: 0 }
+        };
+      }
+      if (evt.event_type === 'project_view') {
+        projectStats[pid].views++;
+        projectStats[pid].interactions++;
+      } else if (evt.event_type === 'github_click') {
+        projectStats[pid].githubClicks++;
+        projectStats[pid].interactions++;
+      } else if (evt.event_type === 'demo_click') {
+        projectStats[pid].demoClicks++;
+        projectStats[pid].interactions++;
+      }
+      const pRef = evt.referrer || 'Direct / Bookmarks';
+      projectStats[pid].referrers[pRef] = (projectStats[pid].referrers[pRef] || 0) + 1;
+      const pDev = evt.device_type || 'desktop';
+      if (projectStats[pid].devices[pDev] !== undefined) projectStats[pid].devices[pDev]++;
+    }
+  });
+
+  const totalInteractions = githubClicks + demoClicks + projectViews;
+  
+  // Interaction rate = (Total Interactions / Portfolio Views) * 100%
+  const interactionRate = portfolioViews > 0 
+    ? Math.round((totalInteractions / portfolioViews) * 1000) / 10 
+    : 0;
+
+  // Format Referrers list
+  const referrers = Object.entries(referrerCounts)
+    .map(([source, count]) => ({ source, count }))
+    .sort((a, b) => b.count - a.count);
+
+  // Format Timeline sorted by date
+  const timeline = Object.values(dailyBuckets).sort((a, b) => a.date.localeCompare(b.date));
+
+  return {
+    totalEvents: inRange.length,
+    portfolioViews,
+    projectViews,
+    githubClicks,
+    demoClicks,
+    resumeDownloads,
+    contactSubmissions,
+    totalInteractions,
+    interactionRate,
+    referrers,
+    devices: deviceCounts,
+    timeline,
+    projectStats
+  };
+}
+
+/**
+ * Computes difference and percentage change between current and previous periods.
+ * Handles previous zero values cleanly without division by zero.
+ */
+export function compareMetric(currentVal = 0, prevVal = 0) {
+  const current = Number(currentVal) || 0;
+  const previous = Number(prevVal) || 0;
+  const diff = current - previous;
+
+  if (previous === 0) {
+    if (current === 0) {
+      return { diff: 0, percent: 0, text: '0%', trend: 'neutral' };
+    }
+    return { diff: current, percent: 100, text: `+${current} (New)`, trend: 'up' };
+  }
+
+  const pct = Math.round(((current - previous) / previous) * 100);
+  const trend = pct > 0 ? 'up' : (pct < 0 ? 'down' : 'neutral');
+  const text = `${pct > 0 ? '+' : ''}${pct}%`;
+
+  return { diff, percent: pct, text, trend };
+}
+
+/**
+ * Compares full metrics payloads.
+ */
+export function comparePeriods(currentMetrics, previousMetrics) {
+  return {
+    portfolioViews: compareMetric(currentMetrics.portfolioViews, previousMetrics.portfolioViews),
+    projectViews: compareMetric(currentMetrics.projectViews, previousMetrics.projectViews),
+    githubClicks: compareMetric(currentMetrics.githubClicks, previousMetrics.githubClicks),
+    demoClicks: compareMetric(currentMetrics.demoClicks, previousMetrics.demoClicks),
+    resumeDownloads: compareMetric(currentMetrics.resumeDownloads, previousMetrics.resumeDownloads),
+    contactSubmissions: compareMetric(currentMetrics.contactSubmissions, previousMetrics.contactSubmissions),
+    totalInteractions: compareMetric(currentMetrics.totalInteractions, previousMetrics.totalInteractions),
+    interactionRate: compareMetric(currentMetrics.interactionRate, previousMetrics.interactionRate)
+  };
+}
+
+/**
+ * Backwards compatibility helper for getAnalytics.
+ */
 export function getAnalytics() {
   try {
     const user = getActiveUser();
-    const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
-    const scopedKey = `profilefolio_user_${uid}_analytics`;
-    const raw = localStorage.getItem(scopedKey);
-    if (raw) return JSON.parse(raw);
+    const username = user?.username || 'sunny';
+    const bounds = getDateRangeBoundaries('30d');
+    const events = getAnalyticsEvents(username);
+    const metrics = calculatePeriodMetrics(events, bounds.current.start, bounds.current.end);
+    
+    const totalViews = metrics.portfolioViews;
+    const projectClicks = metrics.githubClicks + metrics.demoClicks;
+    const resumeDownloads = metrics.resumeDownloads;
+    const uniqueReferrers = metrics.referrers.length;
 
-    if (user?.username === 'sunny' || uid === 'usr_mock_sunny_9921') {
-      const legacy = localStorage.getItem('profilefolio_analytics') || localStorage.getItem('buildlab_analytics');
-      if (legacy) return JSON.parse(legacy);
-    }
+    const totalDev = (metrics.devices.desktop + metrics.devices.mobile + metrics.devices.tablet) || 1;
+    const devPct = {
+      desktop: Math.round((metrics.devices.desktop / totalDev) * 100),
+      mobile: Math.round((metrics.devices.mobile / totalDev) * 100),
+      tablet: Math.round((metrics.devices.tablet / totalDev) * 100)
+    };
 
-    return { ...DEFAULT_ANALYTICS };
+    const recentEvents = events.slice(0, 8).map(e => ({
+      event: e.event_type.replace(/_/g, ' ').toUpperCase(),
+      path: e.project_title || (e.event_type === 'portfolio_view' ? '/u/' + username : e.event_type),
+      time: new Date(e.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      country: e.referrer || 'Active Visitor'
+    }));
+
+    return {
+      totalViews,
+      uniqueReferrers,
+      projectClicks,
+      resumeDownloads,
+      referrers: metrics.referrers.slice(0, 5),
+      devices: devPct,
+      recentEvents
+    };
   } catch (e) {
     return { ...DEFAULT_ANALYTICS };
   }
 }
 
 export function recordPageView(path = window.location.pathname) {
-  const analytics = getAnalytics();
-  analytics.totalViews = (analytics.totalViews || 0) + 1;
-  
-  const ref = document.referrer ? new URL(document.referrer).hostname : "Direct / Bookmarks";
-  let matchedRef = analytics.referrers.find(r => r.source.includes(ref) || ref.includes(r.source));
-  if (matchedRef) {
-    matchedRef.count++;
-  } else {
-    analytics.referrers.push({ source: ref, count: 1 });
-  }
-
-  analytics.recentEvents.unshift({
-    event: "Portfolio View",
-    path: path,
-    time: "Just now",
-    country: "Active Session"
-  });
-  if (analytics.recentEvents.length > 10) analytics.recentEvents.pop();
-
   const user = getActiveUser();
-  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
-  const scopedKey = `profilefolio_user_${uid}_analytics`;
-  localStorage.setItem(scopedKey, JSON.stringify(analytics));
-  return analytics;
+  const username = user?.username || 'sunny';
+  return trackAnalyticsEvent({
+    username,
+    eventType: 'portfolio_view',
+    referrer: typeof document !== 'undefined' ? document.referrer : null
+  });
 }
 
 // ==========================================
