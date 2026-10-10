@@ -342,9 +342,9 @@ function initMobileNavigation() {
     document.body.appendChild(backdrop);
   }
 
-  // 2. Inject drawer action buttons if not already present
+  // 2. Inject drawer action buttons if not already present (strictly for mobile drawer)
   if (!navMenu.querySelector('.mobile-drawer-actions')) {
-    const actionsWrapper = document.createElement('div');
+    const actionsWrapper = document.createElement('li');
     actionsWrapper.className = 'mobile-drawer-actions';
     actionsWrapper.innerHTML = `
       <a href="/login/" class="btn btn-secondary">Sign In</a>

@@ -177,6 +177,7 @@ test('Public Portfolio: js/public-portfolio.js handles username lookup, draft ga
 });
 
 // --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 // TEST 11: Database Schema & RLS Policies
 // --------------------------------------------------------------------------
 test('Database Schema: supabase/schema.sql and sql/schema.sql contain complete table schemas & RLS', () => {
@@ -191,6 +192,26 @@ test('Database Schema: supabase/schema.sql and sql/schema.sql contain complete t
 
   assert.ok(sql.includes('ENABLE ROW LEVEL SECURITY;'), 'RLS must be enabled');
   assert.ok(sql.includes('storage.buckets'), 'Storage bucket configuration must exist');
+});
+
+// --------------------------------------------------------------------------
+// TEST 12: Desktop Navbar Actions Isolation (No Duplicate Buttons)
+// --------------------------------------------------------------------------
+test('Desktop Navbar: .mobile-drawer-actions is strictly hidden on desktop to prevent duplicate buttons', () => {
+  const mobileCss = fs.readFileSync(path.join(ROOT, 'css/mobile.css'), 'utf8');
+  const mainCss = fs.readFileSync(path.join(ROOT, 'css/main.css'), 'utf8');
+
+  // Verify desktop section hides .mobile-drawer-actions
+  const mobileDesktopPart = mobileCss.split('@media')[0];
+  assert.ok(
+    mobileDesktopPart.includes('.mobile-drawer-actions') && mobileDesktopPart.includes('display: none !important'),
+    'css/mobile.css must enforce display: none !important on .mobile-drawer-actions in desktop scope'
+  );
+
+  assert.ok(
+    mainCss.includes('.mobile-drawer-actions') && mainCss.includes('display: none !important'),
+    'css/main.css must enforce display: none !important on .mobile-drawer-actions in desktop scope'
+  );
 });
 
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
