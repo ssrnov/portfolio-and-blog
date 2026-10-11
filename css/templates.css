@@ -1,7 +1,7 @@
 /* ==========================================================================
-   PROFILEFOLIO — CURATED MONOCHROME TEMPLATES ENGINE
+   PROFILEFOLIO — CURATED TEMPLATES ENGINE
    6 Distinct, Highly Specialized Developer Portfolio Styles
-   Strict Dark-Only Monochrome Aesthetics (#080909 / #141515 / #EDE8E1 Warm White)
+   Full Support for Dark, Light, and Night Website Themes
    ========================================================================== */
 
 /* ==========================================================================
@@ -13,8 +13,8 @@
 .template-minimal-professional,
 [data-template="minimal"],
 .template-minimal {
-  --template-accent: #EDE8E1;
-  --template-border: #292A2A;
+  --template-accent: var(--accent-primary);
+  --template-border: var(--border-color);
 }
 
 [data-template="minimal-professional"] .hero-lead,
@@ -61,8 +61,8 @@
 .template-developer-portfolio body,
 [data-template="terminal"] body,
 .template-terminal body {
-  background-color: #080909 !important;
-  color: #A3A3A3 !important;
+  background-color: var(--bg-primary) !important;
+  color: var(--text-secondary) !important;
 }
 
 [data-template="developer-portfolio"] .logo-text::before,
@@ -70,7 +70,7 @@
 [data-template="terminal"] .logo-text::before,
 .template-terminal .logo-text::before {
   content: "~/ ";
-  color: #737373;
+  color: var(--text-muted);
 }
 
 [data-template="developer-portfolio"] .logo-text::after,
@@ -78,7 +78,7 @@
 [data-template="terminal"] .logo-text::after,
 .template-terminal .logo-text::after {
   content: " $";
-  color: #EDE8E1;
+  color: var(--accent-primary);
 }
 
 [data-template="developer-portfolio"] h1[data-builder-target="headline"]::before,
@@ -86,7 +86,7 @@
 [data-template="terminal"] h1[data-builder-target="headline"]::before,
 .template-terminal h1[data-builder-target="headline"]::before {
   content: "> exec --profile \"";
-  color: #737373;
+  color: var(--text-muted);
   font-weight: 500;
   font-size: 0.5em;
   display: block;
@@ -99,15 +99,15 @@
 [data-template="terminal"] h1[data-builder-target="headline"]::after,
 .template-terminal h1[data-builder-target="headline"]::after {
   content: "\"";
-  color: #737373;
+  color: var(--text-muted);
 }
 
 [data-template="developer-portfolio"] .project-card,
 .template-developer-portfolio .project-card,
 [data-template="terminal"] .project-card,
 .template-terminal .project-card {
-  background-color: #101111 !important;
-  border: 1px solid #292A2A !important;
+  background-color: var(--bg-surface) !important;
+  border: 1px solid var(--border-color) !important;
   border-radius: 4px !important;
   box-shadow: none !important;
 }
@@ -116,16 +116,16 @@
 .template-developer-portfolio .project-card:hover,
 [data-template="terminal"] .project-card:hover,
 .template-terminal .project-card:hover {
-  border-color: #454545 !important;
+  border-color: var(--border-hover) !important;
 }
 
 [data-template="developer-portfolio"] .badge,
 .template-developer-portfolio .badge,
 [data-template="terminal"] .badge,
 .template-terminal .badge {
-  background-color: #141515 !important;
-  color: #EDE8E1 !important;
-  border: 1px solid #292A2A !important;
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
   border-radius: 2px !important;
   font-family: var(--font-mono) !important;
   font-size: 11px !important;
@@ -137,14 +137,14 @@
    ========================================================================== */
 [data-template="student-portfolio"],
 .template-student-portfolio {
-  --student-badge-bg: #141515;
+  --student-badge-bg: var(--bg-surface);
 }
 
 [data-template="student-portfolio"] .education-card,
 .template-student-portfolio .education-card {
   border: 1px solid var(--border-color);
   background: var(--bg-surface);
-  border-left: 3px solid #EDE8E1;
+  border-left: 3px solid var(--accent-primary);
   border-radius: var(--radius-md);
   padding: var(--space-6);
   margin-bottom: var(--space-4);
@@ -155,9 +155,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #191A1A;
+  background: var(--bg-secondary);
   border: 1px solid var(--border-hover);
-  color: #EDE8E1;
+  color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
@@ -167,7 +167,7 @@
 
 [data-template="student-portfolio"] .coursework-tag,
 .template-student-portfolio .coursework-tag {
-  background-color: #101111;
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
   font-size: 11px;
@@ -181,7 +181,7 @@
    ========================================================================== */
 [data-template="creative-portfolio"],
 .template-creative-portfolio {
-  --creative-contrast: #EDE8E1;
+  --creative-contrast: var(--text-primary);
 }
 
 [data-template="creative-portfolio"] h1,
@@ -194,8 +194,8 @@
 
 [data-template="creative-portfolio"] .project-card,
 .template-creative-portfolio .project-card {
-  background: #141515;
-  border: 1px solid #292A2A;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
   overflow: hidden;
   transition: border-color var(--transition-normal), transform var(--transition-normal);
@@ -203,7 +203,7 @@
 
 [data-template="creative-portfolio"] .project-card:hover,
 .template-creative-portfolio .project-card:hover {
-  border-color: #EDE8E1;
+  border-color: var(--accent-primary);
   transform: translateY(-4px);
 }
 
@@ -212,7 +212,7 @@
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.12em;
-  color: #EDE8E1;
+  color: var(--accent-primary);
   text-transform: uppercase;
 }
 
@@ -225,7 +225,7 @@
 .template-editorial-portfolio,
 [data-template="editorial"],
 .template-editorial {
-  --editorial-line: #292A2A;
+  --editorial-line: var(--border-color);
 }
 
 [data-template="editorial-portfolio"] h1,
@@ -251,7 +251,7 @@
 .template-editorial .project-card {
   border-radius: 0 !important;
   border: 1px solid var(--border-color) !important;
-  background-color: #080909 !important;
+  background-color: var(--bg-surface) !important;
   transition: border-color var(--transition-fast) !important;
 }
 
@@ -259,7 +259,7 @@
 .template-editorial-portfolio .project-card:hover,
 [data-template="editorial"] .project-card:hover,
 .template-editorial .project-card:hover {
-  border-color: #EDE8E1 !important;
+  border-color: var(--accent-primary) !important;
 }
 
 [data-template="editorial-portfolio"] .badge,
@@ -285,7 +285,7 @@
    ========================================================================== */
 [data-template="experience-focused"],
 .template-experience-focused {
-  --timeline-border: #292A2A;
+  --timeline-border: var(--border-color);
 }
 
 [data-template="experience-focused"] .experience-timeline,
@@ -304,16 +304,16 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #EDE8E1;
-  border: 2px solid #080909;
+  background: var(--accent-primary);
+  border: 2px solid var(--bg-primary);
 }
 
 [data-template="experience-focused"] .company-badge,
 .template-experience-focused .company-badge {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: #EDE8E1;
-  background: #141515;
+  color: var(--text-primary);
+  background: var(--bg-surface);
   border: 1px solid var(--border-color);
   padding: 2px 8px;
   border-radius: var(--radius-sm);

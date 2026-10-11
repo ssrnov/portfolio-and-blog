@@ -80,7 +80,7 @@
 
     .step-item.active .step-badge {
       background: var(--accent-primary);
-      color: #080909;
+      color: var(--accent-contrast);
       border-color: var(--accent-primary);
       font-weight: 700;
     }
@@ -182,7 +182,7 @@
       height: 18px;
       border-radius: 50%;
       background: var(--accent-primary);
-      color: #080909;
+      color: var(--accent-contrast);
       display: none;
       align-items: center;
       justify-content: center;
@@ -230,8 +230,14 @@
   </style>
 
   <script>
-    document.documentElement.setAttribute('data-theme', 'dark');
-    localStorage.setItem('theme', 'dark');
+    try {
+        var saved = localStorage.getItem('folioryn_theme') || localStorage.getItem('theme');
+        var valid = ['dark', 'light', 'night'];
+        var theme = (valid.indexOf(saved) !== -1) ? saved : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
   </script>
 </head>
 <body class="onboarding-page">
@@ -240,7 +246,7 @@
   <header class="onboarding-nav">
     <div style="display: flex; align-items: center; gap: 10px;">
       <a href="/" class="brand-link" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-        <span style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--accent-primary); color: #080909; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">F</span>
+        <span style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--accent-primary); color: var(--accent-contrast); display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">F</span>
         <span style="font-weight: 800; font-size: 1.15rem; color: var(--text-primary);">Folioryn</span>
       </a>
       <span class="badge" style="font-size: 10px;">Onboarding</span>

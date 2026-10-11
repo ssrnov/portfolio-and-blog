@@ -44,10 +44,10 @@ export const MOCK_USER_PROFILE = {
   bio: 'Engineering scalable distributed architectures, zero-dependency high-performance web systems, and developer platforms.',
   location: 'Bangalore, India (IST / UTC+5:30)',
   avatar_url: '',
-  github_handle: 'ssrnov',
-  twitter_handle: 'ssrnov',
-  linkedin_url: 'https://linkedin.com/in/ssrnov',
-  website_url: 'https://profilefolio.dev/u/sunny',
+  github_handle: '',
+  twitter_handle: '',
+  linkedin_url: '',
+  website_url: 'https://folioryn.dev/u/sunny',
   theme_preference: 'dark',
   dob: '2002-08-15',
   security_question: 'What was the name of your first school?',
@@ -163,6 +163,7 @@ export const authService = {
       throw new Error('An account with this username or email already exists.');
     }
 
+    const cleanGh = (options.githubHandle || options.github_handle || '').trim().replace(/^https?:\/\/(www\.)?github\.com\//i, '').replace(/^@+/, '').split('/')[0];
     const passwordHash = await hashPassword(password);
     const userId = 'usr_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     const newUser = {
@@ -178,7 +179,7 @@ export const authService = {
       bio: 'Architecting scalable web applications, distributed backend pipelines, and minimalist user interfaces.',
       location: 'India',
       avatar_url: '',
-      github_handle: '',
+      github_handle: cleanGh,
       twitter_handle: '',
       linkedin_url: '',
       website_url: `https://folioryn.dev/u/${cleanUsername}`,
@@ -201,7 +202,7 @@ export const authService = {
       organization: '',
       availability: 'Open to opportunities',
       portfolioUrl: `https://folioryn.dev/u/${newUser.username}`,
-      githubUrl: '',
+      githubUrl: cleanGh ? `https://github.com/${cleanGh}` : '',
       linkedinUrl: '',
       twitterUrl: '',
       websiteUrl: `https://folioryn.dev/u/${newUser.username}`,
@@ -470,7 +471,7 @@ export const authService = {
     }
 
     // Mock OAuth simulation
-    const mockUser = { ...MOCK_USER_PROFILE, github_handle: 'ssrnov' };
+    const mockUser = { ...MOCK_USER_PROFILE, github_handle: '' };
     localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(mockUser));
     localStorage.setItem('ssrnovx_mock_session', JSON.stringify(mockUser));
     window.location.href = '/dashboard/';
@@ -616,6 +617,25 @@ export const profileService = {
 
     return updated;
   },
+
+  async getProfileByUsername(username) {
+    const clean = (username || '').trim().toLowerCase();
+    if (isSupabaseConfigured && supabase) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('username', clean)
+        .single();
+      if (!error && data) return data;
+    }
+
+    if (clean === 'sunny' || clean === 'ssrnov') {
+      return { ...MOCK_USER_PROFILE, username: clean };
+    }
+
+    const users = getLocalUsers();
+    return users.find(u => (u.username || '').toLowerCase() === clean || (u.github_handle || '').toLowerCase() === clean) || null;
+  },
 };
 
 // ==============================================================================
@@ -661,32 +681,26 @@ export const portfolioService = {
         .select('*, profiles(*), projects(*), skills(*), experiences(*), education(*)')
         .eq('slug', cleanSlug)
         .single();
-      if (error) throw error;
-      return data;
+      if (!error && data) return data;
     }
 
     // Local Multi-User Lookup
-    const user = await profileService.getProfileByUsername(cleanSlug);
+    let user = await profileService.getProfileByUsername(cleanSlug);
     if (!user) {
-      if (cleanSlug === 'sunny') {
-        return {
-          slug: 'sunny',
-          title: 'Sunny / SSRNovX',
-          template_id: 'minimal-professional',
-          is_published: true,
-          profiles: { ...MOCK_USER_PROFILE }
-        };
+      if (cleanSlug === 'sunny' || cleanSlug === 'ssrnov') {
+        user = { ...MOCK_USER_PROFILE, username: cleanSlug };
       }
-      return null;
     }
+
+    if (!user) return null;
 
     const rawSettings = localStorage.getItem(`profilefolio_user_${user.id}_publish`) ||
                         localStorage.getItem('profilefolio_publish_settings');
     const settings = rawSettings ? JSON.parse(rawSettings) : { isPublished: true, templateId: 'minimal-professional' };
 
     return {
-      slug: user.username,
-      title: `${user.display_name} — Portfolio`,
+      slug: cleanSlug,
+      title: `${user.display_name || user.username} — Portfolio`,
       template_id: settings.templateId || 'minimal-professional',
       is_published: settings.isPublished !== false,
       profiles: user

@@ -23,8 +23,14 @@
 
   <script>
     (function () {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
+      try {
+        var saved = localStorage.getItem('folioryn_theme') || localStorage.getItem('theme');
+        var valid = ['dark', 'light', 'night'];
+        var theme = (valid.indexOf(saved) !== -1) ? saved : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
       try {
         var raw = localStorage.getItem('profilefolio_session') ||
                   localStorage.getItem('ssrnovx_mock_session') ||
@@ -112,7 +118,7 @@
     <aside class="builder-editor-pane" aria-label="Portfolio Editor Controls">
       
       <!-- Template Selector Pill -->
-      <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-4);">
+      <div class="builder-template-box">
         <label for="template-select" class="form-label">Active Portfolio Template</label>
         <select id="template-select" class="form-input" style="padding: 0.5rem;">
           <option value="minimal-professional" selected>Minimal Professional (Executive)</option>
@@ -131,7 +137,10 @@
             <span>&bull;</span>
             <span>Profile &amp; Headline</span>
           </span>
-          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">Required</span>
+          <div class="editor-section-meta">
+            <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">Required</span>
+            <svg class="editor-section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
         </div>
         <div class="editor-section-content">
           <div class="form-group">
@@ -163,12 +172,15 @@
             <span>&bull;</span>
             <span>Projects &amp; GitHub</span>
           </span>
-          <a href="/dashboard/projects/" class="btn btn-secondary btn-card" style="padding: 2px 8px; font-size: 11px;">
-            + Import from GitHub
-          </a>
+          <div class="editor-section-meta">
+            <a href="/dashboard/projects/" class="btn btn-secondary btn-card" style="padding: 2px 8px; font-size: 11px;">
+              + Import from GitHub
+            </a>
+            <svg class="editor-section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
         </div>
         <div class="editor-section-content">
-          <div style="padding: var(--space-3); border: 1px solid var(--border-color); border-radius: var(--radius-sm); background-color: var(--bg-secondary);">
+          <div class="builder-project-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
               <strong style="font-size: var(--text-xs); color: var(--text-primary);">Distributed Task Queue</strong>
               <span class="brand-badge">Backend</span>
@@ -176,7 +188,7 @@
             <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">Redis, Node.js, Concurrency, Worker Threads</p>
           </div>
 
-          <div style="padding: var(--space-3); border: 1px solid var(--border-color); border-radius: var(--radius-sm); background-color: var(--bg-secondary);">
+          <div class="builder-project-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
               <strong style="font-size: var(--text-xs); color: var(--text-primary);">Cloud Observability Dashboard</strong>
               <span class="brand-badge">Web</span>
@@ -184,7 +196,7 @@
             <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">JavaScript, WebSockets, Telemetry, CSS Grid</p>
           </div>
 
-          <div style="padding: var(--space-3); border: 1px solid var(--border-color); border-radius: var(--radius-sm); background-color: var(--bg-secondary);">
+          <div class="builder-project-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
               <strong style="font-size: var(--text-xs); color: var(--text-primary);">Client-Side Cryptographic Vault</strong>
               <span class="brand-badge">Security</span>
@@ -201,7 +213,10 @@
             <span>&bull;</span>
             <span>Technical Skills</span>
           </span>
-          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">4 Domains</span>
+          <div class="editor-section-meta">
+            <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">4 Domains</span>
+            <svg class="editor-section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
         </div>
         <div class="editor-section-content">
           <div class="form-group">
@@ -222,16 +237,19 @@
             <span>&bull;</span>
             <span>Social Channels</span>
           </span>
-          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">Links</span>
+          <div class="editor-section-meta">
+            <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">Links</span>
+            <svg class="editor-section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
         </div>
         <div class="editor-section-content">
           <div class="form-group">
             <label for="input-github-url" class="form-label">GitHub Profile URL</label>
-            <input type="url" id="input-github-url" class="form-input" value="https://github.com/ssrnov" />
+            <input type="url" id="input-github-url" class="form-input" placeholder="https://github.com/your-username" value="" />
           </div>
           <div class="form-group">
             <label for="input-contact-email" class="form-label">Public Inquiries Email</label>
-            <input type="email" id="input-contact-email" class="form-input" value="contact@ssrnovx.dev" />
+            <input type="email" id="input-contact-email" class="form-input" placeholder="your-email@domain.com" value="" />
           </div>
         </div>
       </div>

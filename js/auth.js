@@ -676,12 +676,16 @@ function initSignupForm(form) {
         if (submitText) submitText.textContent = 'Creating account...';
       }
 
+      const githubInput = document.getElementById('signup-github');
+      const githubHandle = githubInput?.value.trim() || '';
+
       // Save initial profile details to localStorage for onboarding hydration
       const initialProfile = {
         fullName,
         username,
         email,
-        dob
+        dob,
+        githubUrl: githubHandle ? (githubHandle.startsWith('http') ? githubHandle : `https://github.com/${githubHandle}`) : ''
       };
       localStorage.setItem('folioryn_user_profile', JSON.stringify(initialProfile));
       localStorage.setItem('profilefolio_user_profile', JSON.stringify(initialProfile));
@@ -691,7 +695,8 @@ function initSignupForm(form) {
         fullName,
         dob,
         securityQuestion,
-        securityAnswer
+        securityAnswer,
+        githubHandle
       });
 
       showAuthAlert('Account created successfully! Preparing your onboarding guide...', 'success');

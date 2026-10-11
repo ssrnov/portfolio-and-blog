@@ -5,6 +5,7 @@
  */
 
 import { getActiveUser, savePublishSettings, getPublishSettings } from './profile-data.js';
+import { initThemeManager } from './theme.js';
 
 // ==============================================================================
 // 1. 6 Fictional Datasets for the 6 Archetypes
@@ -485,6 +486,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 export function initDemoController() {
+  initThemeManager();
+
   const urlParams = new URLSearchParams(window.location.search);
   let requestedTemplate = urlParams.get('template') || 'minimal-professional';
 

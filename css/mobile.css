@@ -712,3 +712,28 @@
 .template-card:active {
   transform: scale(0.98) !important;
 }
+
+/* --------------------------------------------------------------------------
+   Print Stylesheet: Strictly suppress all mobile docks and floating bars
+   -------------------------------------------------------------------------- */
+@media print {
+  .mobile-bottom-nav,
+  .mobile-bottom-tab,
+  .mobile-nav-drawer,
+  .mobile-nav-backdrop,
+  .mobile-toggle-btn,
+  #dashboard-mobile-toggle,
+  #mobile-sidebar-toggle-trigger {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  body {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
+

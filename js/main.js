@@ -8,13 +8,16 @@ import { initBlog } from './blog.js';
 import { initContact } from './contact.js';
 import { initHomepage } from './homepage.js';
 import { getActiveUser, getProfile } from './profile-data.js';
+import { initThemeManager, getTheme, setTheme, cycleTheme } from './theme.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
   initMobileNavigation();
   initMobileBottomNav();
   initScrollAnimations();
+  initInteractive3D();
   initActiveNavLink();
+
 
   // Route Protection for Dashboard
   checkDashboardAuth();
@@ -308,19 +311,10 @@ function initExplore() {
 }
 
 /**
- * Enforces dark-only theme across the entire application
+ * Initializes and coordinates the 3-theme system across the entire application
  */
 function initThemeToggle() {
-  document.documentElement.setAttribute('data-theme', 'dark');
-  localStorage.setItem('theme', 'dark');
-
-  const themeToggleBtn = document.getElementById('theme-toggle');
-  if (themeToggleBtn) {
-    themeToggleBtn.setAttribute('aria-label', 'ProfileFolio dark mode active');
-    themeToggleBtn.setAttribute('title', 'Dark mode enforced');
-    themeToggleBtn.setAttribute('aria-pressed', 'true');
-    themeToggleBtn.style.display = 'none'; // Clean monochrome dark-only architecture
-  }
+  initThemeManager();
 }
 
 /**
@@ -584,5 +578,71 @@ function initPublicNavbarAuth() {
     // Non-blocking
   }
 }
+
+/**
+ * 3D Interactive Perspective Tilt & Glare Engine
+ * Calculates mouse vectors relative to card center, applies buttery-smooth
+ * real 3D transforms (rotateX, rotateY, translateZ) and specular lighting reflections.
+ */
+function initInteractive3D() {
+  if (typeof window === 'undefined') return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const selector = '.interactive-3d-card, .project-card, .blog-card, .template-card, .feature-card, .about-bio-card, .fact-card, .article-portfolio-card, .tool-card, .inbound-msg-card, .curated-profile-card';
+
+  function attachTilt(card) {
+    if (card.__tiltBound) return;
+    card.__tiltBound = true;
+
+    let rafId = null;
+
+    const onPointerMove = (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      if (rect.width === 0 || rect.height === 0) return;
+
+      const normX = (x / rect.width) * 2 - 1; // -1 to 1
+      const normY = (y / rect.height) * 2 - 1; // -1 to 1
+
+      const maxTilt = 8; // degrees
+      const rotX = -normY * maxTilt;
+      const rotY = normX * maxTilt;
+
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        card.style.setProperty('--rot-x', `${rotX.toFixed(2)}deg`);
+        card.style.setProperty('--rot-y', `${rotY.toFixed(2)}deg`);
+        card.style.setProperty('--mouse-x', `${((x / rect.width) * 100).toFixed(1)}%`);
+        card.style.setProperty('--mouse-y', `${((y / rect.height) * 100).toFixed(1)}%`);
+        card.style.setProperty('--glare-opacity', '0.12');
+        card.style.setProperty('--glare-active', '1');
+      });
+    };
+
+    const onPointerLeave = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      card.style.setProperty('--rot-x', '0deg');
+      card.style.setProperty('--rot-y', '0deg');
+      card.style.setProperty('--glare-active', '0');
+    };
+
+    card.addEventListener('pointermove', onPointerMove, { passive: true });
+    card.addEventListener('pointerleave', onPointerLeave, { passive: true });
+  }
+
+  // Bind existing cards on page
+  document.querySelectorAll(selector).forEach(attachTilt);
+
+  // MutationObserver to automatically bind dynamically hydrated cards
+  if (typeof MutationObserver !== 'undefined' && document.body) {
+    const mo = new MutationObserver(() => {
+      document.querySelectorAll(selector).forEach(attachTilt);
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+  }
+}
+
 
 

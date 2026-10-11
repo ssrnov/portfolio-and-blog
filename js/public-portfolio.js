@@ -10,7 +10,8 @@
  */
 
 import { portfolioService, contactService } from './supabase.js';
-import { getUserDataBySlug, getActiveUser, verifyPreviewToken, trackAnalyticsEvent } from './profile-data.js';
+import { getUserDataBySlug, getActiveUser, verifyPreviewToken, trackAnalyticsEvent, getBlogArticles, DEFAULT_BLOG_ARTICLES } from './profile-data.js';
+
 
 document.addEventListener('DOMContentLoaded', async () => {
   const username = extractUsernameSlug();
@@ -107,7 +108,12 @@ function isCurrentSessionOwner(username) {
     const raw = localStorage.getItem('profilefolio_session') || localStorage.getItem('ssrnovx_mock_session');
     if (!raw) return false;
     const user = JSON.parse(raw);
-    return (user.username || '').toLowerCase() === username.toLowerCase();
+    const sessionUser = (user.username || '').toLowerCase();
+    const targetUser = (username || '').toLowerCase();
+    if (sessionUser === targetUser) return true;
+    if ((sessionUser === 'sunny' || sessionUser === 'ssrnov') && (targetUser === 'sunny' || targetUser === 'ssrnov')) return true;
+    if ((user.github_handle || '').toLowerCase() === targetUser) return true;
+    return false;
   } catch (e) {
     return false;
   }
@@ -129,8 +135,9 @@ function extractUsernameSlug() {
   if (params.get('u')) return params.get('u').trim().toLowerCase();
   if (params.get('username')) return params.get('username').trim().toLowerCase();
 
-  // If on /u/sunny specifically, default to sunny
+  // If on /u/sunny or /u/ssrnov specifically, default to matching handle
   if (window.location.pathname.includes('/u/sunny')) return 'sunny';
+  if (window.location.pathname.includes('/u/ssrnov')) return 'ssrnov';
 
   // If user is currently logged in and on /u/, show THEIR portfolio
   const activeUser = getActiveUser();
@@ -394,12 +401,11 @@ function bindPublicContactForm(username, userData) {
     }
 
     try {
-      // 4. Save into recipient portfolio owner's scoped storage
-      const recipientUser = userData?.profile?.username || username;
+      // 4. Save into recipient portfolio owner's scoped storage and dashboard inboxes
+      const recipientUser = (userData?.profile?.username || username || 'sunny').toLowerCase();
       const targetUserId = userData?.profile?.id || (recipientUser === 'sunny' ? 'usr_mock_sunny_9921' : recipientUser);
-      const scopedKey = `profilefolio_user_${targetUserId}_messages`;
+      const isSunnyOrSsrnov = recipientUser === 'sunny' || recipientUser === 'ssrnov' || targetUserId === 'usr_mock_sunny_9921';
 
-      const existingMessages = JSON.parse(localStorage.getItem(scopedKey) || '[]');
       const newMsg = {
         id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
         recipient: recipientUser,
@@ -411,8 +417,30 @@ function bindPublicContactForm(username, userData) {
         delivery_status: 'delivered',
         created_at: new Date().toISOString()
       };
-      existingMessages.unshift(newMsg);
-      localStorage.setItem(scopedKey, JSON.stringify(existingMessages));
+
+      const keysToSave = new Set([
+        `profilefolio_user_${targetUserId}_messages`,
+        `profilefolio_user_${recipientUser}_messages`,
+        'profilefolio_contact_messages'
+      ]);
+
+      if (isSunnyOrSsrnov) {
+        keysToSave.add('profilefolio_user_usr_mock_sunny_9921_messages');
+        keysToSave.add('profilefolio_user_ssrnov_messages');
+        keysToSave.add('profilefolio_user_sunny_messages');
+      }
+
+      // Read, prepend, and persist to all destination inboxes
+      keysToSave.forEach(k => {
+        try {
+          const existing = JSON.parse(localStorage.getItem(k) || '[]');
+          existing.unshift(newMsg);
+          localStorage.setItem(k, JSON.stringify(existing));
+        } catch (e) {
+          localStorage.setItem(k, JSON.stringify([newMsg]));
+        }
+      });
+
 
       // Also submit via Supabase contactService if configured
       try {
@@ -499,14 +527,13 @@ function renderPortfolio(data, username, templateId) {
     });
   }
 
-  const effectiveEmail = profile.email || '';
+  const effectiveEmail = profile.email || profile.contactEmail || '';
   if (effectiveEmail) {
     document.querySelectorAll('[data-builder-target="contact_email"]').forEach((el) => {
       el.setAttribute('href', `mailto:${effectiveEmail}`);
       el.style.display = '';
-      if (el.textContent.includes('Email:')) {
-        el.textContent = `Email: ${effectiveEmail}`;
-      }
+      const textSpan = el.querySelector('span') || el;
+      textSpan.textContent = `Email: ${effectiveEmail}`;
     });
   } else {
     document.querySelectorAll('[data-builder-target="contact_email"]').forEach((el) => {
@@ -530,7 +557,11 @@ function renderPortfolio(data, username, templateId) {
 
   // Render Dynamic Skills
   renderSkillsSection(data.skills, username);
+
+  // Render Published Blog Articles
+  renderArticlesSection(data.articles, username, data.publishSettings);
 }
+
 
 function renderHighlightsBar(data, username) {
   const bar = document.getElementById('hero-highlights-bar');
@@ -870,4 +901,93 @@ function trackPublicPortfolioTelemetry(username, userData) {
     });
   });
 }
+
+function renderArticlesSection(articlesList, username, publishSettings) {
+  const section = document.getElementById('blog');
+  if (!section) return;
+
+  // Handle section visibility toggle from builder publish settings
+  if (publishSettings?.sectionVisibility?.blog === false) {
+    section.style.display = 'none';
+    return;
+  } else {
+    section.style.display = '';
+  }
+
+  const container = document.getElementById('portfolio-articles-container') ||
+                    section.querySelector('.portfolio-articles-grid') ||
+                    section.querySelector('.container > div[style*="grid"]');
+  if (!container) return;
+
+  const isOwner = isCurrentSessionOwner(username);
+  let articles = Array.isArray(articlesList) ? articlesList : [];
+
+  // Fallback to active blog engine articles or DEFAULT_BLOG_ARTICLES if list is empty
+  if (articles.length === 0) {
+    try {
+      const activeArticles = getBlogArticles();
+      if (activeArticles && activeArticles.length > 0) {
+        articles = activeArticles;
+      } else {
+        articles = [...DEFAULT_BLOG_ARTICLES];
+      }
+    } catch (e) {
+      articles = [...DEFAULT_BLOG_ARTICLES];
+    }
+  }
+
+  // Filter published articles (or all if active owner)
+  const displayArticles = articles.filter(a => isOwner || a.isPublished !== false);
+
+  if (displayArticles.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; padding: var(--space-10) var(--space-6); border: 1px dashed var(--border-color); border-radius: var(--radius-md); text-align: center; color: var(--text-muted); background-color: var(--bg-surface);">
+        <p style="margin: 0 0 6px 0; font-weight: 700; font-size: var(--text-base); color: var(--text-primary);">No articles published yet</p>
+        <p style="margin: 0; font-size: var(--text-xs); color: var(--text-secondary);">Articles written in the Folioryn Blog editor will appear here once published.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = displayArticles.map(art => {
+    const title = escapeHtml(art.title || 'Untitled Article');
+    const excerpt = escapeHtml(art.excerpt || art.summary || (art.content ? art.content.slice(0, 140) + '...' : ''));
+    const readingTime = art.readingTime ? `${escapeHtml(String(art.readingTime))} min read` : '4 min read';
+    const dateFormatted = art.publishedAt || art.createdAt ? new Date(art.publishedAt || art.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently published';
+    const slug = art.slug || art.id;
+    const postUrl = `/blog/post.html?slug=${encodeURIComponent(slug)}`;
+    const rawTags = art.tags;
+    const tags = Array.isArray(rawTags) ? rawTags : (typeof rawTags === 'string' ? rawTags.split(',').map(t => t.trim()) : []);
+
+    return `
+      <article class="interactive-3d-card article-portfolio-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; justify-content: space-between; transition: border-color var(--transition-fast), transform var(--transition-fast);">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+            <span>${escapeHtml(dateFormatted)}</span>
+            <span class="badge" style="font-size: 10px;">${escapeHtml(readingTime)}</span>
+          </div>
+          <h3 style="font-size: var(--text-lg); font-weight: 800; color: var(--text-primary); margin: 0 0 var(--space-3) 0; line-height: 1.3;">
+            <a href="${postUrl}" style="color: inherit; text-decoration: none;">${title}</a>
+          </h3>
+          <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0 0 var(--space-4) 0;">
+            ${excerpt}
+          </p>
+          ${tags.length > 0 ? `
+            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--space-4);">
+              ${tags.slice(0, 3).map(t => `<span class="badge" style="font-size: 10px; background: var(--bg-secondary); color: var(--text-muted);">#${escapeHtml(t)}</span>`).join('')}
+            </div>
+          ` : ''}
+        </div>
+        <div style="padding-top: var(--space-4); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+          <a href="${postUrl}" class="btn btn-secondary btn-sm" style="font-size: 11px;">
+            <span>Read Article</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">by @${escapeHtml(username)}</span>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
 

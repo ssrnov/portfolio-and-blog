@@ -92,13 +92,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 5. Bind form input listeners & autosave
   bindInputListeners();
 
-  // 6. Bind Undo / Redo controls and keyboard shortcuts
+  // 6. Bind interactive section accordions
+  bindSectionAccordions();
+
+  // 7. Bind Undo / Redo controls and keyboard shortcuts
   bindHistoryControls();
 
-  // 7. Bind Viewport switcher
+  // 8. Bind Viewport switcher
   bindViewportControls();
 
-  // 8. Bind Publish Live button
+  // 9. Bind Publish Live button
   bindPublishButton();
 
   // 9. Bind Autosave Retry Button
@@ -218,14 +221,43 @@ function renderBuilderProjects() {
   if (!sectionContent || projects.length === 0) return;
 
   sectionContent.innerHTML = projects.slice(0, 4).map(p => `
-    <div style="padding: var(--space-3); border: 1px solid var(--border-color); border-radius: var(--radius-sm); background-color: var(--bg-secondary); margin-bottom: 6px;">
+    <div class="builder-project-card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
         <strong style="font-size: var(--text-xs); color: var(--text-primary);">${escapeHtml(p.title)}</strong>
         <span class="brand-badge">${escapeHtml(p.category || 'Tech')}</span>
       </div>
-      <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">${escapeHtml(p.tags ? p.tags.join(', ') : p.description?.slice(0, 60))}</p>
+      <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.4;">${escapeHtml(p.tags ? p.tags.join(', ') : (p.description ? p.description.slice(0, 70) : ''))}</p>
     </div>
   `).join('');
+}
+
+function bindSectionAccordions() {
+  const sections = document.querySelectorAll('.editor-section');
+  sections.forEach((section) => {
+    const header = section.querySelector('.editor-section-header');
+    if (!header) return;
+
+    header.setAttribute('role', 'button');
+    header.setAttribute('tabindex', '0');
+    header.setAttribute('aria-expanded', 'true');
+
+    const toggle = (e) => {
+      // Don't toggle if user clicked an interactive child (a, button, input)
+      if (e.target.closest('a, button, input, select, textarea')) return;
+      const isCollapsed = section.classList.toggle('is-collapsed');
+      header.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+    };
+
+    header.addEventListener('click', toggle);
+    header.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        if (!e.target.closest('a, button, input, select, textarea')) {
+          e.preventDefault();
+          toggle(e);
+        }
+      }
+    });
+  });
 }
 
 function bindInputListeners() {

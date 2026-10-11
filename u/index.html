@@ -22,7 +22,14 @@
 
   <script>
     (function () {
-      document.documentElement.setAttribute('data-theme', 'dark');
+      try {
+        var saved = localStorage.getItem('folioryn_theme') || localStorage.getItem('theme');
+        var valid = ['dark', 'light', 'night'];
+        var theme = (valid.indexOf(saved) !== -1) ? saved : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
     })();
   </script>
 </head>
@@ -48,9 +55,10 @@
         <a href="#education" class="nav-link">Education</a>
         <a href="#projects" class="nav-link">Projects</a>
         <a href="#skills" class="nav-link">Skills</a>
-        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#blog" class="nav-link">Articles</a>
         <a href="#contact" class="nav-link">Contact</a>
       </nav>
+
 
       <div class="header-actions">
         <!-- Theme Toggle -->
@@ -182,8 +190,27 @@
       </div>
     </section>
 
+    <!-- PUBLISHED ARTICLES & BLOG SECTION -->
+    <section class="section-py" id="blog">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Articles &amp; Writing</span>
+          <h2 class="section-title">Published Technical Articles</h2>
+          <p class="section-subtitle">Systems architecture essays, technical write-ups, and engineering notes.</p>
+        </div>
+
+        <div id="portfolio-articles-container" class="portfolio-articles-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-6);">
+          <div style="grid-column: 1 / -1; padding: var(--space-10) var(--space-6); border: 1px dashed var(--border-color); border-radius: var(--radius-md); text-align: center; color: var(--text-muted); background-color: var(--bg-surface);">
+            <p style="margin: 0 0 6px 0; font-weight: 700; font-size: var(--text-base); color: var(--text-primary);">No articles published yet</p>
+            <p style="margin: 0; font-size: var(--text-xs); color: var(--text-secondary);">Articles written in the Folioryn Blog editor will appear here once published.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- CONTACT -->
     <section class="section-py" id="contact" style="border-bottom: none;">
+
       <div class="container">
         <div style="border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-12) var(--space-8); background-color: var(--bg-surface); text-align: center; max-width: 800px; margin: 0 auto;">
           <span class="section-label" style="text-align: center;">Get In Touch</span>

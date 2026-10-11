@@ -22,8 +22,14 @@
 
   <script>
     (function () {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
+      try {
+        var saved = localStorage.getItem('folioryn_theme') || localStorage.getItem('theme');
+        var valid = ['dark', 'light', 'night'];
+        var theme = (valid.indexOf(saved) !== -1) ? saved : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
       try {
         var raw = localStorage.getItem('profilefolio_session') ||
                   localStorage.getItem('ssrnovx_mock_session') ||
@@ -47,7 +53,7 @@
     <div>
       <div class="sidebar-header" style="padding: var(--space-6) var(--space-6); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
         <a href="/" class="brand-logo" aria-label="Folioryn Home" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
-          <span style="width: 26px; height: 26px; border-radius: var(--radius-sm); background: var(--accent-primary); color: #080909; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px;">F</span>
+          <span style="width: 26px; height: 26px; border-radius: var(--radius-sm); background: var(--accent-primary); color: var(--accent-contrast); display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px;">F</span>
           <span style="font-weight: 800; font-size: 1.15rem; color: var(--text-primary); letter-spacing: -0.02em;">Folioryn</span>
         </a>
       </div>
@@ -132,6 +138,11 @@
       </div>
 
       <div class="topbar-actions" style="display: flex; gap: var(--space-2); align-items: center;">
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme">
+            <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+            <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+            <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </button>
         <button type="button" class="btn btn-primary btn-sm" id="open-add-project-dialog-btn">
           <span>+ Add Custom Project</span>
         </button>

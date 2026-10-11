@@ -12,11 +12,11 @@ export const DEFAULT_PROFILE = {
   headline: "Full-Stack Software Engineer & Systems Builder",
   bio: "Architecting scalable web applications, distributed backend pipelines, and minimalist user interfaces. Passionate about native web standards, clean architecture, and performance engineering.",
   location: "Bangalore, India",
-  email: "sunny@profilefolio.dev",
-  portfolioUrl: "https://profilefolio.dev/u/sunny",
-  githubUrl: "https://github.com/ssrnov",
-  linkedinUrl: "https://linkedin.com/in/ssrnov",
-  twitterUrl: "https://x.com/ssrnov",
+  email: "",
+  portfolioUrl: "https://folioryn.dev/u/sunny",
+  githubUrl: "",
+  linkedinUrl: "",
+  twitterUrl: "",
   availability: "Open to opportunities",
   theme: "dark"
 };
@@ -120,7 +120,7 @@ export const DEFAULT_PROJECTS = [
     description: "Fault-tolerant asynchronous task runner with priority queueing, worker pool concurrency control, and dead-letter retries.",
     category: "Backend",
     tags: ["Redis", "Node.js", "Concurrency"],
-    repo_url: "https://github.com/ssrnov",
+    repo_url: "",
     live_url: "",
     stars_count: 42,
     featured: true
@@ -131,8 +131,8 @@ export const DEFAULT_PROJECTS = [
     description: "Zero-dependency cloud observability visualizer streaming live metrics via WebSockets with canvas charts at 60fps.",
     category: "Web",
     tags: ["JavaScript", "WebSockets", "Canvas"],
-    repo_url: "https://github.com/ssrnov",
-    live_url: "https://ssrnovx.dev",
+    repo_url: "",
+    live_url: "",
     stars_count: 28,
     featured: true
   },
@@ -142,7 +142,7 @@ export const DEFAULT_PROJECTS = [
     description: "End-to-end encrypted secret store executing in-browser via Web Crypto API with AES-256-GCM encryption.",
     category: "Security",
     tags: ["Web Crypto", "AES-256", "Security"],
-    repo_url: "https://github.com/ssrnov",
+    repo_url: "",
     live_url: "",
     stars_count: 19,
     featured: false
@@ -233,16 +233,33 @@ export function getProfile() {
     const scopedKey = `profilefolio_user_${uid}_profile`;
     const scopedRaw = localStorage.getItem(scopedKey);
     if (scopedRaw) {
-      return JSON.parse(scopedRaw);
+      const p = JSON.parse(scopedRaw);
+      if (!p.email && user.email) p.email = user.email;
+      if (!p.githubUrl && user.github_handle) {
+        p.githubUrl = user.github_handle.startsWith('http') ? user.github_handle : `https://github.com/${user.github_handle}`;
+      }
+      return p;
     }
 
-    // 2. If sunny, allow legacy fallbacks
+    // 2. If sunny, allow legacy fallbacks with active user overrides
     if (isSunny) {
       const legacyRaw = localStorage.getItem('profilefolio_profile') || 
                         localStorage.getItem('buildlab_profile') ||
                         localStorage.getItem('profilefolio_user_profile');
-      if (legacyRaw) return JSON.parse(legacyRaw);
-      return { ...DEFAULT_PROFILE };
+      let p = legacyRaw ? JSON.parse(legacyRaw) : { ...DEFAULT_PROFILE };
+      if (user && user.email) {
+        if (!p.email || p.email === 'sunny@profilefolio.dev' || p.email.includes('ssrnov')) {
+          p.email = user.email;
+        }
+      }
+      if (user && user.github_handle) {
+        if (!p.githubUrl || p.githubUrl.includes('ssrnov')) {
+          p.githubUrl = user.github_handle.startsWith('http') ? user.github_handle : `https://github.com/${user.github_handle}`;
+        }
+      } else if (p.githubUrl && p.githubUrl.includes('ssrnov')) {
+        p.githubUrl = '';
+      }
+      return p;
     }
 
     // 3. For any other registered user: NEVER fall back to Sunny's data!
@@ -1482,21 +1499,88 @@ export function getUserClones() {
 // ==========================================
 export function getUserDataBySlug(slug) {
   const cleanSlug = (slug || '').trim().toLowerCase();
-  
-  if (cleanSlug === 'sunny') {
+  if (!cleanSlug) return null;
+
+  // 1. Check if it matches the current active user / profile session
+  try {
+    const activeProfile = getProfile();
+    const activeUser = getActiveUser();
+    const activeUsername = (activeProfile?.username || activeUser?.username || '').trim().toLowerCase();
+    const activeGithub = (activeProfile?.githubUrl ? activeProfile.githubUrl.replace('https://github.com/', '').replace(/\/+$/, '') : (activeUser?.github_handle || '')).trim().toLowerCase();
+
+    const isMatchActive = 
+      (activeUsername && activeUsername === cleanSlug) ||
+      (activeGithub && activeGithub === cleanSlug) ||
+      ((cleanSlug === 'sunny' || cleanSlug === 'ssrnov') && (isDemoSunnySession() || !activeUser || activeUser.id === 'usr_mock_sunny_9921'));
+
+    if (isMatchActive) {
+      const activePublish = getPublishSettings();
+      return {
+        profile: {
+          ...DEFAULT_PROFILE,
+          ...(activeProfile || {}),
+          username: cleanSlug,
+          portfolioUrl: `https://folioryn.dev/u/${cleanSlug}`
+        },
+        education: getEducation(),
+        skills: getSkills(),
+        experiences: getExperiences(),
+        certifications: getCertifications(),
+        projects: getProjects(),
+        articles: getBlogArticles(),
+        publishSettings: {
+          ...DEFAULT_PUBLISH_SETTINGS,
+          ...(activePublish || {}),
+          publicSlug: cleanSlug,
+          isPublished: activePublish.isPublished !== false && activePublish.status !== 'draft' && activePublish.status !== 'unpublished'
+        }
+      };
+    }
+  } catch (e) {
+    console.warn('Active user match notice:', e);
+  }
+
+  // 2. Check flagship/default aliases ('sunny' or 'ssrnov') even without active session
+  if (cleanSlug === 'sunny' || cleanSlug === 'ssrnov') {
+    let savedProfile = null;
+    let savedPublish = null;
+    try {
+      const raw = localStorage.getItem('profilefolio_profile') || 
+                  localStorage.getItem('profilefolio_user_usr_mock_sunny_9921_profile') ||
+                  localStorage.getItem('buildlab_profile');
+      if (raw) savedProfile = JSON.parse(raw);
+    } catch (e) {}
+
+    try {
+      const raw = localStorage.getItem('profilefolio_publish_settings') || 
+                  localStorage.getItem('profilefolio_user_usr_mock_sunny_9921_publish');
+      if (raw) savedPublish = JSON.parse(raw);
+    } catch (e) {}
+
     return {
-      profile: { ...DEFAULT_PROFILE },
+      profile: {
+        ...DEFAULT_PROFILE,
+        ...(savedProfile || {}),
+        username: cleanSlug,
+        portfolioUrl: `https://folioryn.dev/u/${cleanSlug}`
+      },
       education: [...DEFAULT_EDUCATION],
       skills: [...DEFAULT_SKILLS],
       experiences: [...DEFAULT_EXPERIENCES],
       certifications: [...DEFAULT_CERTIFICATIONS],
       projects: [...DEFAULT_PROJECTS],
       articles: [...DEFAULT_BLOG_ARTICLES],
-      publishSettings: { ...DEFAULT_PUBLISH_SETTINGS }
+      publishSettings: {
+        ...DEFAULT_PUBLISH_SETTINGS,
+        ...(savedPublish || {}),
+        status: 'published',
+        isPublished: true,
+        publicSlug: cleanSlug
+      }
     };
   }
 
-  // 1. Check if it's a cloned portfolio bundle
+  // 3. Check if it's a cloned portfolio bundle
   try {
     const rawClone = localStorage.getItem(`profilefolio_clone_${cleanSlug}_bundle`);
     if (rawClone) {
@@ -1509,51 +1593,89 @@ export function getUserDataBySlug(slug) {
         certifications: bundle.certifications || [],
         projects: bundle.projects || [],
         articles: bundle.articles || [],
-        publishSettings: bundle.publishSettings || { status: 'draft', isPublished: false, templateId: "minimal-professional", publicSlug: cleanSlug }
+        publishSettings: bundle.publishSettings || { status: 'published', isPublished: true, templateId: "minimal-professional", publicSlug: cleanSlug }
       };
     }
   } catch (e) {}
 
-  // 2. Lookup in local users registry
+  // 4. Lookup in local users registry
   try {
     const rawUsers = localStorage.getItem('profilefolio_users');
     const users = rawUsers ? JSON.parse(rawUsers) : [];
-    const matched = users.find(u => (u.username || '').toLowerCase() === cleanSlug);
-    if (!matched) return null;
+    const matched = users.find(u => 
+      (u.username || '').toLowerCase() === cleanSlug || 
+      (u.github_handle || '').toLowerCase() === cleanSlug ||
+      (u.slug || '').toLowerCase() === cleanSlug
+    );
+    if (matched) {
+      const uid = matched.id;
+      const rawProfile = localStorage.getItem(`profilefolio_user_${uid}_profile`);
+      const rawEdu = localStorage.getItem(`profilefolio_user_${uid}_education`) || localStorage.getItem(`profilefolio_education_${uid}`);
+      const rawSkills = localStorage.getItem(`profilefolio_user_${uid}_skills`) || localStorage.getItem(`profilefolio_skills_${uid}`);
+      const rawExp = localStorage.getItem(`profilefolio_user_${uid}_experiences`) || localStorage.getItem(`profilefolio_experiences_${uid}`);
+      const rawCert = localStorage.getItem(`profilefolio_user_${uid}_certifications`) || localStorage.getItem(`profilefolio_certifications_${uid}`);
+      const rawProj = localStorage.getItem(`profilefolio_user_${uid}_projects`) || localStorage.getItem(`profilefolio_projects_${uid}`);
+      const rawPub = localStorage.getItem(`profilefolio_user_${uid}_publish`) || localStorage.getItem(`profilefolio_publish_settings_${uid}`);
+      const rawArticles = localStorage.getItem(`profilefolio_user_${uid}_articles`);
 
-    const uid = matched.id;
-    const rawProfile = localStorage.getItem(`profilefolio_user_${uid}_profile`);
-    const rawEdu = localStorage.getItem(`profilefolio_user_${uid}_education`) || localStorage.getItem(`profilefolio_education_${uid}`);
-    const rawSkills = localStorage.getItem(`profilefolio_user_${uid}_skills`) || localStorage.getItem(`profilefolio_skills_${uid}`);
-    const rawExp = localStorage.getItem(`profilefolio_user_${uid}_experiences`) || localStorage.getItem(`profilefolio_experiences_${uid}`);
-    const rawCert = localStorage.getItem(`profilefolio_user_${uid}_certifications`) || localStorage.getItem(`profilefolio_certifications_${uid}`);
-    const rawProj = localStorage.getItem(`profilefolio_user_${uid}_projects`) || localStorage.getItem(`profilefolio_projects_${uid}`);
-    const rawPub = localStorage.getItem(`profilefolio_user_${uid}_publish`) || localStorage.getItem(`profilefolio_publish_settings_${uid}`);
-    const rawArticles = localStorage.getItem(`profilefolio_user_${uid}_articles`);
+      return {
+        profile: rawProfile ? JSON.parse(rawProfile) : {
+          fullName: matched.display_name || matched.username,
+          username: matched.username,
+          headline: matched.headline || "Software Engineer & Builder",
+          bio: matched.bio || "Building software applications with modern web standards.",
+          location: matched.location || "",
+          email: matched.email || "",
+          phone: matched.phone || "",
+          portfolioUrl: `https://folioryn.dev/u/${matched.username}`,
+          githubUrl: matched.github_handle ? (matched.github_handle.startsWith('http') ? matched.github_handle : `https://github.com/${matched.github_handle}`) : ""
+        },
+        education: rawEdu ? JSON.parse(rawEdu) : [],
+        skills: rawSkills ? JSON.parse(rawSkills) : [],
+        experiences: rawExp ? JSON.parse(rawExp) : [],
+        certifications: rawCert ? JSON.parse(rawCert) : [],
+        projects: rawProj ? JSON.parse(rawProj) : [],
+        articles: rawArticles ? JSON.parse(rawArticles) : [],
+        publishSettings: rawPub ? JSON.parse(rawPub) : { status: 'published', isPublished: true, templateId: "minimal-professional", publicSlug: matched.username }
+      };
+    }
+  } catch (e) {}
 
-    return {
-      profile: rawProfile ? JSON.parse(rawProfile) : {
-        fullName: matched.display_name || matched.username,
-        username: matched.username,
-        headline: matched.headline || "Software Engineer & Builder",
-        bio: matched.bio || "Building software applications with modern web standards.",
-        location: matched.location || "",
-        email: matched.email || "",
-        phone: matched.phone || "",
-        portfolioUrl: `https://folioryn.dev/u/${matched.username}`,
-        githubUrl: matched.github_handle ? (matched.github_handle.startsWith('http') ? matched.github_handle : `https://github.com/${matched.github_handle}`) : ""
-      },
-      education: rawEdu ? JSON.parse(rawEdu) : [],
-      skills: rawSkills ? JSON.parse(rawSkills) : [],
-      experiences: rawExp ? JSON.parse(rawExp) : [],
-      certifications: rawCert ? JSON.parse(rawCert) : [],
-      projects: rawProj ? JSON.parse(rawProj) : [],
-      articles: rawArticles ? JSON.parse(rawArticles) : [],
-      publishSettings: rawPub ? JSON.parse(rawPub) : { status: 'published', isPublished: true, templateId: "minimal-professional", publicSlug: matched.username }
-    };
-  } catch (e) {
-    return null;
-  }
+  // 5. Scan user-scoped profiles in localStorage
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('profilefolio_user_') && key.endsWith('_profile')) {
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          const p = JSON.parse(raw);
+          if ((p.username || '').toLowerCase() === cleanSlug) {
+            const uid = key.replace('profilefolio_user_', '').replace('_profile', '');
+            const rawEdu = localStorage.getItem(`profilefolio_user_${uid}_education`);
+            const rawSkills = localStorage.getItem(`profilefolio_user_${uid}_skills`);
+            const rawExp = localStorage.getItem(`profilefolio_user_${uid}_experiences`);
+            const rawCert = localStorage.getItem(`profilefolio_user_${uid}_certifications`);
+            const rawProj = localStorage.getItem(`profilefolio_user_${uid}_projects`);
+            const rawPub = localStorage.getItem(`profilefolio_user_${uid}_publish`);
+            const rawArticles = localStorage.getItem(`profilefolio_user_${uid}_articles`);
+
+            return {
+              profile: p,
+              education: rawEdu ? JSON.parse(rawEdu) : [],
+              skills: rawSkills ? JSON.parse(rawSkills) : [],
+              experiences: rawExp ? JSON.parse(rawExp) : [],
+              certifications: rawCert ? JSON.parse(rawCert) : [],
+              projects: rawProj ? JSON.parse(rawProj) : [],
+              articles: rawArticles ? JSON.parse(rawArticles) : [],
+              publishSettings: rawPub ? JSON.parse(rawPub) : { status: 'published', isPublished: true, templateId: "minimal-professional", publicSlug: p.username }
+            };
+          }
+        }
+      }
+    }
+  } catch (e) {}
+
+  return null;
 }
 
 // ==========================================
@@ -1806,31 +1928,74 @@ export function rollbackLastImport() {
 // ==========================================
 export function getContactMessages() {
   const user = getActiveUser();
-  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
-  const scopedKey = `profilefolio_user_${uid}_messages`;
-  try {
-    const raw = localStorage.getItem(scopedKey);
-    if (raw) return JSON.parse(raw);
+  const username = (user?.username || '').toLowerCase();
+  const uid = user?.id || (username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
+  
+  const allMessagesMap = new Map();
 
-    // Fallback for Sunny
-    if (user?.username === 'sunny' || uid === 'usr_mock_sunny_9921') {
-      const legacyRaw = localStorage.getItem('profilefolio_contact_messages');
-      if (legacyRaw) return JSON.parse(legacyRaw);
-    }
-    return [];
-  } catch (e) {
-    return [];
+  const loadFromKey = (k) => {
+    try {
+      const raw = localStorage.getItem(k);
+      if (raw) {
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr)) {
+          arr.forEach(msg => {
+            if (msg && msg.id && !allMessagesMap.has(msg.id)) {
+              allMessagesMap.set(msg.id, msg);
+            }
+          });
+        }
+      }
+    } catch (e) {}
+  };
+
+  // Primary scoped key by user ID
+  loadFromKey(`profilefolio_user_${uid}_messages`);
+  
+  // Scoped by username handle
+  if (username) {
+    loadFromKey(`profilefolio_user_${username}_messages`);
   }
+
+  // Cross-user fallbacks for Sunny / SSRNov flagship aliases and global inbox
+  if (username === 'sunny' || username === 'ssrnov' || uid === 'usr_mock_sunny_9921' || !user) {
+    loadFromKey('profilefolio_user_usr_mock_sunny_9921_messages');
+    loadFromKey('profilefolio_user_ssrnov_messages');
+    loadFromKey('profilefolio_user_sunny_messages');
+    loadFromKey('profilefolio_contact_messages');
+  }
+
+  const result = Array.from(allMessagesMap.values());
+  // Sort descending by creation timestamp (newest inquiries first)
+  result.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+  return result;
 }
 
 export function saveContactMessages(messages) {
   const user = getActiveUser();
-  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
-  const scopedKey = `profilefolio_user_${uid}_messages`;
-  localStorage.setItem(scopedKey, JSON.stringify(messages));
-  if (user?.username === 'sunny' || uid === 'usr_mock_sunny_9921') {
-    localStorage.setItem('profilefolio_contact_messages', JSON.stringify(messages));
+  const username = (user?.username || '').toLowerCase();
+  const uid = user?.id || (username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
+  const serialized = JSON.stringify(messages);
+
+  const keysToUpdate = new Set([
+    `profilefolio_user_${uid}_messages`
+  ]);
+
+  if (username) {
+    keysToUpdate.add(`profilefolio_user_${username}_messages`);
   }
+
+  if (username === 'sunny' || username === 'ssrnov' || uid === 'usr_mock_sunny_9921' || !user) {
+    keysToUpdate.add('profilefolio_user_usr_mock_sunny_9921_messages');
+    keysToUpdate.add('profilefolio_user_ssrnov_messages');
+    keysToUpdate.add('profilefolio_user_sunny_messages');
+    keysToUpdate.add('profilefolio_contact_messages');
+  }
+
+  keysToUpdate.forEach(k => {
+    localStorage.setItem(k, serialized);
+  });
+
   return messages;
 }
 
@@ -1853,5 +2018,6 @@ export function clearAllContactMessages() {
   saveContactMessages([]);
   return [];
 }
+
 
 

@@ -411,6 +411,8 @@
   display: flex;
   flex: 1;
   overflow: hidden;
+  min-height: 0;
+  height: calc(100vh - 3.75rem);
 }
 
 /* Left Editor Pane */
@@ -419,11 +421,47 @@
   background-color: var(--bg-surface);
   border-right: 1px solid var(--border-color);
   overflow-y: auto;
+  overflow-x: hidden;
   padding: var(--space-6);
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-5);
   flex-shrink: 0;
+  height: 100%;
+}
+
+.builder-editor-pane > * {
+  flex-shrink: 0;
+}
+
+/* Smooth custom scrollbars for builder pane */
+.builder-editor-pane::-webkit-scrollbar {
+  width: 6px;
+}
+.builder-editor-pane::-webkit-scrollbar-track {
+  background: transparent;
+}
+.builder-editor-pane::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-full);
+}
+.builder-editor-pane::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.builder-template-box {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  transition: border-color var(--transition-fast);
+}
+
+.builder-template-box:hover {
+  border-color: var(--border-strong);
 }
 
 .editor-section {
@@ -431,6 +469,12 @@
   border-radius: var(--radius-md);
   background-color: var(--bg-primary);
   overflow: hidden;
+  flex-shrink: 0;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.editor-section:hover {
+  border-color: var(--border-strong);
 }
 
 .editor-section-header {
@@ -441,6 +485,17 @@
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  user-select: none;
+  transition: background-color var(--transition-fast);
+}
+
+.editor-section-header:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.editor-section-header:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
 }
 
 .editor-section-title {
@@ -452,11 +507,50 @@
   gap: var(--space-2);
 }
 
+.editor-section-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.editor-section-chevron {
+  width: 14px;
+  height: 14px;
+  color: var(--text-muted);
+  transition: transform var(--transition-fast), color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.editor-section-header:hover .editor-section-chevron {
+  color: var(--text-primary);
+}
+
+.editor-section.is-collapsed .editor-section-chevron {
+  transform: rotate(-90deg);
+}
+
+.editor-section.is-collapsed .editor-section-content {
+  display: none;
+}
+
 .editor-section-content {
   padding: var(--space-5);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  background-color: var(--bg-primary);
+}
+
+.builder-project-card {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-secondary);
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.builder-project-card:hover {
+  border-color: var(--border-strong);
 }
 
 /* Right Live Preview Canvas */
@@ -746,26 +840,47 @@
 @media print {
   @page {
     size: A4 portrait;
-    margin: 10mm 12mm;
+    margin: 8mm 10mm;
   }
 
   body, html {
     background-color: #ffffff !important;
     color: #000000 !important;
     padding: 0 !important;
+    padding-bottom: 0 !important;
     margin: 0 !important;
+    margin-bottom: 0 !important;
   }
 
+  /* Strictly hide all non-printable shells, sidebars, mobile bottom nav dock, and floating elements */
   .dashboard-sidebar,
   .dashboard-topbar,
   .resume-builder-shell > div:first-child,
   .site-header,
   .site-footer,
   #theme-toggle,
+  .theme-toggle-btn,
   .btn,
-  header.builder-header {
+  header.builder-header,
+  .mobile-bottom-nav,
+  .mobile-bottom-tab,
+  .mobile-nav-backdrop,
+  .mobile-nav-drawer,
+  .mobile-toggle-btn,
+  #dashboard-mobile-toggle,
+  #mobile-sidebar-toggle-trigger,
+  .dashboard-sidebar-backdrop,
+  #toast-container,
+  .toast-notification,
+  .floating-orb-3d {
     display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
+
 
   .dashboard-shell,
   .dashboard-main,
@@ -801,6 +916,25 @@
     word-break: break-word !important;
   }
 }
+
+/* Hard guard for PDF export button trigger */
+body.is-printing-pdf .mobile-bottom-nav,
+body.is-printing-pdf .dashboard-sidebar,
+body.is-printing-pdf .dashboard-topbar,
+body.is-printing-pdf .resume-builder-shell > div:first-child,
+body.is-printing-pdf #mobile-sidebar-toggle-trigger,
+body.is-printing-pdf .dashboard-sidebar-backdrop {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  opacity: 0 !important;
+}
+
+body.is-printing-pdf {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
 
 /* --------------------------------------------------------------------------
    Split Two-Column Auth Layout (Folioryn Signup)

@@ -156,14 +156,24 @@ test('Resume PDF: js/dashboard-resume.js renders semantic clickable <a> tags for
 });
 
 // --------------------------------------------------------------------------
-// TEST 9: Print Stylesheet Links Underlined and Wrapped
+// TEST 9: Print Stylesheet Links Underlined and Wrapped & Docks Strictly Suppressed
 // --------------------------------------------------------------------------
 test('Print CSS: css/dashboard.css formats resume links with underlines and text wrapping', () => {
   const dashboardCss = fs.readFileSync(path.join(ROOT, 'css/dashboard.css'), 'utf8');
+  const mobileCss = fs.readFileSync(path.join(ROOT, 'css/mobile.css'), 'utf8');
+  const resumeJs = fs.readFileSync(path.join(ROOT, 'js/dashboard-resume.js'), 'utf8');
+
   assert.ok(dashboardCss.includes('.a4-preview-canvas a'), 'Must style .a4-preview-canvas a');
   assert.ok(dashboardCss.includes('text-decoration: underline !important;'), 'Must underline links on print');
   assert.ok(dashboardCss.includes('overflow-wrap: anywhere !important;'), 'Must wrap links on print');
+
+  // Verify suppression of mobile bottom navigation dock in print styles
+  assert.ok(dashboardCss.includes('.mobile-bottom-nav'), 'dashboard.css must hide .mobile-bottom-nav in print styles');
+  assert.ok(mobileCss.includes('.mobile-bottom-nav'), 'mobile.css must hide .mobile-bottom-nav in @media print');
+  assert.ok(resumeJs.includes('triggerCleanPdfPrint'), 'dashboard-resume.js must implement clean PDF print trigger');
+  assert.ok(resumeJs.includes("bottomNav.style.setProperty('display', 'none'"), 'dashboard-resume.js must hide mobile bottom dock before print');
 });
+
 
 // --------------------------------------------------------------------------
 // TEST 10: Public Portfolio Slug Lookup and Gating
@@ -616,6 +626,179 @@ test('Feature: Supabase Database Migration 003 & Security (analytics_events sche
   assert.ok(schemaSql.includes('CREATE POLICY "Owners can view their portfolio analytics"'), 'supabase/schema.sql must include owner RLS policy');
 });
 
+// --------------------------------------------------------------------------
+// TEST 31: Portfolio Builder — Editor Pane Layout & Field Visibility
+// --------------------------------------------------------------------------
+test('Portfolio Builder: Editor Pane flex-shrink prevention, all 4 sections & fields visibility, and interactive accordions', () => {
+  const dashCss = fs.readFileSync(path.join(ROOT, 'css/dashboard.css'), 'utf8');
+  const builderHtml = fs.readFileSync(path.join(ROOT, 'dashboard/builder/index.html'), 'utf8');
+  const builderJs = fs.readFileSync(path.join(ROOT, 'js/builder.js'), 'utf8');
+
+  // Verify CSS fixes flex-shrink bug and sets smooth scroll
+  assert.ok(dashCss.includes('.builder-editor-pane > *'), 'css/dashboard.css must target direct children of .builder-editor-pane');
+  assert.ok(dashCss.includes('flex-shrink: 0'), 'css/dashboard.css must prevent flex-shrink squishing');
+  assert.ok(dashCss.includes('overflow-y: auto'), 'css/dashboard.css must enable vertical scrolling');
+  assert.ok(dashCss.includes('.editor-section.is-collapsed'), 'css/dashboard.css must support collapsible accordion states');
+
+  // Verify all fields are present in HTML
+  assert.ok(builderHtml.includes('id="template-select"'), 'Template selector must exist');
+  assert.ok(builderHtml.includes('id="input-display-name"'), 'Full Name input must exist');
+  assert.ok(builderHtml.includes('id="input-headline"'), 'Professional Headline input must exist');
+  assert.ok(builderHtml.includes('id="input-bio"'), 'Bio Summary textarea must exist');
+  assert.ok(builderHtml.includes('id="input-location"'), 'Location input must exist');
+  assert.ok(builderHtml.includes('id="input-skills-frontend"'), 'Frontend Engineering skills input must exist');
+  assert.ok(builderHtml.includes('id="input-skills-backend"'), 'Backend & Systems skills input must exist');
+  assert.ok(builderHtml.includes('id="input-github-url"'), 'GitHub Profile URL input must exist');
+  assert.ok(builderHtml.includes('id="input-contact-email"'), 'Public Inquiries Email input must exist');
+  assert.ok(builderHtml.includes('builder-project-card'), 'Project items must use .builder-project-card');
+
+  // Verify JS binds accordions and preserves event propagation
+  assert.ok(builderJs.includes('bindSectionAccordions'), 'builder.js must define bindSectionAccordions');
+  assert.ok(builderJs.includes("section.classList.toggle('is-collapsed')"), 'builder.js must toggle .is-collapsed state');
+});
+
+// --------------------------------------------------------------------------
+// TEST 32: Public Portfolio — /u/ssrnov & Active Session Dynamic Resolution
+// --------------------------------------------------------------------------
+test('Public Portfolio: /u/ssrnov and active session dynamic resolution without 404', () => {
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  const pubJs = fs.readFileSync(path.join(ROOT, 'js/public-portfolio.js'), 'utf8');
+  const supabaseJs = fs.readFileSync(path.join(ROOT, 'js/supabase.js'), 'utf8');
+
+  // Verify profile-data.js checks active user and resolves ssrnov alias
+  assert.ok(profileDataJs.includes("cleanSlug === 'sunny' || cleanSlug === 'ssrnov'"), 'profile-data.js must resolve ssrnov and sunny aliases');
+  assert.ok(profileDataJs.includes('isMatchActive'), 'profile-data.js must check active profile session match');
+
+  // Verify public-portfolio.js owner matching recognizes ssrnov
+  assert.ok(pubJs.includes("targetUser === 'sunny' || targetUser === 'ssrnov'"), 'public-portfolio.js must recognize ssrnov session ownership');
+
+  // Verify supabase.js implements getProfileByUsername without throwing TypeError
+  assert.ok(supabaseJs.includes('getProfileByUsername(username)'), 'supabase.js must define getProfileByUsername');
+  assert.ok(supabaseJs.includes("clean === 'sunny' || clean === 'ssrnov'"), 'supabase.js must handle sunny and ssrnov in getProfileByUsername');
+});
+
+// --------------------------------------------------------------------------
+// TEST 33: Inbound Contact Messages Delivery & Dashboard Inbox
+// --------------------------------------------------------------------------
+test('Feature: Inbound Contact Messages Delivery & Dashboard Inbox (multi-key sync, read status, live storage)', () => {
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  const pubJs = fs.readFileSync(path.join(ROOT, 'js/public-portfolio.js'), 'utf8');
+  const dashHtml = fs.readFileSync(path.join(ROOT, 'dashboard/index.html'), 'utf8');
+  const dashJs = fs.readFileSync(path.join(ROOT, 'js/dashboard.js'), 'utf8');
+
+  // Verify dashboard HTML contains inbound messages section & list
+  assert.ok(dashHtml.includes('id="dashboard-inbound-messages-section"'), 'dashboard/index.html must have inbound messages section');
+  assert.ok(dashHtml.includes('id="dashboard-inbound-messages-list"'), 'dashboard/index.html must have inbound messages list container');
+  assert.ok(dashHtml.includes('id="dashboard-inbound-unread-badge"'), 'dashboard/index.html must have unread message count badge');
+  assert.ok(dashHtml.includes('id="dashboard-refresh-messages-btn"'), 'dashboard/index.html must have refresh messages button');
+
+  // Verify public contact form persists across inboxes
+  assert.ok(pubJs.includes('keysToSave.add'), 'public-portfolio.js must save submitted messages into recipient inboxes');
+  assert.ok(pubJs.includes('profilefolio_contact_messages'), 'public-portfolio.js must update global fallback inbox');
+
+  // Verify profile-data.js deduplication and sorting
+  assert.ok(profileDataJs.includes('allMessagesMap'), 'profile-data.js must deduplicate messages by ID');
+  assert.ok(profileDataJs.includes('b.created_at'), 'profile-data.js must sort messages descending by creation timestamp');
+
+  // Verify dashboard.js populates inbound messages and handles live storage sync
+  assert.ok(dashJs.includes('populateInboundMessages'), 'dashboard.js must define populateInboundMessages');
+  assert.ok(dashJs.includes('setupInboundMessages'), 'dashboard.js must define setupInboundMessages');
+  assert.ok(dashJs.includes("window.addEventListener('storage'"), 'dashboard.js must listen for real-time storage events');
+});
+
+// --------------------------------------------------------------------------
+// TEST 34: Public Portfolio Blog Articles Section
+// --------------------------------------------------------------------------
+test('Feature: Public Portfolio Blog Articles Section (desktop nav, cards grid, reading time, tags)', () => {
+  const uHtml = fs.readFileSync(path.join(ROOT, 'u/index.html'), 'utf8');
+  const sunnyHtml = fs.readFileSync(path.join(ROOT, 'u/sunny/index.html'), 'utf8');
+  const pubJs = fs.readFileSync(path.join(ROOT, 'js/public-portfolio.js'), 'utf8');
+
+  // Check section and containers in u/index.html and u/sunny/index.html
+  assert.ok(uHtml.includes('id="blog"'), 'u/index.html must contain #blog section');
+  assert.ok(uHtml.includes('id="portfolio-articles-container"'), 'u/index.html must contain #portfolio-articles-container');
+  assert.ok(uHtml.includes('href="#blog"'), 'u/index.html must link to #blog in navigation');
+
+  assert.ok(sunnyHtml.includes('id="blog"'), 'u/sunny/index.html must contain #blog section');
+  assert.ok(sunnyHtml.includes('id="portfolio-articles-container"'), 'u/sunny/index.html must contain #portfolio-articles-container');
+  assert.ok(sunnyHtml.includes('href="#blog"'), 'u/sunny/index.html must link to #blog in navigation');
+
+  // Check JS rendering logic
+  assert.ok(pubJs.includes('renderArticlesSection'), 'public-portfolio.js must define renderArticlesSection');
+  assert.ok(pubJs.includes('article-portfolio-card'), 'public-portfolio.js must style article cards');
+  assert.ok(pubJs.includes('readingTime'), 'public-portfolio.js must display reading time');
+});
+
+// --------------------------------------------------------------------------
+// TEST 35: 3D Perspective Tilt, Specular Lighting & Animations Across Pages
+// --------------------------------------------------------------------------
+test('Feature: 3D Perspective Tilt, Specular Lighting & Animations Across Pages', () => {
+  const compCss = fs.readFileSync(path.join(ROOT, 'css/components.css'), 'utf8');
+  const mainJs = fs.readFileSync(path.join(ROOT, 'js/main.js'), 'utf8');
+
+  // Check 3D CSS transforms and variables
+  assert.ok(compCss.includes('transform-style: preserve-3d'), 'components.css must define preserve-3d transform style');
+  assert.ok(compCss.includes('perspective(var(--perspective-default))'), 'components.css must apply 3D perspective to interactive cards');
+  assert.ok(compCss.includes('rotateX(var(--rot-x'), 'components.css must support dynamic rotateX');
+  assert.ok(compCss.includes('rotateY(var(--rot-y'), 'components.css must support dynamic rotateY');
+  assert.ok(compCss.includes('translateZ(8px)'), 'components.css must lift cards on Z-axis');
+  assert.ok(compCss.includes('radial-gradient'), 'components.css must implement specular glare highlight');
+  assert.ok(compCss.includes('.floating-orb-3d'), 'components.css must define ambient 3D floating orbs');
+  assert.ok(compCss.includes('prefers-reduced-motion: reduce'), 'components.css must include reduced-motion accessibility guard');
+
+  // Check JS 3D tilt engine
+  assert.ok(mainJs.includes('initInteractive3D'), 'main.js must define and call initInteractive3D');
+  assert.ok(mainJs.includes('--rot-x'), 'main.js must calculate and set --rot-x');
+  assert.ok(mainJs.includes('--rot-y'), 'main.js must calculate and set --rot-y');
+  assert.ok(mainJs.includes('pointermove'), 'main.js must track pointer position for 3D perspective');
+});
+
+// --------------------------------------------------------------------------
+// TEST 36: Dynamic User Identity & Credential Decoupling
+// --------------------------------------------------------------------------
+test('User Identity Decoupling: Dynamic contact email and credentials without hardcoded creator defaults', () => {
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  const contactHtml = fs.readFileSync(path.join(ROOT, 'contact/index.html'), 'utf8');
+  const contactJs = fs.readFileSync(path.join(ROOT, 'js/contact.js'), 'utf8');
+  const builderHtml = fs.readFileSync(path.join(ROOT, 'dashboard/builder/index.html'), 'utf8');
+  const resumeHtml = fs.readFileSync(path.join(ROOT, 'dashboard/resume/index.html'), 'utf8');
+  const sunnyHtml = fs.readFileSync(path.join(ROOT, 'u/sunny/index.html'), 'utf8');
+  const signupHtml = fs.readFileSync(path.join(ROOT, 'signup/index.html'), 'utf8');
+  const supabaseJs = fs.readFileSync(path.join(ROOT, 'js/supabase.js'), 'utf8');
+
+  // 1. DEFAULT_PROFILE must not contain hardcoded personal contact info
+  assert.ok(profileDataJs.includes('email: ""'), 'DEFAULT_PROFILE must have blank email default');
+  assert.ok(profileDataJs.includes('githubUrl: ""'), 'DEFAULT_PROFILE must have blank githubUrl default');
+  assert.ok(!profileDataJs.includes('email: "sunny@profilefolio.dev"'), 'DEFAULT_PROFILE must not force sunny@profilefolio.dev');
+  assert.ok(!profileDataJs.includes('githubUrl: "https://github.com/ssrnov"'), 'DEFAULT_PROFILE must not force github.com/ssrnov');
+
+  // 2. contact/index.html must not hardcode personal emails
+  assert.ok(!contactHtml.includes('mailto:contact@ssrnovx.dev'), 'contact/index.html must not hardcode contact@ssrnovx.dev');
+  assert.ok(!contactHtml.includes('github.com/ssrnov'), 'contact/index.html must not hardcode github.com/ssrnov');
+  assert.ok(contactHtml.includes('id="contact-email-link"'), 'contact/index.html must have dynamic email link ID');
+
+  // 3. dashboard/builder/index.html must not prefill ssrnov credentials
+  assert.ok(!builderHtml.includes('value="https://github.com/ssrnov"'), 'builder must not prefill ssrnov github URL');
+  assert.ok(!builderHtml.includes('value="contact@ssrnovx.dev"'), 'builder must not prefill contact@ssrnovx.dev');
+
+  // 4. dashboard/resume/index.html must not prefill contact@ssrnovx.dev
+  assert.ok(!resumeHtml.includes('value="contact@ssrnovx.dev"'), 'resume must not prefill contact@ssrnovx.dev');
+
+  // 5. u/sunny/index.html must not hardcode contact@ssrnovx.dev or ssrnov github
+  assert.ok(!sunnyHtml.includes('mailto:contact@ssrnovx.dev'), 'public portfolio must not hardcode contact@ssrnovx.dev');
+  assert.ok(!sunnyHtml.includes('https://github.com/ssrnov'), 'public portfolio must not hardcode https://github.com/ssrnov');
+
+  // 6. signup/index.html must prompt for user credentials
+  assert.ok(signupHtml.includes('id="signup-github"'), 'signup form must include GitHub username prompt');
+
+  // 7. js/contact.js must dynamically hydrate profile and active user
+  assert.ok(contactJs.includes('getProfile') && contactJs.includes('getActiveUser'), 'contact.js must import getProfile and getActiveUser');
+  assert.ok(contactJs.includes('contact-email-link'), 'contact.js must dynamically set contact-email-link');
+
+  // 8. MOCK_USER_PROFILE must have blank social handles
+  assert.ok(supabaseJs.includes("github_handle: ''"), 'MOCK_USER_PROFILE must have empty github_handle default');
+});
+
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL REGRESSION TESTS PASSED SUCCESSFULLY! ✓');
@@ -624,6 +807,7 @@ if (passed === total) {
   console.error(`FAILED: ${total - passed} tests failed.`);
   process.exit(1);
 }
+
 
 
 

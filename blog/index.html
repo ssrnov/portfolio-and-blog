@@ -11,7 +11,7 @@
 
   <!-- Open Graph -->
   <meta property="og:type" content="blog" />
-  <meta property="og:url" content="https://github.com/ssrnov/portfolio-and-blog" />
+  <meta property="og:url" content="https://folioryn.dev/blog/" />
   <meta property="og:title" content="Engineering Blog | Folioryn" />
   <meta property="og:description" content="Technical articles, architectural teardowns, and practical guides on web performance and distributed systems." />
 
@@ -31,7 +31,14 @@
   <!-- Early Theme Init -->
   <script>
     (function () {
-      document.documentElement.setAttribute('data-theme', 'dark');
+      try {
+        var saved = localStorage.getItem('folioryn_theme') || localStorage.getItem('theme');
+        var valid = ['dark', 'light', 'night'];
+        var theme = (valid.indexOf(saved) !== -1) ? saved : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
     })();
   </script>
 </head>
@@ -43,7 +50,7 @@
   <header class="site-header" role="banner">
     <div class="container nav-container">
       <a href="/" class="brand-logo" aria-label="Folioryn Home" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
-        <span style="width: 28px; height: 28px; border-radius: var(--radius-sm); background: var(--accent-primary); color: #080909; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px;">F</span>
+        <span style="width: 28px; height: 28px; border-radius: var(--radius-sm); background: var(--accent-primary); color: var(--accent-contrast); display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px;">F</span>
         <span style="font-weight: 800; font-size: 1.25rem; color: var(--text-primary); letter-spacing: -0.02em;">Folioryn</span>
       </a>
 
@@ -60,6 +67,11 @@
         </nav>
 
         <div style="display: flex; align-items: center; gap: var(--space-3);">
+          <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme">
+            <svg class="icon-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+            <svg class="icon-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+            <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </button>
           <a href="/login/" class="btn btn-secondary btn-sm">Sign In</a>
           <a href="/signup/" class="btn btn-primary btn-sm">Get Started</a>
 
@@ -164,7 +176,7 @@
         <!-- Brand Summary -->
         <div style="grid-column: span 1.5;">
           <a href="/" class="brand-logo" style="margin-bottom: var(--space-3); display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
-            <span style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--accent-primary); color: #080909; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">F</span>
+            <span style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--accent-primary); color: var(--accent-contrast); display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">F</span>
             <span style="font-weight: 800; font-size: 1.15rem; color: var(--text-primary);">Folioryn</span>
           </a>
           <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); max-width: 280px; margin-bottom: var(--space-3);">

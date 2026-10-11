@@ -34,6 +34,7 @@ import {
   markContactMessageRead,
   clearAllContactMessages
 } from './profile-data.js';
+import { renderThemeSettingsSelector } from './theme.js';
 
 let pendingImportBundle = null;
 
@@ -59,7 +60,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const profile = getProfile();
   const publishSettings = getPublishSettings();
 
-  // 1. Hydrate Long-Form Profile Form Fields
+  // 1. Hydrate Theme Selector (3 Complete Themes)
+  renderThemeSettingsSelector('theme-selector-container');
+
+  // 2. Hydrate Long-Form Profile Form Fields
   hydrateProfileForm(profile, activeUser);
 
   // 2. Setup Publishing Controls & Private Preview Token
