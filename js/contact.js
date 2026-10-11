@@ -1,9 +1,11 @@
 /**
  * ProfileFolio — Contact Form Controller
- * Client-side validation, accessible feedback states, and message persistence.
+ * Client-side validation, accessible feedback states, dynamic user identity hydration,
+ * and message persistence to the recipient's dashboard inbox.
  */
 
 import { contactService } from './supabase.js';
+import { getProfile, getActiveUser, getUserDataBySlug } from './profile-data.js';
 
 export function initContact() {
   const form = document.getElementById('contact-form');
@@ -15,6 +17,95 @@ export function initContact() {
   const messageInput = document.getElementById('contact-message');
   const submitBtn = document.getElementById('contact-submit-btn');
   const statusBanner = document.getElementById('contact-status');
+
+  // 1. Dynamic User Identity Resolution
+  const urlParams = new URLSearchParams(window.location.search);
+  const targetUserSlug = urlParams.get('user') || urlParams.get('u');
+
+  let targetProfile = null;
+  let targetDisplayName = '';
+  let recipientKey = 'platform_inquiry';
+
+  if (targetUserSlug) {
+    const slugData = getUserDataBySlug(targetUserSlug);
+    if (slugData && slugData.profile) {
+      targetProfile = slugData.profile;
+      targetDisplayName = targetProfile.fullName || targetProfile.username;
+      recipientKey = targetUserSlug;
+    }
+  }
+
+  const activeUser = getActiveUser();
+  if (!targetProfile && activeUser) {
+    targetProfile = getProfile();
+    targetDisplayName = targetProfile.fullName || activeUser.display_name || activeUser.username;
+    recipientKey = activeUser.username || activeUser.id || 'platform_inquiry';
+  }
+
+  // Hydrate direct communication card dynamically
+  const emailLink = document.getElementById('contact-email-link');
+  const socialEmail = document.getElementById('contact-social-email');
+  const githubRow = document.getElementById('contact-github-row');
+  const githubLink = document.getElementById('contact-github-link');
+  const socialGithub = document.getElementById('contact-social-github');
+  const locationText = document.getElementById('contact-location-text');
+  const formHeading = document.getElementById('contact-form-heading');
+  const infoDesc = document.getElementById('contact-info-desc');
+
+  if (targetProfile) {
+    const effectiveEmail = targetProfile.email || activeUser?.email || '';
+    if (effectiveEmail) {
+      if (emailLink) {
+        emailLink.href = `mailto:${effectiveEmail}`;
+        emailLink.textContent = effectiveEmail;
+      }
+      if (socialEmail) {
+        socialEmail.href = `mailto:${effectiveEmail}`;
+      }
+    } else {
+      if (emailLink) {
+        emailLink.href = 'mailto:contact@folioryn.dev';
+        emailLink.textContent = 'Direct message via form below';
+      }
+    }
+
+    if (targetProfile.githubUrl) {
+      const cleanGh = targetProfile.githubUrl.replace(/^https?:\/\/(www\.)?github\.com\//i, '').replace(/^@+/, '').split('/')[0];
+      if (githubLink) {
+        githubLink.href = targetProfile.githubUrl;
+        githubLink.textContent = `github.com/${cleanGh}`;
+      }
+      if (socialGithub) {
+        socialGithub.href = targetProfile.githubUrl;
+        socialGithub.style.display = '';
+      }
+      if (githubRow) githubRow.style.display = '';
+    } else {
+      if (githubRow) githubRow.style.display = 'none';
+      if (socialGithub) socialGithub.style.display = 'none';
+    }
+
+    if (targetProfile.location && locationText) {
+      locationText.textContent = targetProfile.location;
+    }
+
+    if (targetDisplayName && formHeading) {
+      formHeading.textContent = `Direct Communication with ${targetDisplayName}`;
+    }
+    if (targetProfile.headline && infoDesc) {
+      infoDesc.textContent = `${targetProfile.headline}. Send a direct message or connect via the links below.`;
+    }
+  }
+
+  // Pre-fill sender fields if logged in user
+  if (activeUser) {
+    if (nameInput && !nameInput.value) {
+      nameInput.value = activeUser.display_name || activeUser.username || '';
+    }
+    if (emailInput && !emailInput.value) {
+      emailInput.value = activeUser.email || '';
+    }
+  }
 
   // Real-time input clearing of error states
   [nameInput, emailInput, subjectInput, messageInput].forEach((input) => {
@@ -64,7 +155,7 @@ export function initContact() {
     setLoadingState(true);
 
     try {
-      await contactService.submitMessage('platform_inquiry', {
+      await contactService.submitMessage(recipientKey, {
         senderName: nameInput.value.trim(),
         senderEmail: emailInput.value.trim(),
         subject: subjectInput.value.trim(),
@@ -72,10 +163,14 @@ export function initContact() {
       });
 
       showStatus(
-        'Thank you for reaching out! Your message has been received and our team will get back to you shortly.',
+        'Thank you for reaching out! Your message has been transmitted and will appear in the inbox.',
         'success'
       );
       form.reset();
+      if (activeUser) {
+        if (nameInput) nameInput.value = activeUser.display_name || activeUser.username || '';
+        if (emailInput) emailInput.value = activeUser.email || '';
+      }
     } catch (err) {
       console.error('Contact Form Submission Error:', err);
       showStatus(

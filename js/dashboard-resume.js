@@ -54,13 +54,54 @@ function initResumeBuilder() {
   // Attach Two-Way Input Listeners
   attachInputListeners(profile);
 
-  // PDF Print Trigger
+  // PDF Print Trigger with strict mobile bottom dock suppression
   const downloadPdfBtn = document.getElementById('download-pdf-btn');
   downloadPdfBtn?.addEventListener('click', (e) => {
     e.preventDefault();
-    window.print();
+    triggerCleanPdfPrint();
+  });
+
+  // Native beforeprint / afterprint lifecycle hooks
+  window.addEventListener('beforeprint', () => {
+    document.body.classList.add('is-printing-pdf');
+    const bottomNav = document.querySelector('.mobile-bottom-nav');
+    if (bottomNav) {
+      bottomNav.style.setProperty('display', 'none', 'important');
+      bottomNav.style.setProperty('visibility', 'hidden', 'important');
+    }
+  });
+
+  window.addEventListener('afterprint', () => {
+    document.body.classList.remove('is-printing-pdf');
+    const bottomNav = document.querySelector('.mobile-bottom-nav');
+    if (bottomNav) {
+      bottomNav.style.removeProperty('display');
+      bottomNav.style.removeProperty('visibility');
+    }
   });
 }
+
+function triggerCleanPdfPrint() {
+  document.body.classList.add('is-printing-pdf');
+  const bottomNav = document.querySelector('.mobile-bottom-nav');
+  if (bottomNav) {
+    bottomNav.style.setProperty('display', 'none', 'important');
+    bottomNav.style.setProperty('visibility', 'hidden', 'important');
+  }
+
+  // Trigger browser print
+  window.print();
+
+  // Reset after print dialog exits
+  setTimeout(() => {
+    document.body.classList.remove('is-printing-pdf');
+    if (bottomNav) {
+      bottomNav.style.removeProperty('display');
+      bottomNav.style.removeProperty('visibility');
+    }
+  }, 1200);
+}
+
 
 function attachInputListeners(profile) {
   const fields = [

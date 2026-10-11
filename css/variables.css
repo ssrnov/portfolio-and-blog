@@ -1,6 +1,10 @@
 /* ==========================================================================
    CSS VARIABLES & DESIGN TOKENS
-   SSRNovX Portfolio & Blog — Predominantly Black & White Aesthetic
+   Folioryn Portfolio & Blog Platform
+   Three Complete Website Themes:
+   1. Dark Theme  — Premium Obsidian + Emerald (New Default)
+   2. Light Theme — Ivory + Forest Green
+   3. Night Theme — Preserved Original Folioryn Warm Stone Monochrome
    ========================================================================== */
 
 :root {
@@ -38,9 +42,9 @@
   --space-20: 5rem;
   --space-24: 6rem;
 
-  /* Layout */
   /* Layout & Radii */
   --container-max-width: 1200px;
+  --container-article-width: 760px;
   --header-height: 4.5rem;
   --radius-sm: 6px;
   --radius-md: 12px;
@@ -53,75 +57,247 @@
   --transition-base: 250ms ease;
   --transition-slow: 400ms cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Folioryn Monochrome Dark Theme (Default & Locked) - Eye-friendly Warm White */
-  --bg-primary: #080909;
-  --bg-secondary: #101111;
-  --bg-tertiary: #141515;
-  --bg-surface: #141515;
-  --bg-surface-hover: #191A1A;
-  --bg-elevated: #191A1A;
+  /* Default Theme Tokens: Dark Theme (Premium Obsidian) */
+  --bg-primary: #050706;
+  --bg-secondary: #101512;
+  --bg-tertiary: #171D19;
+  --bg-surface: #101512;
+  --bg-surface-hover: #1C2920;
+  --bg-elevated: #171D19;
+  --bg-selected: #1C2920;
+  --bg-accent-tinted: #13251B;
+  --input-bg: #101512;
 
-  --text-primary: #EDE8E1;
-  --text-secondary: #A8A39D;
-  --text-muted: #7D7871;
-  --text-inverse: #080909;
+  --text-primary: #F4F7F4;
+  --text-secondary: #B8C3BB;
+  --text-muted: #929F95;
+  --text-descriptions: #B8C3BB;
+  --text-placeholder: #929F95;
+  --text-inverse: #050706;
 
-  --border-color: #292A2A;
-  --border-hover: #454545;
-  --border-subtle: #191A1A;
+  --border-color: #26352B;
+  --border-hover: #35463A;
+  --border-subtle: #1C2920;
+  --border-strong: #35463A;
 
-  --accent-primary: #EDE8E1;
-  --accent-secondary: #DCD7CE;
-  --accent-gradient: linear-gradient(180deg, #F0ECE4 0%, #DCD7CE 100%);
-  --accent-contrast: #080909;
-  --accent-hover: #DCD7CE;
-  --accent-subtle: rgba(237, 232, 225, 0.08);
+  --accent-primary: #8FE0AE;
+  --accent-secondary: #73CB96;
+  --accent-gradient: linear-gradient(180deg, #A6EABD 0%, #8FE0AE 100%);
+  --accent-contrast: #092014;
+  --accent-hover: #A6EABD;
+  --accent-pressed: #73CB96;
+  --accent-subtle: #13251B;
 
-  --color-success: #22c55e;
-  --color-warning: #eab308;
-  --color-error: #ef4444;
+  --btn-primary-bg: #8FE0AE;
+  --btn-primary-text: #092014;
+  --btn-primary-hover: #A6EABD;
+  --btn-primary-pressed: #73CB96;
 
-  --focus-ring: #EDE8E1;
+  --color-success: #6EE7A0;
+  --color-warning: #F4C76B;
+  --color-error: #FF8585;
+  --color-info: #8FC7FF;
+
+  --focus-ring: #8FE0AE;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.7);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.85);
 
-  --container-article-width: 760px;
-  --header-backdrop: rgba(8, 9, 9, 0.88);
-  --code-bg: #101111;
-  --code-text: #EDE8E1;
-  --code-border: #292A2A;
+  --header-backdrop: rgba(5, 7, 6, 0.88);
+  --code-bg: #101512;
+  --code-text: #F4F7F4;
+  --code-border: #26352B;
+
+  --chart-grid: #26352B;
+  --chart-text: #929F95;
+  --chart-views: #8FE0AE;
+  --chart-project: #8FC7FF;
+  --chart-interactions: #6EE7A0;
 }
 
-/* Enforce Dark-Only Across All Selectors */
-[data-theme="dark"],
+/* ==========================================================================
+   1. DARK THEME — Premium Obsidian (New Default)
+   Deep near-black backgrounds, elevated charcoal surfaces, emerald accents
+   ========================================================================== */
+[data-theme="dark"] {
+  --bg-primary: #050706;
+  --bg-secondary: #101512;
+  --bg-tertiary: #171D19;
+  --bg-surface: #101512;
+  --bg-surface-hover: #1C2920;
+  --bg-elevated: #171D19;
+  --bg-selected: #1C2920;
+  --bg-accent-tinted: #13251B;
+  --input-bg: #101512;
+
+  --text-primary: #F4F7F4;
+  --text-secondary: #B8C3BB;
+  --text-muted: #929F95;
+  --text-descriptions: #B8C3BB;
+  --text-placeholder: #929F95;
+  --text-inverse: #050706;
+
+  --border-color: #26352B;
+  --border-hover: #35463A;
+  --border-subtle: #1C2920;
+  --border-strong: #35463A;
+
+  --accent-primary: #8FE0AE;
+  --accent-secondary: #73CB96;
+  --accent-gradient: linear-gradient(180deg, #A6EABD 0%, #8FE0AE 100%);
+  --accent-contrast: #092014;
+  --accent-hover: #A6EABD;
+  --accent-pressed: #73CB96;
+  --accent-subtle: #13251B;
+
+  --btn-primary-bg: #8FE0AE;
+  --btn-primary-text: #092014;
+  --btn-primary-hover: #A6EABD;
+  --btn-primary-pressed: #73CB96;
+
+  --color-success: #6EE7A0;
+  --color-warning: #F4C76B;
+  --color-error: #FF8585;
+  --color-info: #8FC7FF;
+
+  --focus-ring: #8FE0AE;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.85);
+
+  --header-backdrop: rgba(5, 7, 6, 0.88);
+  --code-bg: #101512;
+  --code-text: #F4F7F4;
+  --code-border: #26352B;
+
+  --chart-grid: #26352B;
+  --chart-text: #929F95;
+  --chart-views: #8FE0AE;
+  --chart-project: #8FC7FF;
+  --chart-interactions: #6EE7A0;
+}
+
+/* ==========================================================================
+   2. LIGHT THEME — Ivory + Forest Green
+   Warm ivory page background, crisp white cards, forest green accents
+   ========================================================================== */
 [data-theme="light"] {
+  --bg-primary: #F7F5EF;
+  --bg-secondary: #EFEEE6;
+  --bg-tertiary: #E8EEE7;
+  --bg-surface: #FFFFFF;
+  --bg-surface-hover: #E8EEE7;
+  --bg-elevated: #FFFFFF;
+  --bg-selected: #E8EEE7;
+  --bg-accent-tinted: #E8EEE7;
+  --input-bg: #FFFFFF;
+
+  --text-primary: #20372D;
+  --text-secondary: #41483F;
+  --text-muted: #62685F;
+  --text-descriptions: #555B54;
+  --text-placeholder: #6B7168;
+  --text-inverse: #FFFFFF;
+
+  --border-color: #E5E2D8;
+  --border-hover: #CFCFC4;
+  --border-subtle: #EFEEE6;
+  --border-strong: #CFCFC4;
+
+  --accent-primary: #315C46;
+  --accent-secondary: #264A38;
+  --accent-gradient: linear-gradient(180deg, #3B6B52 0%, #315C46 100%);
+  --accent-contrast: #FFFFFF;
+  --accent-hover: #264A38;
+  --accent-pressed: #203D2F;
+  --accent-subtle: #E8EEE7;
+  --accent-botanical: #71866D;
+
+  --btn-primary-bg: #315C46;
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: #264A38;
+  --btn-primary-pressed: #203D2F;
+
+  --color-success: #267347;
+  --color-warning: #855A12;
+  --color-error: #B42318;
+  --color-info: #315D83;
+
+  --focus-ring: #315C46;
+  --shadow-sm: 0 1px 3px rgba(32, 55, 45, 0.08);
+  --shadow-md: 0 4px 16px rgba(32, 55, 45, 0.10);
+  --shadow-lg: 0 10px 30px rgba(32, 55, 45, 0.14);
+
+  --header-backdrop: rgba(247, 245, 239, 0.90);
+  --code-bg: #EFEEE6;
+  --code-text: #20372D;
+  --code-border: #E5E2D8;
+
+  --chart-grid: #E5E2D8;
+  --chart-text: #62685F;
+  --chart-views: #315C46;
+  --chart-project: #315D83;
+  --chart-interactions: #267347;
+}
+
+/* ==========================================================================
+   3. NIGHT THEME — Preserved Original Folioryn Website Theme
+   Retains the website's authentic eye-friendly soft warm stone appearance
+   ========================================================================== */
+[data-theme="night"] {
   --bg-primary: #080909;
   --bg-secondary: #101111;
   --bg-tertiary: #141515;
   --bg-surface: #141515;
   --bg-surface-hover: #191A1A;
   --bg-elevated: #191A1A;
+  --bg-selected: #191A1A;
+  --bg-accent-tinted: rgba(209, 204, 194, 0.08);
+  --input-bg: #101111;
 
-  --text-primary: #EDE8E1;
-  --text-secondary: #A8A39D;
-  --text-muted: #7D7871;
+  --text-primary: #D1CCC2;
+  --text-secondary: #98938A;
+  --text-muted: #726E67;
+  --text-descriptions: #98938A;
+  --text-placeholder: #726E67;
   --text-inverse: #080909;
 
   --border-color: #292A2A;
   --border-hover: #454545;
   --border-subtle: #191A1A;
+  --border-strong: #454545;
 
-  --accent-primary: #EDE8E1;
-  --accent-secondary: #DCD7CE;
-  --accent-gradient: linear-gradient(180deg, #F0ECE4 0%, #DCD7CE 100%);
+  --accent-primary: #D6D1C7;
+  --accent-secondary: #C5C0B6;
+  --accent-gradient: linear-gradient(180deg, #DDD8CF 0%, #C5C0B6 100%);
   --accent-contrast: #080909;
-  --accent-hover: #DCD7CE;
-  --accent-subtle: rgba(237, 232, 225, 0.08);
+  --accent-hover: #C5C0B6;
+  --accent-pressed: #B0ABA1;
+  --accent-subtle: rgba(209, 204, 194, 0.08);
 
-  --focus-ring: #EDE8E1;
+  --btn-primary-bg: #D6D1C7;
+  --btn-primary-text: #080909;
+  --btn-primary-hover: #C5C0B6;
+  --btn-primary-pressed: #B0ABA1;
+
+  --color-success: #22c55e;
+  --color-warning: #eab308;
+  --color-error: #ef4444;
+  --color-info: #8FC7FF;
+
+  --focus-ring: #D1CCC2;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.85);
+
   --header-backdrop: rgba(8, 9, 9, 0.88);
   --code-bg: #101111;
-  --code-text: #EDE8E1;
+  --code-text: #D1CCC2;
   --code-border: #292A2A;
+
+  --chart-grid: #292A2A;
+  --chart-text: #726E67;
+  --chart-views: #D6D1C7;
+  --chart-project: #8FC7FF;
+  --chart-interactions: #22c55e;
 }

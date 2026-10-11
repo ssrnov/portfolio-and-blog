@@ -2,13 +2,15 @@
   "name": "folioryn",
   "private": true,
   "version": "1.0.0",
+  "license": "MIT",
   "type": "module",
+
   "description": "Folioryn — Multi-User Portfolio Builder & Publishing Platform",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node test/regression.test.js"
+    "test": "node test/regression.test.js && node test/theme.test.js"
   },
   "devDependencies": {
     "vite": "^6.2.0"

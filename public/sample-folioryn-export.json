@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "folioryn_backup_v1",
+  "exportedAt": "2026-10-10T20:00:00.000Z",
+  "ownerUsername": "alex-dev",
+  "profile": {
+    "fullName": "Alex Rivera",
+    "displayName": "Alex Rivera",
+    "username": "alex-dev",
+    "headline": "Senior Distributed Systems Engineer & Open Source Builder",
+    "bio": "Designing fault-tolerant distributed consensus algorithms, high-throughput microservices, and reactive web applications with zero external dependencies.",
+    "location": "Seattle, WA, USA",
+    "email": "alex.rivera@example.com",
+    "phone": "+1 (555) 234-5678",
+    "organization": "Cascadia Distributed Labs",
+    "availability": "Open to opportunities",
+    "portfolioUrl": "https://folioryn.dev/u/alex-dev",
+    "githubUrl": "https://github.com/alexrivera-dev",
+    "linkedinUrl": "https://linkedin.com/in/alexrivera-dev",
+    "twitterUrl": "https://x.com/alexrivera_dev",
+    "websiteUrl": "https://alexrivera.dev",
+    "theme": "dark"
+  },
+  "education": [
+    {
+      "id": "edu-sample-1",
+      "institution": "University of Washington",
+      "institutionType": "university",
+      "qualification": "Master of Science (M.S.)",
+      "fieldOfStudy": "Computer Science & Systems",
+      "startDate": "2020-09",
+      "endDate": "2022-06",
+      "currentlyStudying": false,
+      "gradeType": "GPA",
+      "gradeValue": "3.92",
+      "gradeScale": "4.0",
+      "coursework": "Distributed Systems, Advanced Operating Systems, Concurrency",
+      "achievements": "Graduate Teaching Fellowship &bull; Dean's Honor Scholar",
+      "displayOnPortfolio": true
+    }
+  ],
+  "skills": [
+    { "id": "sk-sample-1", "name": "Go (Golang)", "category": "languages", "proficiency": "Expert", "years": "5" },
+    { "id": "sk-sample-2", "name": "Rust", "category": "languages", "proficiency": "Advanced", "years": "3" },
+    { "id": "sk-sample-3", "name": "TypeScript", "category": "frontend", "proficiency": "Expert", "years": "4" },
+    { "id": "sk-sample-4", "name": "PostgreSQL & Supabase", "category": "databases", "proficiency": "Advanced", "years": "4" },
+    { "id": "sk-sample-5", "name": "Docker & Kubernetes", "category": "cloud", "proficiency": "Advanced", "years": "4" }
+  ],
+  "experiences": [
+    {
+      "id": "exp-sample-1",
+      "organization": "Cascadia Distributed Labs",
+      "role": "Staff Distributed Systems Engineer",
+      "startDate": "2022-07",
+      "endDate": "",
+      "currentlyActive": true,
+      "location": "Seattle, WA (Remote)",
+      "description": "Architected low-latency Raft consensus library handling 1.2M transactions per second across multi-region clusters.",
+      "displayOnPortfolio": true
+    }
+  ],
+  "certifications": [
+    {
+      "id": "cert-sample-1",
+      "title": "AWS Certified Solutions Architect – Professional",
+      "issuer": "Amazon Web Services",
+      "issueDate": "2024-03",
+      "credentialUrl": "https://aws.amazon.com/verification",
+      "displayOnPortfolio": true
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-sample-1",
+      "title": "AuraRaft: Distributed Consensus Engine",
+      "description": "Zero-dependency Raft consensus implementation in Go featuring dynamic membership reconfiguration and snapshot log compaction.",
+      "category": "Systems",
+      "tags": ["Go", "Raft", "Distributed Systems"],
+      "repo_url": "https://github.com/alexrivera-dev/auraraft",
+      "live_url": "https://auraraft.dev",
+      "stars_count": 89,
+      "featured": true
+    },
+    {
+      "id": "proj-sample-2",
+      "title": "PulseKV: In-Memory Key-Value Store",
+      "description": "High-throughput asynchronous memory store with LSM-trees and append-only write ahead logging.",
+      "category": "Databases",
+      "tags": ["Rust", "Storage", "Concurrency"],
+      "repo_url": "https://github.com/alexrivera-dev/pulsekv",
+      "live_url": "",
+      "stars_count": 54,
+      "featured": true
+    }
+  ],
+  "articles": [
+    {
+      "id": "art-sample-1",
+      "title": "Achieving Predictable Tail Latency in Distributed Queues",
+      "slug": "predictable-tail-latency-distributed-queues",
+      "tags": "Concurrency, Performance, Distributed Systems",
+      "excerpt": "A deep dive into mitigating p99 latency spikes in distributed task runners.",
+      "isPublished": true,
+      "updatedAt": "2026-10-10T14:30:00.000Z"
+    }
+  ],
+  "publishSettings": {
+    "status": "draft",
+    "isPublished": false,
+    "publicSlug": "alex-dev",
+    "templateId": "minimal-professional",
+    "sectionVisibility": {
+      "hero": true,
+      "about": true,
+      "education": true,
+      "skills": true,
+      "projects": true,
+      "experience": true,
+      "certifications": true,
+      "blog": true,
+      "contact": true
+    }
+  }
+}

@@ -44,11 +44,14 @@ export const MOCK_USER_PROFILE = {
   bio: 'Engineering scalable distributed architectures, zero-dependency high-performance web systems, and developer platforms.',
   location: 'Bangalore, India (IST / UTC+5:30)',
   avatar_url: '',
-  github_handle: 'ssrnov',
-  twitter_handle: 'ssrnov',
-  linkedin_url: 'https://linkedin.com/in/ssrnov',
-  website_url: 'https://profilefolio.dev/u/sunny',
+  github_handle: '',
+  twitter_handle: '',
+  linkedin_url: '',
+  website_url: 'https://folioryn.dev/u/sunny',
   theme_preference: 'dark',
+  dob: '2002-08-15',
+  security_question: 'What was the name of your first school?',
+  security_answer: 'Delhi Public School',
 };
 
 // Helper: Get registered local users
@@ -125,9 +128,16 @@ export const authService = {
   /**
    * Register with Email & Password
    */
-  async signUp(email, password, { username, fullName }) {
+  async signUp(email, password, { username, fullName, dob = '', securityQuestion = '', securityAnswer = '' } = {}) {
     const cleanUsername = (username || '').trim().toLowerCase();
     const cleanEmail = (email || '').trim().toLowerCase();
+
+    // Enforce single active session restriction
+    const currentSession = await this.getSession();
+    if (currentSession && currentSession.user) {
+      const activeUser = currentSession.user;
+      throw new Error(`You are currently logged in as ${activeUser.display_name || activeUser.username}. Please log out first before creating or registering another account.`);
+    }
 
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase.auth.signUp({
@@ -137,6 +147,8 @@ export const authService = {
           data: {
             user_name: cleanUsername,
             full_name: fullName,
+            dob: dob ? dob.trim() : '',
+            security_question: securityQuestion ? securityQuestion.trim() : '',
           },
         },
       });
@@ -151,6 +163,7 @@ export const authService = {
       throw new Error('An account with this username or email already exists.');
     }
 
+    const cleanGh = (options.githubHandle || options.github_handle || '').trim().replace(/^https?:\/\/(www\.)?github\.com\//i, '').replace(/^@+/, '').split('/')[0];
     const passwordHash = await hashPassword(password);
     const userId = 'usr_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     const newUser = {
@@ -159,11 +172,14 @@ export const authService = {
       username: cleanUsername,
       display_name: fullName || cleanUsername,
       password_hash: passwordHash, // Stored as salted SHA-256 hash, NEVER plaintext
+      dob: dob ? dob.trim() : '',
+      security_question: securityQuestion ? securityQuestion.trim() : '',
+      security_answer: securityAnswer ? securityAnswer.trim() : '',
       headline: 'Full-Stack Software Engineer & Builder',
       bio: 'Architecting scalable web applications, distributed backend pipelines, and minimalist user interfaces.',
       location: 'India',
       avatar_url: '',
-      github_handle: '',
+      github_handle: cleanGh,
       twitter_handle: '',
       linkedin_url: '',
       website_url: `https://folioryn.dev/u/${cleanUsername}`,
@@ -186,7 +202,7 @@ export const authService = {
       organization: '',
       availability: 'Open to opportunities',
       portfolioUrl: `https://folioryn.dev/u/${newUser.username}`,
-      githubUrl: '',
+      githubUrl: cleanGh ? `https://github.com/${cleanGh}` : '',
       linkedinUrl: '',
       twitterUrl: '',
       websiteUrl: `https://folioryn.dev/u/${newUser.username}`,
@@ -216,6 +232,17 @@ export const authService = {
    */
   async signInWithPassword(email, password) {
     const cleanEmail = (email || '').trim().toLowerCase();
+
+    // Enforce single active session restriction: If an ID is logged in, another ID cannot log in
+    const currentSession = await this.getSession();
+    if (currentSession && currentSession.user) {
+      const activeUser = currentSession.user;
+      const activeEmail = (activeUser.email || '').toLowerCase();
+      const activeUsername = (activeUser.username || '').toLowerCase();
+      if (cleanEmail !== activeEmail && cleanEmail !== activeUsername) {
+        throw new Error(`Another account (${activeUser.display_name || activeUser.username}) is currently logged in. Please log out first before signing in with another account.`);
+      }
+    }
 
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -294,6 +321,141 @@ export const authService = {
   },
 
   /**
+   * Lookup account security details for password recovery
+   */
+  async getUserSecurityDetails(identifier) {
+    const clean = (identifier || '').trim().toLowerCase();
+    if (!clean) throw new Error('Please enter your email address or username.');
+
+    const users = getLocalUsers();
+    let user = users.find(u => 
+      (u.email && u.email.toLowerCase() === clean) || 
+      (u.username && u.username.toLowerCase() === clean)
+    );
+
+    // If searching for sunny
+    if (!user && (clean === 'sunny' || clean === 'sunny@profilefolio.dev')) {
+      user = { ...MOCK_USER_PROFILE };
+      saveLocalUser(user);
+    }
+
+    if (!user) {
+      throw new Error('No account found with this email or username. Please check your spelling.');
+    }
+
+    return {
+      success: true,
+      username: user.username,
+      email: user.email,
+      hasDob: Boolean(user.dob),
+      hasSecurityQuestion: Boolean(user.security_question),
+      securityQuestion: user.security_question || 'What was the name of your first school?'
+    };
+  },
+
+  /**
+   * Verify identity using Security Question & Secret Answer
+   */
+  async verifySecurityQuestion(identifier, answer) {
+    const clean = (identifier || '').trim().toLowerCase();
+    const cleanAnswer = (answer || '').trim().toLowerCase();
+    if (!cleanAnswer) throw new Error('Please enter your security answer.');
+
+    const users = getLocalUsers();
+    let user = users.find(u => 
+      (u.email && u.email.toLowerCase() === clean) || 
+      (u.username && u.username.toLowerCase() === clean)
+    );
+
+    if (!user && (clean === 'sunny' || clean === 'sunny@profilefolio.dev')) {
+      user = { ...MOCK_USER_PROFILE };
+    }
+    if (!user) throw new Error('Account not found.');
+
+    const expected = (user.security_answer || 'Delhi Public School').trim().toLowerCase();
+    if (expected !== cleanAnswer) {
+      throw new Error('Incorrect security answer. Please check and try again.');
+    }
+
+    return {
+      verified: true,
+      method: 'security_question',
+      username: user.username,
+      token: 'rst_' + user.id + '_' + Date.now()
+    };
+  },
+
+  /**
+   * Verify identity using Date of Birth (DOB)
+   */
+  async verifyDateOfBirth(identifier, dob) {
+    const clean = (identifier || '').trim().toLowerCase();
+    const cleanDob = (dob || '').trim();
+    if (!cleanDob) throw new Error('Please enter your Date of Birth.');
+
+    const users = getLocalUsers();
+    let user = users.find(u => 
+      (u.email && u.email.toLowerCase() === clean) || 
+      (u.username && u.username.toLowerCase() === clean)
+    );
+
+    if (!user && (clean === 'sunny' || clean === 'sunny@profilefolio.dev')) {
+      user = { ...MOCK_USER_PROFILE };
+    }
+    if (!user) throw new Error('Account not found.');
+
+    const expected = (user.dob || '2002-08-15').trim();
+    if (expected !== cleanDob) {
+      throw new Error('Date of Birth does not match account records.');
+    }
+
+    return {
+      verified: true,
+      method: 'dob',
+      username: user.username,
+      token: 'rst_' + user.id + '_' + Date.now()
+    };
+  },
+
+  /**
+   * Reset user password after verified via Security Question or DOB
+   */
+  async resetPasswordWithVerification(identifier, newPassword) {
+    const clean = (identifier || '').trim().toLowerCase();
+    if (!newPassword || newPassword.length < 8) {
+      throw new Error('New password must be at least 8 characters long.');
+    }
+    if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(newPassword)) {
+      throw new Error('New password must contain both letters and numbers.');
+    }
+
+    const users = getLocalUsers();
+    let idx = users.findIndex(u => 
+      (u.email && u.email.toLowerCase() === clean) || 
+      (u.username && u.username.toLowerCase() === clean)
+    );
+
+    if (idx === -1 && (clean === 'sunny' || clean === 'sunny@profilefolio.dev')) {
+      const sunny = { ...MOCK_USER_PROFILE };
+      users.unshift(sunny);
+      idx = 0;
+    }
+
+    if (idx === -1) throw new Error('Account not found.');
+
+    const newHash = await hashPassword(newPassword);
+    users[idx].password_hash = newHash;
+    localStorage.setItem(USERS_REGISTRY_KEY, JSON.stringify(users));
+
+    return {
+      success: true,
+      email: users[idx].email,
+      username: users[idx].username,
+      message: 'Password reset successfully. You can now log in with your new password.'
+    };
+  },
+
+  /**
    * Login via GitHub OAuth Provider
    */
   async signInWithOAuth(provider = 'github') {
@@ -309,7 +471,7 @@ export const authService = {
     }
 
     // Mock OAuth simulation
-    const mockUser = { ...MOCK_USER_PROFILE, github_handle: 'ssrnov' };
+    const mockUser = { ...MOCK_USER_PROFILE, github_handle: '' };
     localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(mockUser));
     localStorage.setItem('ssrnovx_mock_session', JSON.stringify(mockUser));
     window.location.href = '/dashboard/';
@@ -331,6 +493,9 @@ export const authService = {
     localStorage.removeItem('ssrnovx_mock_session');
     localStorage.removeItem('buildlab_session');
     localStorage.removeItem('profilefolio_active_user');
+    localStorage.removeItem('folioryn_user_profile');
+    localStorage.removeItem('profilefolio_user_profile');
+    try { sessionStorage.clear(); } catch (_) {}
     window.location.href = '/login/';
   },
 
@@ -452,6 +617,25 @@ export const profileService = {
 
     return updated;
   },
+
+  async getProfileByUsername(username) {
+    const clean = (username || '').trim().toLowerCase();
+    if (isSupabaseConfigured && supabase) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('username', clean)
+        .single();
+      if (!error && data) return data;
+    }
+
+    if (clean === 'sunny' || clean === 'ssrnov') {
+      return { ...MOCK_USER_PROFILE, username: clean };
+    }
+
+    const users = getLocalUsers();
+    return users.find(u => (u.username || '').toLowerCase() === clean || (u.github_handle || '').toLowerCase() === clean) || null;
+  },
 };
 
 // ==============================================================================
@@ -497,32 +681,26 @@ export const portfolioService = {
         .select('*, profiles(*), projects(*), skills(*), experiences(*), education(*)')
         .eq('slug', cleanSlug)
         .single();
-      if (error) throw error;
-      return data;
+      if (!error && data) return data;
     }
 
     // Local Multi-User Lookup
-    const user = await profileService.getProfileByUsername(cleanSlug);
+    let user = await profileService.getProfileByUsername(cleanSlug);
     if (!user) {
-      if (cleanSlug === 'sunny') {
-        return {
-          slug: 'sunny',
-          title: 'Sunny / SSRNovX',
-          template_id: 'minimal-professional',
-          is_published: true,
-          profiles: { ...MOCK_USER_PROFILE }
-        };
+      if (cleanSlug === 'sunny' || cleanSlug === 'ssrnov') {
+        user = { ...MOCK_USER_PROFILE, username: cleanSlug };
       }
-      return null;
     }
+
+    if (!user) return null;
 
     const rawSettings = localStorage.getItem(`profilefolio_user_${user.id}_publish`) ||
                         localStorage.getItem('profilefolio_publish_settings');
     const settings = rawSettings ? JSON.parse(rawSettings) : { isPublished: true, templateId: 'minimal-professional' };
 
     return {
-      slug: user.username,
-      title: `${user.display_name} — Portfolio`,
+      slug: cleanSlug,
+      title: `${user.display_name || user.username} — Portfolio`,
       template_id: settings.templateId || 'minimal-professional',
       is_published: settings.isPublished !== false,
       profiles: user
@@ -645,3 +823,144 @@ export const contactService = {
     }
   },
 };
+
+// ==============================================================================
+// 7. Portfolio & Project Analytics Service
+// ==============================================================================
+export const analyticsService = {
+  /**
+   * Records a privacy-respecting telemetry event.
+   * Public-facing insert guarded by RLS in Supabase and localized user isolation.
+   */
+  async trackEvent({
+    portfolioSlug,
+    portfolioId = null,
+    projectId = null,
+    projectTitle = null,
+    eventType,
+    referrer = null,
+    deviceType = null
+  }) {
+    if (!portfolioSlug || !eventType) return false;
+
+    const eventRecord = {
+      id: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+      portfolio_slug: portfolioSlug.toLowerCase(),
+      portfolio_id: portfolioId,
+      project_id: projectId ? String(projectId) : null,
+      project_title: projectTitle || null,
+      event_type: eventType,
+      referrer: referrer || null,
+      device_type: deviceType || 'desktop',
+      created_at: new Date().toISOString()
+    };
+
+    // 1. Supabase insert if configured
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { error } = await supabase
+          .from('analytics_events')
+          .insert([{
+            portfolio_slug: eventRecord.portfolio_slug,
+            portfolio_id: eventRecord.portfolio_id,
+            project_id: eventRecord.project_id,
+            project_title: eventRecord.project_title,
+            event_type: eventRecord.event_type,
+            referrer: eventRecord.referrer,
+            device_type: eventRecord.device_type,
+            created_at: eventRecord.created_at
+          }]);
+        if (error) console.warn('Supabase analytics track notice:', error.message);
+      } catch (e) {
+        console.warn('Supabase analytics track exception:', e);
+      }
+    }
+
+    // 2. Multi-tenant Local Persistence Fallback
+    try {
+      const storageKey = `profilefolio_events_${portfolioSlug.toLowerCase()}`;
+      const raw = localStorage.getItem(storageKey);
+      const events = raw ? JSON.parse(raw) : [];
+      events.unshift(eventRecord);
+      // Keep up to 3000 events per portfolio locally to prevent unbounded growth
+      if (events.length > 3000) events.length = 3000;
+      localStorage.setItem(storageKey, JSON.stringify(events));
+      return eventRecord;
+    } catch (e) {
+      return eventRecord;
+    }
+  },
+
+  /**
+   * Fetches events for an authenticated portfolio owner.
+   */
+  async getEvents({ portfolioSlug, startDate = null, endDate = null, projectId = null }) {
+    if (!portfolioSlug) return [];
+    const cleanSlug = portfolioSlug.toLowerCase();
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        let query = supabase
+          .from('analytics_events')
+          .select('*')
+          .eq('portfolio_slug', cleanSlug)
+          .order('created_at', { ascending: false });
+
+        if (startDate) query = query.gte('created_at', startDate);
+        if (endDate) query = query.lte('created_at', endDate);
+        if (projectId) query = query.eq('project_id', String(projectId));
+
+        const { data, error } = await query;
+        if (!error && data && data.length > 0) return data;
+      } catch (e) {
+        console.warn('Supabase getEvents fallback to local:', e);
+      }
+    }
+
+    // Read local events
+    try {
+      const storageKey = `profilefolio_events_${cleanSlug}`;
+      const raw = localStorage.getItem(storageKey);
+      let events = raw ? JSON.parse(raw) : [];
+
+      if (startDate) {
+        const startMs = new Date(startDate).getTime();
+        events = events.filter(e => new Date(e.created_at).getTime() >= startMs);
+      }
+      if (endDate) {
+        const endMs = new Date(endDate).getTime();
+        events = events.filter(e => new Date(e.created_at).getTime() <= endMs);
+      }
+      if (projectId) {
+        events = events.filter(e => String(e.project_id) === String(projectId));
+      }
+      return events;
+    } catch (e) {
+      return [];
+    }
+  },
+
+  async purgeEvents(portfolioSlug) {
+    if (!portfolioSlug) return false;
+    const cleanSlug = portfolioSlug.toLowerCase();
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase
+          .from('analytics_events')
+          .delete()
+          .eq('portfolio_slug', cleanSlug);
+      } catch (e) {
+        console.warn('Supabase purgeEvents exception:', e);
+      }
+    }
+
+    try {
+      localStorage.removeItem(`profilefolio_events_${cleanSlug}`);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+};
+

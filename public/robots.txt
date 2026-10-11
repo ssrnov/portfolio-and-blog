@@ -1,0 +1,16 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Allow: /u/
+Allow: /templates/
+Allow: /explore/
+Allow: /blog/
+
+# Protect authenticated user environments, preview modes, and private APIs
+Disallow: /dashboard/
+Disallow: /login/
+Disallow: /signup/
+Disallow: /*preview*
+Disallow: /*token*
+
+Sitemap: https://folioryn.dev/sitemap.xml

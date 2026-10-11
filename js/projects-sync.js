@@ -94,9 +94,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!currentGitHubUser && user?.github_handle) {
     currentGitHubUser = extractGitHubUsername(user.github_handle);
   }
-  if (!currentGitHubUser && profile?.username === 'sunny') {
-    currentGitHubUser = 'ssrnov';
-  }
 
   const handleInput = document.getElementById('github-handle-input');
   if (handleInput && currentGitHubUser) {
@@ -257,6 +254,13 @@ async function loadGitHubRepositories(rawUsername) {
 
 function disconnectGitHub() {
   currentGitHubUser = '';
+  saveProfile({ githubUrl: '' });
+  const activeUser = getActiveUser();
+  if (activeUser) {
+    activeUser.github_handle = '';
+    localStorage.setItem('profilefolio_session', JSON.stringify(activeUser));
+    localStorage.setItem('profilefolio_active_user', JSON.stringify(activeUser));
+  }
   const handleInput = document.getElementById('github-handle-input');
   const badgeEl = document.getElementById('github-connection-badge');
   const statusHeading = document.getElementById('github-status-heading');

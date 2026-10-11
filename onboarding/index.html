@@ -80,7 +80,7 @@
 
     .step-item.active .step-badge {
       background: var(--accent-primary);
-      color: #080909;
+      color: var(--accent-contrast);
       border-color: var(--accent-primary);
       font-weight: 700;
     }
@@ -182,7 +182,7 @@
       height: 18px;
       border-radius: 50%;
       background: var(--accent-primary);
-      color: #080909;
+      color: var(--accent-contrast);
       display: none;
       align-items: center;
       justify-content: center;
@@ -230,8 +230,14 @@
   </style>
 
   <script>
-    document.documentElement.setAttribute('data-theme', 'dark');
-    localStorage.setItem('theme', 'dark');
+    try {
+        var saved = localStorage.getItem('folioryn_theme') || localStorage.getItem('theme');
+        var valid = ['dark', 'light', 'night'];
+        var theme = (valid.indexOf(saved) !== -1) ? saved : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
   </script>
 </head>
 <body class="onboarding-page">
@@ -240,7 +246,7 @@
   <header class="onboarding-nav">
     <div style="display: flex; align-items: center; gap: 10px;">
       <a href="/" class="brand-link" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-        <span style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--accent-primary); color: #080909; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">F</span>
+        <span style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--accent-primary); color: var(--accent-contrast); display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">F</span>
         <span style="font-weight: 800; font-size: 1.15rem; color: var(--text-primary);">Folioryn</span>
       </a>
       <span class="badge" style="font-size: 10px;">Onboarding</span>
@@ -374,21 +380,21 @@
           <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-3); margin-bottom: var(--space-3);">
             <div>
               <label for="ob-institution" class="form-label">College / University *</label>
-              <input type="text" id="ob-institution" class="form-input" placeholder="e.g. SRM Institute of Science and Technology" value="SRM Institute of Science and Technology" />
+              <input type="text" id="ob-institution" class="form-input" placeholder="e.g. SRM Institute of Science and Technology" value="" />
             </div>
             <div>
               <label for="ob-degree" class="form-label">Degree *</label>
-              <input type="text" id="ob-degree" class="form-input" placeholder="e.g. B.Tech Computer Science" value="B.Tech Computer Science &amp; Engineering" />
+              <input type="text" id="ob-degree" class="form-input" placeholder="e.g. B.Tech Computer Science & Engineering" value="" />
             </div>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
             <div>
               <label for="ob-score" class="form-label">Score (CGPA or %)</label>
-              <input type="text" id="ob-score" class="form-input" placeholder="e.g. 9.24 / 10.0 CGPA" value="9.24 / 10.0" />
+              <input type="text" id="ob-score" class="form-input" placeholder="e.g. 9.24 / 10.0 CGPA" value="" />
             </div>
             <div>
               <label for="ob-years" class="form-label">Study Duration</label>
-              <input type="text" id="ob-years" class="form-input" placeholder="e.g. 2022 - 2026" value="2022 &ndash; 2026" />
+              <input type="text" id="ob-years" class="form-input" placeholder="e.g. 2022 - 2026" value="" />
             </div>
           </div>
         </div>
@@ -425,15 +431,15 @@
             <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin: 0 0 var(--space-3) 0;">Option A: Feature a Project</h3>
             <div class="form-group" style="margin-bottom: var(--space-3);">
               <label for="ob-proj-title" class="form-label">Project Title</label>
-              <input type="text" id="ob-proj-title" class="form-input" placeholder="e.g. Folioryn SaaS Engine" value="Folioryn SaaS Engine" />
+              <input type="text" id="ob-proj-title" class="form-input" placeholder="e.g. Distributed Task Engine" value="" />
             </div>
             <div class="form-group" style="margin-bottom: var(--space-3);">
               <label for="ob-proj-desc" class="form-label">Short Description</label>
-              <textarea id="ob-proj-desc" class="form-textarea" rows="3" placeholder="What does this project do?">Multi-tenant portfolio builder with 0ms live preview synchronization, ATS resume generation, and verified data persistence.</textarea>
+              <textarea id="ob-proj-desc" class="form-textarea" rows="3" placeholder="What does this project do?"></textarea>
             </div>
             <div class="form-group">
               <label for="ob-proj-tags" class="form-label">Tech Stack (comma-separated)</label>
-              <input type="text" id="ob-proj-tags" class="form-input" placeholder="JavaScript, Supabase, Vite" value="JavaScript, Supabase, Vite" />
+              <input type="text" id="ob-proj-tags" class="form-input" placeholder="e.g. JavaScript, Vite, Supabase" value="" />
             </div>
           </div>
 
@@ -446,7 +452,7 @@
               <label for="ob-github-handle" class="form-label">GitHub Username</label>
               <div style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-secondary);">
                 <span style="padding: 0 10px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); border-right: 1px solid var(--border-color);">github.com/</span>
-                <input type="text" id="ob-github-handle" class="form-input" placeholder="ssrnov" style="border: none; border-radius: 0;" value="ssrnov" />
+                <input type="text" id="ob-github-handle" class="form-input" placeholder="username" style="border: none; border-radius: 0;" value="" />
               </div>
             </div>
             <button type="button" id="btn-ob-fetch-github" class="btn btn-secondary btn-sm" style="width: 100%;">

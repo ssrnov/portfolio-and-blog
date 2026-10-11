@@ -1,12 +1,17 @@
 /**
  * Folioryn — Dynamic Multi-Tenant Public Portfolio Engine
- * Resolves /u/:username and ?u=:username routes, queries Supabase/multi-user storage,
- * enforces published/draft visibility gates, renders template archetypes dynamically,
- * and displays clean user-scoped states without leaking demo data.
+ * Features:
+ * - Resolves /u/:username routes and multi-user storage
+ * - Enforces Draft / Published / Unpublished visibility gates
+ * - Supports Authenticated & Tokenized Private Preview with draft banner
+ * - Injects Dynamic SEO Canonical, Open Graph, and Twitter metadata
+ * - Rate-limited, honeypot-protected Inbound Contact Form with owner-scoped delivery
+ * - Native Web Share API & Clipboard fallback for social sharing
  */
 
 import { portfolioService, contactService } from './supabase.js';
-import { getUserDataBySlug, getActiveUser } from './profile-data.js';
+import { getUserDataBySlug, getActiveUser, verifyPreviewToken, trackAnalyticsEvent, getBlogArticles, DEFAULT_BLOG_ARTICLES } from './profile-data.js';
+
 
 document.addEventListener('DOMContentLoaded', async () => {
   const username = extractUsernameSlug();
@@ -18,6 +23,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Check for template override query param (from template showroom preview)
   const urlParams = new URLSearchParams(window.location.search);
   const templateOverride = urlParams.get('template');
+  const isPreviewParam = urlParams.get('preview') === 'true';
+  const previewTokenParam = urlParams.get('preview_token');
 
   try {
     // 1. Retrieve user data via multi-tenant resolver
@@ -43,6 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           experiences: dbPort.experiences || [],
           certifications: [],
           publishSettings: {
+            status: dbPort.is_published ? 'published' : 'draft',
             isPublished: dbPort.is_published !== false,
             templateId: dbPort.template_id || 'minimal-professional'
           }
@@ -55,21 +63,39 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    // 2. Enforce Visibility Gate: Check if portfolio is published
-    const isPublished = userData.publishSettings?.isPublished !== false;
+    // 2. Enforce Visibility Gate: Check if portfolio is published or preview is authorized
+    const isPublished = userData.publishSettings?.isPublished !== false && userData.publishSettings?.status !== 'draft' && userData.publishSettings?.status !== 'unpublished';
     const isOwnerSession = isCurrentSessionOwner(username);
+    const hasValidToken = previewTokenParam ? verifyPreviewToken(username, previewTokenParam) : false;
+    const isAuthorizedPreview = isOwnerSession || (isPreviewParam && isOwnerSession) || hasValidToken;
 
-    if (!isPublished && !isOwnerSession) {
-      renderPrivatePortfolioState(username);
-      return;
+    if (!isPublished) {
+      if (!isAuthorizedPreview) {
+        renderPrivatePortfolioState(username);
+        return;
+      }
+      // Authorized to view Draft / Unpublished portfolio in preview mode
+      renderDraftPreviewBanner(username, isOwnerSession);
     }
 
-    // 3. Render Portfolio with template
+    // 3. Dynamic SEO, Canonical & Social Open Graph metadata
+    updateSocialMetadata(userData, username, isPublished);
+
+    // 4. Render Portfolio with template
     const templateId = templateOverride || userData.publishSettings?.templateId || 'minimal-professional';
     renderPortfolio(userData, username, templateId);
 
-    // 4. Bind Public Contact Form
-    bindPublicContactForm(username);
+    // 5. Bind Public Contact Form (with honeypot & rate-limiting)
+    bindPublicContactForm(username, userData);
+
+    // 6. Bind Share Button & Web Share API
+    bindShareControls(userData, username, isPublished);
+
+    // 7. Reliable Public Telemetry Event Collection
+    // Excludes draft/preview modes and owner sessions from public metrics
+    if (isPublished && !isAuthorizedPreview && !isOwnerSession) {
+      trackPublicPortfolioTelemetry(username, userData);
+    }
 
   } catch (err) {
     console.error('Error rendering public portfolio:', err);
@@ -82,7 +108,12 @@ function isCurrentSessionOwner(username) {
     const raw = localStorage.getItem('profilefolio_session') || localStorage.getItem('ssrnovx_mock_session');
     if (!raw) return false;
     const user = JSON.parse(raw);
-    return (user.username || '').toLowerCase() === username.toLowerCase();
+    const sessionUser = (user.username || '').toLowerCase();
+    const targetUser = (username || '').toLowerCase();
+    if (sessionUser === targetUser) return true;
+    if ((sessionUser === 'sunny' || sessionUser === 'ssrnov') && (targetUser === 'sunny' || targetUser === 'ssrnov')) return true;
+    if ((user.github_handle || '').toLowerCase() === targetUser) return true;
+    return false;
   } catch (e) {
     return false;
   }
@@ -104,8 +135,9 @@ function extractUsernameSlug() {
   if (params.get('u')) return params.get('u').trim().toLowerCase();
   if (params.get('username')) return params.get('username').trim().toLowerCase();
 
-  // If on /u/sunny specifically, default to sunny
+  // If on /u/sunny or /u/ssrnov specifically, default to matching handle
   if (window.location.pathname.includes('/u/sunny')) return 'sunny';
+  if (window.location.pathname.includes('/u/ssrnov')) return 'ssrnov';
 
   // If user is currently logged in and on /u/, show THEIR portfolio
   const activeUser = getActiveUser();
@@ -114,20 +146,357 @@ function extractUsernameSlug() {
   return null;
 }
 
+// ==============================================================================
+// Feature 3: Draft Mode Banner
+// ==============================================================================
+function renderDraftPreviewBanner(username, isOwner) {
+  const existing = document.getElementById('draft-preview-banner');
+  if (existing) existing.remove();
+
+  const banner = document.createElement('aside');
+  banner.id = 'draft-preview-banner';
+  banner.setAttribute('role', 'status');
+  banner.setAttribute('aria-label', 'Private draft preview notice');
+  banner.style.cssText = `
+    background: rgba(234, 179, 8, 0.14);
+    border-bottom: 1px solid rgba(234, 179, 8, 0.4);
+    color: #eab308;
+    padding: 8px 16px;
+    font-size: var(--text-xs);
+    font-family: var(--font-mono);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    backdrop-filter: blur(8px);
+  `;
+
+  banner.innerHTML = `
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #eab308;"></span>
+      <span><strong>Private Draft Preview</strong> &bull; This portfolio is unpublished and excluded from search engines.</span>
+    </div>
+    ${isOwner ? `
+      <div style="display: flex; gap: 8px;">
+        <a href="/dashboard/builder/" class="btn btn-secondary btn-sm" style="font-size: 11px; padding: 2px 10px;">Edit in Builder</a>
+        <a href="/dashboard/publish/" class="btn btn-primary btn-sm" style="font-size: 11px; padding: 2px 10px;">Publish Live</a>
+      </div>
+    ` : `
+      <span style="font-size: 11px; color: var(--text-secondary);">Authorized via secure preview token</span>
+    `}
+  `;
+
+  document.body.prepend(banner);
+}
+
+// ==============================================================================
+// Feature 5: SEO Canonical & Open Graph Metadata
+// ==============================================================================
+function updateSocialMetadata(userData, username, isPublished) {
+  const profile = userData.profile || {};
+  const displayName = profile.fullName || profile.displayName || username;
+  const headline = profile.headline || 'Software Engineer & Builder';
+  const bio = profile.bio || headline;
+  const canonicalUrl = `https://folioryn.dev/u/${username}`;
+
+  // 1. Page Title
+  document.title = `${displayName} — ${headline} | Folioryn`;
+
+  // 2. Canonical Link
+  let canonicalEl = document.querySelector('link[rel="canonical"]');
+  if (!canonicalEl) {
+    canonicalEl = document.createElement('link');
+    canonicalEl.rel = 'canonical';
+    document.head.appendChild(canonicalEl);
+  }
+  canonicalEl.href = canonicalUrl;
+
+  // 3. Meta Description
+  let descEl = document.querySelector('meta[name="description"]');
+  if (!descEl) {
+    descEl = document.createElement('meta');
+    descEl.name = 'description';
+    document.head.appendChild(descEl);
+  }
+  descEl.content = bio.slice(0, 160);
+
+  // 4. Crawler Indexing Gate: If Draft or Unpublished, set noindex, nofollow
+  let robotsEl = document.querySelector('meta[name="robots"]');
+  if (!robotsEl) {
+    robotsEl = document.createElement('meta');
+    robotsEl.name = 'robots';
+    document.head.appendChild(robotsEl);
+  }
+  robotsEl.content = isPublished ? 'index, follow' : 'noindex, nofollow';
+
+  // 5. Open Graph Meta Tags
+  setMetaTag('property', 'og:type', 'profile');
+  setMetaTag('property', 'og:title', `${displayName} — Portfolio`);
+  setMetaTag('property', 'og:description', bio.slice(0, 160));
+  setMetaTag('property', 'og:url', canonicalUrl);
+  setMetaTag('property', 'og:site_name', 'Folioryn');
+
+  // 6. Twitter Cards
+  setMetaTag('name', 'twitter:card', 'summary_large_image');
+  setMetaTag('name', 'twitter:title', `${displayName} — Portfolio`);
+  setMetaTag('name', 'twitter:description', bio.slice(0, 160));
+}
+
+function setMetaTag(attrName, attrVal, content) {
+  let el = document.querySelector(`meta[${attrName}="${attrVal}"]`);
+  if (!el) {
+    el = document.createElement('meta');
+    el.setAttribute(attrName, attrVal);
+    document.head.appendChild(el);
+  }
+  el.content = content;
+}
+
+// ==============================================================================
+// Feature 7: Social Sharing & Web Share API
+// ==============================================================================
+function bindShareControls(userData, username, isPublished) {
+  const shareBtn = document.getElementById('share-portfolio-btn');
+  if (!shareBtn) return;
+
+  const profile = userData.profile || {};
+  const displayName = profile.fullName || profile.displayName || username;
+  const canonicalUrl = `${window.location.origin}/u/${username}`;
+
+  shareBtn.addEventListener('click', async () => {
+    if (!isPublished) {
+      alert('Note: This portfolio is currently saved as an unpublished draft. Public visitors without access will see the draft gate.');
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${displayName} — Developer Portfolio`,
+          text: `Check out ${displayName}'s professional portfolio and engineering projects on Folioryn:`,
+          url: canonicalUrl
+        });
+        return;
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.warn('Web Share API fallback:', err);
+        }
+      }
+    }
+
+    // Clipboard Fallback
+    try {
+      await navigator.clipboard.writeText(canonicalUrl);
+      showShareFeedback(shareBtn, '✓ Link Copied!');
+    } catch (clipErr) {
+      prompt('Copy your portfolio link:', canonicalUrl);
+    }
+  });
+}
+
+function showShareFeedback(btn, message) {
+  const originalHtml = btn.innerHTML;
+  btn.textContent = message;
+  btn.style.borderColor = '#22c55e';
+  btn.style.color = '#22c55e';
+
+  setTimeout(() => {
+    btn.innerHTML = originalHtml;
+    btn.removeAttribute('style');
+  }, 2500);
+}
+
+// ==============================================================================
+// Feature 6: Public Contact Form with Spam Honeypot & Rate Limiting
+// ==============================================================================
+function bindPublicContactForm(username, userData) {
+  const form = document.getElementById('portfolio-contact-form') || document.getElementById('public-contact-form');
+  const statusEl = document.getElementById('contact-form-status');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // 1. Honeypot Spam Protection
+    const hp = document.getElementById('contact-hp');
+    if (hp && hp.value.trim().length > 0) {
+      console.warn('Honeypot triggered, message dropped.');
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.style.color = '#22c55e';
+        statusEl.textContent = '✓ Message received! Thank you.';
+      }
+      form.reset();
+      return;
+    }
+
+    // 2. Client-Side Rate Limiting (max 3 messages in 5 minutes)
+    const rateLimitKey = 'folioryn_contact_submissions_tracker';
+    const now = Date.now();
+    let submissions = [];
+    try {
+      submissions = JSON.parse(localStorage.getItem(rateLimitKey) || '[]');
+    } catch (err) {
+      submissions = [];
+    }
+    // Retain only submissions within last 5 minutes
+    submissions = submissions.filter(ts => (now - ts) < 5 * 60 * 1000);
+
+    if (submissions.length >= 3) {
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.style.color = '#ef4444';
+        statusEl.textContent = 'Rate limit reached: You have sent messages too frequently. Please wait a few minutes before trying again.';
+      }
+      return;
+    }
+
+    // 3. Field Extraction & Validation
+    const nameInput = document.getElementById('contact-name');
+    const emailInput = document.getElementById('contact-email');
+    const subjectInput = document.getElementById('contact-subject');
+    const messageInput = document.getElementById('contact-message');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    const senderName = nameInput?.value.trim();
+    const senderEmail = emailInput?.value.trim();
+    const subject = subjectInput?.value.trim() || 'Portfolio Inquiry';
+    const message = messageInput?.value.trim();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!senderName || !senderEmail || !message) {
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.style.color = '#ef4444';
+        statusEl.textContent = 'Please complete all required fields.';
+      }
+      return;
+    }
+
+    if (!emailRegex.test(senderEmail)) {
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.style.color = '#ef4444';
+        statusEl.textContent = 'Please enter a valid email address.';
+      }
+      return;
+    }
+
+    if (message.length < 10) {
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.style.color = '#ef4444';
+        statusEl.textContent = 'Message must be at least 10 characters long.';
+      }
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending Message...';
+    }
+
+    try {
+      // 4. Save into recipient portfolio owner's scoped storage and dashboard inboxes
+      const recipientUser = (userData?.profile?.username || username || 'sunny').toLowerCase();
+      const targetUserId = userData?.profile?.id || (recipientUser === 'sunny' ? 'usr_mock_sunny_9921' : recipientUser);
+      const isSunnyOrSsrnov = recipientUser === 'sunny' || recipientUser === 'ssrnov' || targetUserId === 'usr_mock_sunny_9921';
+
+      const newMsg = {
+        id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+        recipient: recipientUser,
+        sender_name: senderName,
+        sender_email: senderEmail,
+        subject,
+        message,
+        is_read: false,
+        delivery_status: 'delivered',
+        created_at: new Date().toISOString()
+      };
+
+      const keysToSave = new Set([
+        `profilefolio_user_${targetUserId}_messages`,
+        `profilefolio_user_${recipientUser}_messages`,
+        'profilefolio_contact_messages'
+      ]);
+
+      if (isSunnyOrSsrnov) {
+        keysToSave.add('profilefolio_user_usr_mock_sunny_9921_messages');
+        keysToSave.add('profilefolio_user_ssrnov_messages');
+        keysToSave.add('profilefolio_user_sunny_messages');
+      }
+
+      // Read, prepend, and persist to all destination inboxes
+      keysToSave.forEach(k => {
+        try {
+          const existing = JSON.parse(localStorage.getItem(k) || '[]');
+          existing.unshift(newMsg);
+          localStorage.setItem(k, JSON.stringify(existing));
+        } catch (e) {
+          localStorage.setItem(k, JSON.stringify([newMsg]));
+        }
+      });
+
+
+      // Also submit via Supabase contactService if configured
+      try {
+        await contactService.submitMessage(username, {
+          senderName,
+          senderEmail,
+          subject,
+          message
+        });
+      } catch (remoteErr) {
+        console.warn('Remote contact service notice:', remoteErr);
+      }
+
+      // Record timestamp for rate-limiting
+      submissions.push(now);
+      localStorage.setItem(rateLimitKey, JSON.stringify(submissions));
+
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.style.color = '#22c55e';
+        statusEl.textContent = '✓ Message received! The portfolio owner has been notified.';
+      }
+      form.reset();
+
+      // Track successful contact submission
+      trackAnalyticsEvent({
+        username,
+        eventType: 'contact_submit'
+      });
+    } catch (err) {
+      console.error('Contact submission error:', err);
+      if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.style.color = '#ef4444';
+        statusEl.textContent = 'Could not send message. Please try again.';
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Send Message</span> <span aria-hidden="true">&rarr;</span>';
+      }
+    }
+  });
+}
+
 function renderPortfolio(data, username, templateId) {
   const profile = data.profile || {};
   const displayName = profile.fullName || profile.displayName || profile.display_name || username;
   const headline = profile.headline || 'Software Engineer & Builder';
   const bio = profile.bio || 'Building software applications with modern web standards.';
 
-  // 1. Update Document Title & SEO
-  document.title = `${displayName} (@${username}) | Folioryn`;
-
-  // 2. Apply Template Archetype Style
+  // Apply Template Archetype Style
   document.documentElement.setAttribute('data-template', templateId);
   document.body.className = `template-${templateId}`;
 
-  // 3. Text & Bio Targets
+  // Text & Bio Targets
   document.querySelectorAll('[data-builder-target="display_name"]').forEach((el) => {
     el.textContent = displayName;
   });
@@ -146,7 +515,7 @@ function renderPortfolio(data, username, templateId) {
     });
   }
 
-  // 4. Links
+  // Links
   if (profile.githubUrl) {
     document.querySelectorAll('[data-builder-target="github_url"]').forEach((el) => {
       el.setAttribute('href', profile.githubUrl);
@@ -158,14 +527,13 @@ function renderPortfolio(data, username, templateId) {
     });
   }
 
-  const effectiveEmail = profile.email || '';
+  const effectiveEmail = profile.email || profile.contactEmail || '';
   if (effectiveEmail) {
     document.querySelectorAll('[data-builder-target="contact_email"]').forEach((el) => {
       el.setAttribute('href', `mailto:${effectiveEmail}`);
       el.style.display = '';
-      if (el.textContent.includes('Email:')) {
-        el.textContent = `Email: ${effectiveEmail}`;
-      }
+      const textSpan = el.querySelector('span') || el;
+      textSpan.textContent = `Email: ${effectiveEmail}`;
     });
   } else {
     document.querySelectorAll('[data-builder-target="contact_email"]').forEach((el) => {
@@ -173,23 +541,27 @@ function renderPortfolio(data, username, templateId) {
     });
   }
 
-  // 5. Update Header Slug Mark
+  // Update Header Slug Mark
   document.querySelectorAll('.logo-text').forEach((el) => {
     el.textContent = username;
   });
 
-  // 6. Dynamic Hero Highlights
+  // Dynamic Hero Highlights
   renderHighlightsBar(data, username);
 
-  // 7. Render Dynamic Education
+  // Render Dynamic Education
   renderEducationSection(data.education, username);
 
-  // 8. Render Dynamic Projects
+  // Render Dynamic Projects
   renderProjectsSection(data.projects, username);
 
-  // 9. Render Dynamic Skills
+  // Render Dynamic Skills
   renderSkillsSection(data.skills, username);
+
+  // Render Published Blog Articles
+  renderArticlesSection(data.articles, username, data.publishSettings);
 }
+
 
 function renderHighlightsBar(data, username) {
   const bar = document.getElementById('hero-highlights-bar');
@@ -304,9 +676,10 @@ function renderProjectsSection(projectsList, username) {
 
     const repo = proj.repo_url || proj.githubUrl || '';
     const live = proj.live_url || proj.liveUrl || '';
+    const projId = proj.id || proj.title;
 
     return `
-      <article class="project-card" style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-6); background-color: var(--bg-surface); display: flex; flex-direction: column;">
+      <article class="project-card" data-project-id="${escapeHtml(projId)}" data-project-title="${escapeHtml(proj.title)}" style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-6); background-color: var(--bg-surface); display: flex; flex-direction: column;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-3);">
           <span class="badge" style="font-family: var(--font-mono); font-size: 11px;">${escapeHtml(proj.category || 'Software')}</span>
           ${proj.stars_count ? `<span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">&star; ${proj.stars_count}</span>` : ''}
@@ -321,8 +694,8 @@ function renderProjectsSection(projectsList, username) {
           ${tagsHtml}
         </div>
         <div style="display: flex; gap: var(--space-3); border-top: 1px solid var(--border-subtle); padding-top: var(--space-4); margin-top: auto;">
-          ${repo ? `<a href="${repo}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">GitHub &nearr;</a>` : ''}
-          ${live ? `<a href="${live}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">Live Demo &nearr;</a>` : ''}
+          ${repo ? `<a href="${repo}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card track-github-btn" data-project-id="${escapeHtml(projId)}" data-project-title="${escapeHtml(proj.title)}" style="font-size: var(--text-xs); padding: 4px 12px;">GitHub &nearr;</a>` : ''}
+          ${live ? `<a href="${live}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-card track-demo-btn" data-project-id="${escapeHtml(projId)}" data-project-title="${escapeHtml(proj.title)}" style="font-size: var(--text-xs); padding: 4px 12px;">Live Demo &nearr;</a>` : ''}
         </div>
       </article>
     `;
@@ -376,68 +749,16 @@ function renderSkillsSection(skillsList, username) {
   `).join('');
 }
 
-function bindPublicContactForm(username) {
-  const form = document.getElementById('public-contact-form') || document.getElementById('portfolio-contact-form');
-  const statusEl = document.getElementById('contact-form-status');
-  if (!form) return;
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const nameInput = document.getElementById('contact-name');
-    const emailInput = document.getElementById('contact-email');
-    const subjectInput = document.getElementById('contact-subject');
-    const messageInput = document.getElementById('contact-message');
-    const submitBtn = form.querySelector('button[type="submit"]');
-
-    const senderName = nameInput?.value.trim();
-    const senderEmail = emailInput?.value.trim();
-    const subject = subjectInput?.value.trim() || 'Portfolio Inquiry';
-    const message = messageInput?.value.trim();
-
-    if (!senderName || !senderEmail || !message) {
-      if (statusEl) {
-        statusEl.style.display = 'block';
-        statusEl.style.color = '#ef4444';
-        statusEl.textContent = 'Please fill out all required fields.';
-      }
-      return;
-    }
-
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending Message...';
-    }
-
-    try {
-      await contactService.submitMessage(username, {
-        senderName,
-        senderEmail,
-        subject,
-        message
-      });
-
-      if (statusEl) {
-        statusEl.style.display = 'block';
-        statusEl.style.color = '#22c55e';
-        statusEl.textContent = '✓ Message received! The portfolio owner has been notified.';
-      }
-      form.reset();
-    } catch (err) {
-      if (statusEl) {
-        statusEl.style.display = 'block';
-        statusEl.style.color = '#ef4444';
-        statusEl.textContent = 'Could not send message. Please try again.';
-      }
-    } finally {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>Send Message</span> <span aria-hidden="true">&rarr;</span>';
-      }
-    }
-  });
-}
-
 function renderPrivatePortfolioState(username) {
+  // Set crawler noindex
+  let robotsEl = document.querySelector('meta[name="robots"]');
+  if (!robotsEl) {
+    robotsEl = document.createElement('meta');
+    robotsEl.name = 'robots';
+    document.head.appendChild(robotsEl);
+  }
+  robotsEl.content = 'noindex, nofollow';
+
   const mainContent = document.getElementById('main-content');
   if (!mainContent) return;
 
@@ -463,6 +784,14 @@ function renderPrivatePortfolioState(username) {
 }
 
 function renderNotFoundState(username) {
+  let robotsEl = document.querySelector('meta[name="robots"]');
+  if (!robotsEl) {
+    robotsEl = document.createElement('meta');
+    robotsEl.name = 'robots';
+    document.head.appendChild(robotsEl);
+  }
+  robotsEl.content = 'noindex, nofollow';
+
   const mainContent = document.getElementById('main-content');
   if (!mainContent) return;
 
@@ -494,3 +823,171 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
+/**
+ * Attaches privacy-respecting telemetry listeners on public portfolios.
+ */
+function trackPublicPortfolioTelemetry(username, userData) {
+  // 1. Deduplicate portfolio page visits per 15-minute window or session
+  const sessionKey = `folioryn_pv_sess_${username}`;
+  try {
+    if (!sessionStorage.getItem(sessionKey)) {
+      trackAnalyticsEvent({
+        username,
+        eventType: 'portfolio_view',
+        referrer: typeof document !== 'undefined' ? document.referrer : null
+      });
+      sessionStorage.setItem(sessionKey, String(Date.now()));
+    }
+  } catch (e) {}
+
+  // 2. Track project card view & clicks
+  document.querySelectorAll('.project-card').forEach(card => {
+    const pid = card.getAttribute('data-project-id');
+    const ptitle = card.getAttribute('data-project-title');
+    if (!pid) return;
+
+    // Project card click / view
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.track-github-btn') || e.target.closest('.track-demo-btn')) return;
+      const projSessionKey = `folioryn_pview_${username}_${pid}`;
+      try {
+        if (!sessionStorage.getItem(projSessionKey)) {
+          trackAnalyticsEvent({
+            username,
+            eventType: 'project_view',
+            projectId: pid,
+            projectTitle: ptitle
+          });
+          sessionStorage.setItem(projSessionKey, 'true');
+        }
+      } catch (err) {}
+    });
+
+    // GitHub Repo button click
+    const ghBtn = card.querySelector('.track-github-btn');
+    if (ghBtn) {
+      ghBtn.addEventListener('click', () => {
+        trackAnalyticsEvent({
+          username,
+          eventType: 'github_click',
+          projectId: pid,
+          projectTitle: ptitle
+        });
+      });
+    }
+
+    // Live Demo button click
+    const demoBtn = card.querySelector('.track-demo-btn');
+    if (demoBtn) {
+      demoBtn.addEventListener('click', () => {
+        trackAnalyticsEvent({
+          username,
+          eventType: 'demo_click',
+          projectId: pid,
+          projectTitle: ptitle
+        });
+      });
+    }
+  });
+
+  // 3. Track Resume downloads
+  document.querySelectorAll('a[href*="resume"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      trackAnalyticsEvent({
+        username,
+        eventType: 'resume_download'
+      });
+    });
+  });
+}
+
+function renderArticlesSection(articlesList, username, publishSettings) {
+  const section = document.getElementById('blog');
+  if (!section) return;
+
+  // Handle section visibility toggle from builder publish settings
+  if (publishSettings?.sectionVisibility?.blog === false) {
+    section.style.display = 'none';
+    return;
+  } else {
+    section.style.display = '';
+  }
+
+  const container = document.getElementById('portfolio-articles-container') ||
+                    section.querySelector('.portfolio-articles-grid') ||
+                    section.querySelector('.container > div[style*="grid"]');
+  if (!container) return;
+
+  const isOwner = isCurrentSessionOwner(username);
+  let articles = Array.isArray(articlesList) ? articlesList : [];
+
+  // Fallback to active blog engine articles or DEFAULT_BLOG_ARTICLES if list is empty
+  if (articles.length === 0) {
+    try {
+      const activeArticles = getBlogArticles();
+      if (activeArticles && activeArticles.length > 0) {
+        articles = activeArticles;
+      } else {
+        articles = [...DEFAULT_BLOG_ARTICLES];
+      }
+    } catch (e) {
+      articles = [...DEFAULT_BLOG_ARTICLES];
+    }
+  }
+
+  // Filter published articles (or all if active owner)
+  const displayArticles = articles.filter(a => isOwner || a.isPublished !== false);
+
+  if (displayArticles.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; padding: var(--space-10) var(--space-6); border: 1px dashed var(--border-color); border-radius: var(--radius-md); text-align: center; color: var(--text-muted); background-color: var(--bg-surface);">
+        <p style="margin: 0 0 6px 0; font-weight: 700; font-size: var(--text-base); color: var(--text-primary);">No articles published yet</p>
+        <p style="margin: 0; font-size: var(--text-xs); color: var(--text-secondary);">Articles written in the Folioryn Blog editor will appear here once published.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = displayArticles.map(art => {
+    const title = escapeHtml(art.title || 'Untitled Article');
+    const excerpt = escapeHtml(art.excerpt || art.summary || (art.content ? art.content.slice(0, 140) + '...' : ''));
+    const readingTime = art.readingTime ? `${escapeHtml(String(art.readingTime))} min read` : '4 min read';
+    const dateFormatted = art.publishedAt || art.createdAt ? new Date(art.publishedAt || art.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently published';
+    const slug = art.slug || art.id;
+    const postUrl = `/blog/post.html?slug=${encodeURIComponent(slug)}`;
+    const rawTags = art.tags;
+    const tags = Array.isArray(rawTags) ? rawTags : (typeof rawTags === 'string' ? rawTags.split(',').map(t => t.trim()) : []);
+
+    return `
+      <article class="interactive-3d-card article-portfolio-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; justify-content: space-between; transition: border-color var(--transition-fast), transform var(--transition-fast);">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+            <span>${escapeHtml(dateFormatted)}</span>
+            <span class="badge" style="font-size: 10px;">${escapeHtml(readingTime)}</span>
+          </div>
+          <h3 style="font-size: var(--text-lg); font-weight: 800; color: var(--text-primary); margin: 0 0 var(--space-3) 0; line-height: 1.3;">
+            <a href="${postUrl}" style="color: inherit; text-decoration: none;">${title}</a>
+          </h3>
+          <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0 0 var(--space-4) 0;">
+            ${excerpt}
+          </p>
+          ${tags.length > 0 ? `
+            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--space-4);">
+              ${tags.slice(0, 3).map(t => `<span class="badge" style="font-size: 10px; background: var(--bg-secondary); color: var(--text-muted);">#${escapeHtml(t)}</span>`).join('')}
+            </div>
+          ` : ''}
+        </div>
+        <div style="padding-top: var(--space-4); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+          <a href="${postUrl}" class="btn btn-secondary btn-sm" style="font-size: 11px;">
+            <span>Read Article</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">by @${escapeHtml(username)}</span>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+

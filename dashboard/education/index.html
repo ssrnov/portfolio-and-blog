@@ -22,12 +22,26 @@
 
   <script>
     (function () {
-      const storedTheme = localStorage.getItem('theme');
-      if (storedTheme) {
-        document.documentElement.setAttribute('data-theme', storedTheme);
-      } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      try {
+        var saved = localStorage.getItem('folioryn_theme') || localStorage.getItem('theme');
+        var valid = ['dark', 'light', 'night'];
+        var theme = (valid.indexOf(saved) !== -1) ? saved : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+      try {
+        var raw = localStorage.getItem('profilefolio_session') ||
+                  localStorage.getItem('ssrnovx_mock_session') ||
+                  localStorage.getItem('profilefolio_active_user');
+        var user = raw ? JSON.parse(raw) : null;
+        if (!user || (!user.id && !user.username && !user.email)) {
+          var target = encodeURIComponent(window.location.pathname + window.location.search);
+          window.location.replace('/login/?redirect=' + target + '&auth=required');
+        }
+      } catch (e) {
+        var target = encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.replace('/login/?redirect=' + target + '&auth=required');
       }
     })();
   </script>
@@ -40,7 +54,7 @@
     <div>
       <div class="sidebar-header" style="padding: var(--space-6) var(--space-6); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
         <a href="/" class="brand-logo" aria-label="Folioryn Home" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
-          <span style="width: 26px; height: 26px; border-radius: var(--radius-sm); background: var(--accent-primary); color: #080909; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px;">F</span>
+          <span style="width: 26px; height: 26px; border-radius: var(--radius-sm); background: var(--accent-primary); color: var(--accent-contrast); display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px;">F</span>
           <span style="font-weight: 800; font-size: 1.15rem; color: var(--text-primary); letter-spacing: -0.02em;">Folioryn</span>
         </a>
       </div>

@@ -11,7 +11,7 @@
   <meta property="og:title" content="Sunny (@sunny) — Folioryn" />
   <meta property="og:description" content="Senior Systems & Frontend Architect. Building scalable distributed systems and zero-dependency web applications." />
   <meta property="og:type" content="profile" />
-  <meta property="og:url" content="https://ssrnovx.dev/u/sunny" />
+  <meta property="og:url" content="https://folioryn.dev/u/sunny" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080909'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%23F5F5F5' text-anchor='middle'>F</text></svg>" />
@@ -30,7 +30,14 @@
   <!-- Theme Script (Prevent FOUC) -->
   <script>
     (function () {
-      document.documentElement.setAttribute('data-theme', 'dark');
+      try {
+        var saved = localStorage.getItem('folioryn_theme') || localStorage.getItem('theme');
+        var valid = ['dark', 'light', 'night'];
+        var theme = (valid.indexOf(saved) !== -1) ? saved : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
     })();
   </script>
 </head>
@@ -57,8 +64,10 @@
         <a href="#projects" class="nav-link">Projects</a>
         <a href="#skills" class="nav-link">Skills</a>
         <a href="#experience" class="nav-link">Experience</a>
+        <a href="#blog" class="nav-link">Articles</a>
         <a href="#contact" class="nav-link">Contact</a>
       </nav>
+
 
       <div class="header-actions">
         <!-- Theme Toggle -->
@@ -102,7 +111,7 @@
               <span>ATS Resume (PDF)</span>
               <span aria-hidden="true">&nearr;</span>
             </a>
-            <a href="https://github.com/ssrnov" data-builder-target="github_url" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card">
+            <a href="#" data-builder-target="github_url" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="display: none;">
               <span>GitHub Profile</span>
               <span aria-hidden="true">&nearr;</span>
             </a>
@@ -198,8 +207,8 @@
               <span class="badge">Streams</span>
             </div>
             <div style="display: flex; gap: var(--space-3); border-top: 1px solid var(--border-subtle); padding-top: var(--space-4);">
-              <a href="https://github.com/ssrnov" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">GitHub &nearr;</a>
-              <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">Architecture Doc &rarr;</a>
+              <a href="#" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">GitHub &nearr;</a>
+              <a href="#" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">Architecture Doc &rarr;</a>
             </div>
           </article>
 
@@ -222,8 +231,8 @@
               <span class="badge">Telemetry</span>
             </div>
             <div style="display: flex; gap: var(--space-3); border-top: 1px solid var(--border-subtle); padding-top: var(--space-4);">
-              <a href="https://github.com/ssrnov" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">GitHub &nearr;</a>
-              <a href="https://folioryn.dev" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">Live Demo &nearr;</a>
+              <a href="#" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">GitHub &nearr;</a>
+              <a href="#" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">Live Demo &nearr;</a>
             </div>
           </article>
 
@@ -246,8 +255,8 @@
               <span class="badge">Zero-Knowledge</span>
             </div>
             <div style="display: flex; gap: var(--space-3); border-top: 1px solid var(--border-subtle); padding-top: var(--space-4);">
-              <a href="https://github.com/ssrnov" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">GitHub &nearr;</a>
-              <a href="https://github.com/ssrnov/portfolio-and-blog" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">Security Spec &rarr;</a>
+              <a href="#" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">GitHub &nearr;</a>
+              <a href="#" class="btn btn-secondary btn-card" style="font-size: var(--text-xs); padding: 4px 12px;">Security Spec &rarr;</a>
             </div>
           </article>
 
@@ -343,8 +352,27 @@
       </div>
     </section>
 
+    <!-- PUBLISHED ARTICLES & BLOG SECTION -->
+    <section class="section-py" id="blog">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Articles &amp; Writing</span>
+          <h2 class="section-title">Published Technical Articles</h2>
+          <p class="section-subtitle">Systems architecture essays, technical write-ups, and engineering notes.</p>
+        </div>
+
+        <div id="portfolio-articles-container" class="portfolio-articles-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-6);">
+          <div style="grid-column: 1 / -1; padding: var(--space-10) var(--space-6); border: 1px dashed var(--border-color); border-radius: var(--radius-md); text-align: center; color: var(--text-muted); background-color: var(--bg-surface);">
+            <p style="margin: 0 0 6px 0; font-weight: 700; font-size: var(--text-base); color: var(--text-primary);">No articles published yet</p>
+            <p style="margin: 0; font-size: var(--text-xs); color: var(--text-secondary);">Articles written in the Folioryn Blog editor will appear here once published.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- CONTACT & INQUIRIES -->
     <section class="section-py" id="contact" style="border-bottom: none;">
+
       <div class="container">
         <div style="border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-12) var(--space-8); background-color: var(--bg-surface); text-align: center; max-width: 800px; margin: 0 auto;">
           <span class="section-label" style="text-align: center;">Get In Touch</span>
@@ -356,10 +384,10 @@
           </p>
 
           <div style="display: flex; justify-content: center; gap: var(--space-4); flex-wrap: wrap; margin-bottom: var(--space-6);">
-            <a href="mailto:contact@ssrnovx.dev" data-builder-target="contact_email" class="btn btn-secondary btn-card" style="padding: 10px 24px;">
-              <span>Email: contact@ssrnovx.dev</span>
+            <a href="#" data-builder-target="contact_email" class="btn btn-secondary btn-card" style="padding: 10px 24px; display: none;">
+              <span>Email Direct &rarr;</span>
             </a>
-            <a href="https://github.com/ssrnov" data-builder-target="github_url" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="padding: 10px 24px;">
+            <a href="#" data-builder-target="github_url" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="padding: 10px 24px; display: none;">
               <span>GitHub Profile &nearr;</span>
             </a>
           </div>

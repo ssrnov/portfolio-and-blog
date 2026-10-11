@@ -106,6 +106,23 @@ function loadUrlParamsAndLocalData() {
 
   const elBio = document.getElementById('ob-bio');
   if (elBio) elBio.value = onboardingState.bio;
+
+  // Ensure GitHub sync username is blank by default (never hardcoded to ssrnov)
+  const elGithub = document.getElementById('ob-github-handle');
+  if (elGithub) elGithub.value = '';
+  const userGh = user?.github_handle || (existingProfile?.githubUrl ? existingProfile.githubUrl.replace(/^https?:\/\/(www\.)?github\.com\//i, '').replace(/^@+/, '').split('/')[0] : '') || urlParams.get('github') || '';
+  if (elGithub && userGh && userGh !== 'ssrnov') {
+    elGithub.value = userGh;
+  }
+
+  const elProjTitle = document.getElementById('ob-proj-title');
+  if (elProjTitle) elProjTitle.value = onboardingState.projectTitle || '';
+
+  const elProjDesc = document.getElementById('ob-proj-desc');
+  if (elProjDesc) elProjDesc.value = onboardingState.projectDesc || '';
+
+  const elProjTags = document.getElementById('ob-proj-tags');
+  if (elProjTags) elProjTags.value = Array.isArray(onboardingState.projectTags) ? onboardingState.projectTags.join(', ') : (onboardingState.projectTags || '');
 }
 
 function initWizardButtons() {

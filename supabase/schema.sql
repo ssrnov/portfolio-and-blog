@@ -55,6 +55,9 @@ CREATE TABLE IF NOT EXISTS public.portfolios (
   slug TEXT UNIQUE NOT NULL,
   template_id TEXT NOT NULL DEFAULT 'minimal', -- 'minimal', 'terminal', 'editorial'
   is_published BOOLEAN NOT NULL DEFAULT false,
+  status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('draft', 'published', 'unpublished')),
+  preview_token TEXT,
+  preview_token_expires_at TIMESTAMPTZ,
   custom_domain TEXT UNIQUE,
   seo_title TEXT,
   seo_description TEXT,
@@ -196,6 +199,7 @@ CREATE TABLE IF NOT EXISTS public.contact_messages (
   subject TEXT,
   message TEXT NOT NULL,
   is_read BOOLEAN NOT NULL DEFAULT false,
+  delivery_status TEXT DEFAULT 'sent' CHECK (delivery_status IN ('pending', 'sent', 'failed')),
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
@@ -235,7 +239,14 @@ CREATE POLICY "Users can update their own profile"
 -- Anyone can read published portfolios
 CREATE POLICY "Published portfolios are publicly viewable"
   ON public.portfolios FOR SELECT
-  USING (is_published = true OR auth.uid() = user_id);
+  USING (
+    (is_published = true AND status = 'published')
+    OR auth.uid() = user_id
+    OR (
+      preview_token IS NOT NULL 
+      AND preview_token_expires_at > now()
+    )
+  );
 
 CREATE POLICY "Users can insert their own portfolios"
   ON public.portfolios FOR INSERT
@@ -480,4 +491,66 @@ CREATE POLICY "Users Can Delete Portfolio Assets"
     bucket_id = 'portfolio-assets'
     AND auth.uid()::text = (storage.foldername(name))[1]
   );
+
+-- ==============================================================================
+-- 8. Analytics Events & Telemetry
+-- ==============================================================================
+
+CREATE TABLE IF NOT EXISTS public.analytics_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  portfolio_id UUID REFERENCES public.portfolios(id) ON DELETE CASCADE,
+  portfolio_slug TEXT NOT NULL,
+  project_id TEXT,
+  project_title TEXT,
+  event_type TEXT NOT NULL CHECK (
+    event_type IN (
+      'portfolio_view',
+      'project_view',
+      'github_click',
+      'demo_click',
+      'resume_download',
+      'contact_submit'
+    )
+  ),
+  referrer TEXT,
+  device_type TEXT CHECK (device_type IN ('desktop', 'mobile', 'tablet', 'other')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_analytics_portfolio_created 
+  ON public.analytics_events(portfolio_slug, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_analytics_project_created 
+  ON public.analytics_events(portfolio_slug, project_id, created_at DESC)
+  WHERE project_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_analytics_type_created 
+  ON public.analytics_events(portfolio_slug, event_type, created_at DESC);
+
+ALTER TABLE public.analytics_events ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public can record analytics events"
+  ON public.analytics_events FOR INSERT
+  WITH CHECK (true);
+
+CREATE POLICY "Owners can view their portfolio analytics"
+  ON public.analytics_events FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.portfolios p
+      WHERE p.slug = analytics_events.portfolio_slug
+        AND p.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Owners can delete their portfolio analytics"
+  ON public.analytics_events FOR DELETE
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.portfolios p
+      WHERE p.slug = analytics_events.portfolio_slug
+        AND p.user_id = auth.uid()
+    )
+  );
+
 
