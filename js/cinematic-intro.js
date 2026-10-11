@@ -44,6 +44,11 @@ export function shouldPlayIntro() {
     return true;
   }
 
+  // Do not play intro on dashboard workspaces
+  if (window.location.pathname.startsWith('/dashboard') || document.body.classList.contains('dashboard-shell')) {
+    return false;
+  }
+
   // If already playing in current document lifecycle, don't duplicate
   if (_isPlaying || document.getElementById(INTRO_ELEMENT_ID)) {
     return false;

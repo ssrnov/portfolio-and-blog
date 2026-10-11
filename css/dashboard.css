@@ -1656,4 +1656,26 @@ body.is-printing-pdf {
   margin: var(--space-4) 0;
 }
 
+/* --------------------------------------------------------------------------
+   Suppress 3D Perspective Tilt on Dashboard
+   Keeps all admin, editing, and analytics cards stable & non-tilting
+   -------------------------------------------------------------------------- */
+.dashboard-shell .interactive-3d-card,
+.dashboard-shell .project-card,
+.dashboard-shell .inbound-msg-card,
+.dashboard-shell .stat-card,
+.dashboard-shell .chart-card,
+.dashboard-shell .card {
+  transform: none !important;
+  perspective: none !important;
+  transform-style: flat !important;
+}
+
+.dashboard-shell .interactive-3d-card::after,
+.dashboard-shell .project-card::after,
+.dashboard-shell .inbound-msg-card::after {
+  display: none !important;
+  opacity: 0 !important;
+}
+
 
