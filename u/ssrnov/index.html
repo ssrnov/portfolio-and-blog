@@ -412,10 +412,86 @@
         </div>
 
         <div id="portfolio-articles-container" class="portfolio-articles-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-6);">
-          <div style="grid-column: 1 / -1; padding: var(--space-10) var(--space-6); border: 1px dashed var(--border-color); border-radius: var(--radius-md); text-align: center; color: var(--text-muted); background-color: var(--bg-surface);">
-            <p style="margin: 0 0 6px 0; font-weight: 700; font-size: var(--text-base); color: var(--text-primary);">No articles published yet</p>
-            <p style="margin: 0; font-size: var(--text-xs); color: var(--text-secondary);">Articles written in the Folioryn Blog editor will appear here once published.</p>
-          </div>
+          <article class="interactive-3d-card article-portfolio-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+                <span>Oct 8, 2026</span>
+                <span class="badge" style="font-size: 10px;">5 min read</span>
+              </div>
+              <h3 style="font-size: var(--text-lg); font-weight: 800; color: var(--text-primary); margin: 0 0 var(--space-3) 0; line-height: 1.3;">
+                <a href="/blog/sample-article/?slug=high-performance-zero-framework-vanilla-js" style="color: inherit; text-decoration: none;">Building High-Performance Web Applications with Zero-Framework Vanilla JS</a>
+              </h3>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0 0 var(--space-4) 0;">
+                Why stripping away heavy runtime abstractions and leveraging modern browser APIs can produce lightning-fast, accessible user experiences.
+              </p>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--space-4);">
+                <span class="badge" style="font-size: 10px; background: var(--bg-secondary); color: var(--text-muted);">#Frontend</span>
+                <span class="badge" style="font-size: 10px; background: var(--bg-secondary); color: var(--text-muted);">#Performance</span>
+                <span class="badge" style="font-size: 10px; background: var(--bg-secondary); color: var(--text-muted);">#JavaScript</span>
+              </div>
+            </div>
+            <div style="padding-top: var(--space-4); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+              <a href="/blog/sample-article/?slug=high-performance-zero-framework-vanilla-js" class="btn btn-secondary btn-sm" style="font-size: 11px;">
+                <span>Read Article</span>
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+              <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">by @ssrnov</span>
+            </div>
+          </article>
+
+          <article class="interactive-3d-card article-portfolio-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+                <span>Sep 24, 2026</span>
+                <span class="badge" style="font-size: 10px;">7 min read</span>
+              </div>
+              <h3 style="font-size: var(--text-lg); font-weight: 800; color: var(--text-primary); margin: 0 0 var(--space-3) 0; line-height: 1.3;">
+                <a href="/blog/sample-article/?slug=scalable-system-architecture-monolith-to-microservices" style="color: inherit; text-decoration: none;">Designing Scalable System Architecture: From Monolith to Microservices</a>
+              </h3>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0 0 var(--space-4) 0;">
+                A pragmatic engineer's guide to decomposing monolithic systems without premature complexity or distributed transaction nightmares.
+              </p>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--space-4);">
+                <span class="badge" style="font-size: 10px; background: var(--bg-secondary); color: var(--text-muted);">#System Design</span>
+                <span class="badge" style="font-size: 10px; background: var(--bg-secondary); color: var(--text-muted);">#Backend</span>
+                <span class="badge" style="font-size: 10px; background: var(--bg-secondary); color: var(--text-muted);">#Architecture</span>
+              </div>
+            </div>
+            <div style="padding-top: var(--space-4); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+              <a href="/blog/sample-article/?slug=scalable-system-architecture-monolith-to-microservices" class="btn btn-secondary btn-sm" style="font-size: 11px;">
+                <span>Read Article</span>
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+              <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">by @ssrnov</span>
+            </div>
+          </article>
+
+          <article class="interactive-3d-card article-portfolio-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+                <span>Aug 15, 2026</span>
+                <span class="badge" style="font-size: 10px;">4 min read</span>
+              </div>
+              <h3 style="font-size: var(--text-lg); font-weight: 800; color: var(--text-primary); margin: 0 0 var(--space-3) 0; line-height: 1.3;">
+                <a href="/blog/sample-article/?slug=mastering-state-management-patterns-in-javascript" style="color: inherit; text-decoration: none;">Mastering Reactive State Management Patterns in JavaScript</a>
+              </h3>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); margin: 0 0 var(--space-4) 0;">
+                Exploring reactive state patterns, event emitters, and pub-sub architectures without external third-party dependencies.
+              </p>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--space-4);">
+                <span class="badge" style="font-size: 10px; background: var(--bg-secondary); color: var(--text-muted);">#JavaScript</span>
+                <span class="badge" style="font-size: 10px; background: var(--bg-secondary); color: var(--text-muted);">#Architecture</span>
+                <span class="badge" style="font-size: 10px; background: var(--bg-secondary); color: var(--text-muted);">#Design Patterns</span>
+              </div>
+            </div>
+            <div style="padding-top: var(--space-4); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+              <a href="/blog/sample-article/?slug=mastering-state-management-patterns-in-javascript" class="btn btn-secondary btn-sm" style="font-size: 11px;">
+                <span>Read Article</span>
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+              <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">by @ssrnov</span>
+            </div>
+          </article>
         </div>
       </div>
     </section>

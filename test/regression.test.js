@@ -1128,6 +1128,45 @@ test('Universal Edit Functionality: Education, Experience, Certifications, Skill
   assert.ok(projJs.includes('openEditProjectDialog'), 'projects-sync.js must implement openEditProjectDialog');
 });
 
+// --------------------------------------------------------------------------
+// TEST 43: Complete ATS Resume Content & Cross-Device Data Synchronization
+// --------------------------------------------------------------------------
+test('Complete ATS Resume Content & Cross-Device Data Synchronization: honors, all projects, full blogs', () => {
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  const resumeGenJs = fs.readFileSync(path.join(ROOT, 'js/resume-pdf-generator.js'), 'utf8');
+  const dashResumeJs = fs.readFileSync(path.join(ROOT, 'js/dashboard-resume.js'), 'utf8');
+  const ssrnovHtml = fs.readFileSync(path.join(ROOT, 'u/ssrnov/index.html'), 'utf8');
+  const blogReaderJs = fs.readFileSync(path.join(ROOT, 'js/blog-reader.js'), 'utf8');
+  const vercelJson = fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8');
+
+  // 1. Resume PDF Generator renders honors, all projects, clickable links, and contact bar
+  assert.ok(resumeGenJs.includes('Honors & Awards'), 'resume-pdf-generator.js must render Honors & Awards in PDF');
+  assert.ok(resumeGenJs.includes('edu.achievements || edu.honors'), 'resume-pdf-generator.js must check achievements and honors');
+  assert.ok(resumeGenJs.includes('doc.addLinkAnnotation'), 'resume-pdf-generator.js must embed clickable PDF link annotations');
+  assert.ok(!resumeGenJs.includes('projects.slice(0, 4)'), 'resume-pdf-generator.js must NOT truncate projects to 4');
+  assert.ok(dashResumeJs.includes('edu.achievements || edu.honors'), 'dashboard-resume.js must check achievements and honors');
+  assert.ok(!dashResumeJs.includes('(projects || []).slice(0, 4)'), 'dashboard-resume.js must NOT truncate projects to 4');
+
+  // 2. DEFAULT_PROJECTS contains complete 6 projects with valid URLs
+  assert.ok(profileDataJs.includes('Personal Portfolio & Blog (BuildLab B04)'), 'DEFAULT_PROJECTS must include portfolio project');
+  assert.ok(profileDataJs.includes('Distributed Task Queue & Worker Engine'), 'DEFAULT_PROJECTS must include task queue project');
+  assert.ok(profileDataJs.includes('Real-Time Cloud Observability Dashboard'), 'DEFAULT_PROJECTS must include observability project');
+  assert.ok(profileDataJs.includes('Client-Side Cryptographic Vault'), 'DEFAULT_PROJECTS must include cryptographic vault');
+  assert.ok(profileDataJs.includes('API Gateway & Sliding Window Rate Limiter'), 'DEFAULT_PROJECTS must include API gateway');
+
+  // 3. DEFAULT_BLOG_ARTICLES contains published technical articles
+  assert.ok(profileDataJs.includes('high-performance-zero-framework-vanilla-js'), 'DEFAULT_BLOG_ARTICLES must include vanilla js post');
+  assert.ok(profileDataJs.includes('scalable-system-architecture-monolith-to-microservices'), 'DEFAULT_BLOG_ARTICLES must include architecture post');
+  assert.ok(profileDataJs.includes('mastering-state-management-patterns-in-javascript'), 'DEFAULT_BLOG_ARTICLES must include state management post');
+  assert.ok(profileDataJs.includes('pragmatic-engineers-guide-to-clean-code'), 'DEFAULT_BLOG_ARTICLES must include clean code post');
+
+  // 4. Cross-device blog reader and public portfolio articles
+  assert.ok(ssrnovHtml.includes('high-performance-zero-framework-vanilla-js'), 'u/ssrnov/index.html must pre-render articles');
+  assert.ok(blogReaderJs.includes('DEFAULT_BLOG_ARTICLES'), 'blog-reader.js must fall back to DEFAULT_BLOG_ARTICLES');
+  assert.ok(fs.existsSync(path.join(ROOT, 'blog/post.html')), 'blog/post.html redirector must exist');
+  assert.ok(vercelJson.includes('/blog/post'), 'vercel.json must rewrite /blog/post');
+});
+
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL REGRESSION TESTS PASSED SUCCESSFULLY! ✓');

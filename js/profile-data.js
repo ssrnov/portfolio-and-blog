@@ -118,36 +118,93 @@ export const DEFAULT_CERTIFICATIONS = [
 export const DEFAULT_PROJECTS = [
   {
     id: "proj_1",
-    title: "Distributed Task Queue & Worker Engine",
-    description: "Fault-tolerant asynchronous task runner with priority queueing, worker pool concurrency control, and dead-letter retries.",
-    category: "Backend",
-    tags: ["Redis", "Node.js", "Concurrency"],
-    repo_url: "",
-    live_url: "",
-    stars_count: 42,
-    featured: true
+    title: "Personal Portfolio & Blog (BuildLab B04)",
+    description: "High-performance, accessible developer portfolio and technical blog built with Vanilla JavaScript, semantic HTML5, modern CSS design tokens, and Vite.",
+    category: "Web",
+    tags: ["JavaScript", "HTML5", "CSS3", "Vite", "Responsive Design"],
+    repo_url: "https://github.com/ssrnov/portfolio-and-blog",
+    github_url: "https://github.com/ssrnov/portfolio-and-blog",
+    githubUrl: "https://github.com/ssrnov/portfolio-and-blog",
+    live_url: "https://folioryn.vercel.app/u/ssrnov",
+    liveUrl: "https://folioryn.vercel.app/u/ssrnov",
+    stars_count: 56,
+    featured: true,
+    displayOnPortfolio: true
   },
   {
     id: "proj_2",
-    title: "Real-Time Cloud Observability Dashboard",
-    description: "Zero-dependency cloud observability visualizer streaming live metrics via WebSockets with canvas charts at 60fps.",
-    category: "Web",
-    tags: ["JavaScript", "WebSockets", "Canvas"],
-    repo_url: "",
-    live_url: "",
-    stars_count: 28,
-    featured: true
+    title: "Distributed Task Queue & Worker Engine",
+    description: "Fault-tolerant asynchronous task runner with priority queueing, worker pool concurrency control, exponential backoff retries, and dead-letter queues.",
+    category: "Backend",
+    tags: ["Redis", "Node.js", "System Design", "Concurrency", "Worker Threads"],
+    repo_url: "https://github.com/ssrnov/task-engine",
+    github_url: "https://github.com/ssrnov/task-engine",
+    githubUrl: "https://github.com/ssrnov/task-engine",
+    live_url: "https://example.com/demo/task-engine",
+    liveUrl: "https://example.com/demo/task-engine",
+    stars_count: 42,
+    featured: true,
+    displayOnPortfolio: true
   },
   {
     id: "proj_3",
+    title: "Real-Time Cloud Observability Dashboard",
+    description: "Zero-dependency cloud observability visualizer streaming live metrics via WebSockets with canvas charts at 60fps and anomaly threshold alerts.",
+    category: "Web",
+    tags: ["JavaScript", "WebSockets", "CSS Grid", "Canvas", "Telemetry"],
+    repo_url: "https://github.com/ssrnov/cloud-metrics",
+    github_url: "https://github.com/ssrnov/cloud-metrics",
+    githubUrl: "https://github.com/ssrnov/cloud-metrics",
+    live_url: "https://example.com/demo/cloud-metrics",
+    liveUrl: "https://example.com/demo/cloud-metrics",
+    stars_count: 38,
+    featured: true,
+    displayOnPortfolio: true
+  },
+  {
+    id: "proj_4",
+    title: "Interactive Algorithm Visualizer & Sandbox",
+    description: "Canvas-based visual sandbox demonstrating graph pathfinding (A*, Dijkstra), sorting algorithms, and dynamic programming step-by-step.",
+    category: "Tools",
+    tags: ["HTML5 Canvas", "Algorithms", "Data Structures", "CSS3"],
+    repo_url: "https://github.com/ssrnov/algo-visualizer",
+    github_url: "https://github.com/ssrnov/algo-visualizer",
+    githubUrl: "https://github.com/ssrnov/algo-visualizer",
+    live_url: "https://example.com/demo/algo-visualizer",
+    liveUrl: "https://example.com/demo/algo-visualizer",
+    stars_count: 28,
+    featured: false,
+    displayOnPortfolio: true
+  },
+  {
+    id: "proj_5",
     title: "Client-Side Cryptographic Vault",
-    description: "End-to-end encrypted secret store executing in-browser via Web Crypto API with AES-256-GCM encryption.",
+    description: "Zero-knowledge secret storage application implementing client-side AES-GCM encryption with PBKDF2 key derivation using the Web Crypto API.",
     category: "Security",
-    tags: ["Web Crypto", "AES-256", "Security"],
-    repo_url: "",
-    live_url: "",
-    stars_count: 19,
-    featured: false
+    tags: ["Web Crypto API", "Security", "AES-256", "JavaScript"],
+    repo_url: "https://github.com/ssrnov/crypto-vault",
+    github_url: "https://github.com/ssrnov/crypto-vault",
+    githubUrl: "https://github.com/ssrnov/crypto-vault",
+    live_url: "https://example.com/demo/crypto-vault",
+    liveUrl: "https://example.com/demo/crypto-vault",
+    stars_count: 24,
+    featured: false,
+    displayOnPortfolio: true
+  },
+  {
+    id: "proj_6",
+    title: "API Gateway & Sliding Window Rate Limiter",
+    description: "Reverse proxy and gateway with token-bucket rate limiting, JWT verification, request caching, and structured logging middleware.",
+    category: "Backend",
+    tags: ["Node.js", "Express", "Security", "Docker", "Middleware"],
+    repo_url: "https://github.com/ssrnov/api-gateway",
+    github_url: "https://github.com/ssrnov/api-gateway",
+    githubUrl: "https://github.com/ssrnov/api-gateway",
+    live_url: "https://example.com/demo/api-gateway",
+    liveUrl: "https://example.com/demo/api-gateway",
+    stars_count: 31,
+    featured: false,
+    displayOnPortfolio: true
   }
 ];
 
@@ -196,16 +253,23 @@ export function getActiveUser() {
   }
 }
 
+export function isFlagshipSession(user, uid) {
+  if (!user) return true;
+  const uname = (user.username || '').toLowerCase();
+  const id = uid || user.id || '';
+  return uname === 'sunny' || uname === 'ssrnov' || id === 'usr_mock_sunny_9921';
+}
+
 export function getActiveUserId() {
   const user = getActiveUser();
   if (user?.id) return user.id;
-  if (user?.username === 'sunny') return 'usr_mock_sunny_9921';
+  if (user?.username === 'sunny' || user?.username === 'ssrnov') return 'usr_mock_sunny_9921';
   return null;
 }
 
 export function isDemoSunnySession() {
   const user = getActiveUser();
-  return !user || user.username === 'sunny' || user.id === 'usr_mock_sunny_9921';
+  return isFlagshipSession(user);
 }
 
 function userKey(resource) {
@@ -229,7 +293,7 @@ export function getProfile() {
     }
 
     const uid = user.id || 'usr_mock_sunny_9921';
-    const isSunny = user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+    const isSunny = isFlagshipSession(user, uid);
 
     // 1. Check user-scoped key
     const scopedKey = `profilefolio_user_${uid}_profile`;
@@ -294,8 +358,8 @@ export function saveProfile(data) {
   const current = getProfile();
   const updated = { ...current, ...data };
   const user = getActiveUser();
-  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
-  const isSunny = !user || user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+  const uid = user?.id || (isFlagshipSession(user) ? 'usr_mock_sunny_9921' : 'usr_default');
+  const isSunny = isFlagshipSession(user, uid);
 
   // Save to user-scoped key
   const scopedKey = `profilefolio_user_${uid}_profile`;
@@ -355,7 +419,7 @@ export function getEducation() {
     if (!user) return [...DEFAULT_EDUCATION];
 
     const uid = user.id || 'usr_mock_sunny_9921';
-    const isSunny = user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+    const isSunny = isFlagshipSession(user, uid);
 
     const scopedKey = `profilefolio_user_${uid}_education`;
     const raw = localStorage.getItem(scopedKey) || localStorage.getItem(`profilefolio_education_${uid}`);
@@ -376,8 +440,8 @@ export function getEducation() {
 
 export function saveEducation(list) {
   const user = getActiveUser();
-  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
-  const isSunny = !user || user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+  const uid = user?.id || (isFlagshipSession(user) ? 'usr_mock_sunny_9921' : 'usr_default');
+  const isSunny = isFlagshipSession(user, uid);
 
   const scopedKey = `profilefolio_user_${uid}_education`;
   localStorage.setItem(scopedKey, JSON.stringify(list));
@@ -424,7 +488,7 @@ export function getSkills() {
     if (!user) return [...DEFAULT_SKILLS];
 
     const uid = user.id || 'usr_mock_sunny_9921';
-    const isSunny = user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+    const isSunny = isFlagshipSession(user, uid);
 
     const scopedKey = `profilefolio_user_${uid}_skills`;
     const raw = localStorage.getItem(scopedKey) || localStorage.getItem(`profilefolio_skills_${uid}`);
@@ -445,8 +509,8 @@ export function getSkills() {
 
 export function saveSkills(list) {
   const user = getActiveUser();
-  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
-  const isSunny = !user || user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+  const uid = user?.id || (isFlagshipSession(user) ? 'usr_mock_sunny_9921' : 'usr_default');
+  const isSunny = isFlagshipSession(user, uid);
 
   const scopedKey = `profilefolio_user_${uid}_skills`;
   localStorage.setItem(scopedKey, JSON.stringify(list));
@@ -493,7 +557,7 @@ export function getExperiences() {
     if (!user) return [...DEFAULT_EXPERIENCES];
 
     const uid = user.id || 'usr_mock_sunny_9921';
-    const isSunny = user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+    const isSunny = isFlagshipSession(user, uid);
 
     const scopedKey = `profilefolio_user_${uid}_experiences`;
     const raw = localStorage.getItem(scopedKey) || localStorage.getItem(`profilefolio_experiences_${uid}`);
@@ -513,8 +577,8 @@ export function getExperiences() {
 
 export function saveExperiences(list) {
   const user = getActiveUser();
-  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
-  const isSunny = !user || user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+  const uid = user?.id || (isFlagshipSession(user) ? 'usr_mock_sunny_9921' : 'usr_default');
+  const isSunny = isFlagshipSession(user, uid);
 
   const scopedKey = `profilefolio_user_${uid}_experiences`;
   localStorage.setItem(scopedKey, JSON.stringify(list));
@@ -558,7 +622,7 @@ export function getCertifications() {
     if (!user) return [...DEFAULT_CERTIFICATIONS];
 
     const uid = user.id || 'usr_mock_sunny_9921';
-    const isSunny = user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+    const isSunny = isFlagshipSession(user, uid);
 
     const scopedKey = `profilefolio_user_${uid}_certifications`;
     const raw = localStorage.getItem(scopedKey) || localStorage.getItem(`profilefolio_certifications_${uid}`);
@@ -578,8 +642,8 @@ export function getCertifications() {
 
 export function saveCertifications(list) {
   const user = getActiveUser();
-  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
-  const isSunny = !user || user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+  const uid = user?.id || (isFlagshipSession(user) ? 'usr_mock_sunny_9921' : 'usr_default');
+  const isSunny = isFlagshipSession(user, uid);
 
   const scopedKey = `profilefolio_user_${uid}_certifications`;
   localStorage.setItem(scopedKey, JSON.stringify(list));
@@ -626,7 +690,7 @@ export function getProjects() {
     if (!user) return [...DEFAULT_PROJECTS];
 
     const uid = user.id || 'usr_mock_sunny_9921';
-    const isSunny = user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+    const isSunny = isFlagshipSession(user, uid);
 
     const scopedKey = `profilefolio_user_${uid}_projects`;
     const raw = localStorage.getItem(scopedKey) || localStorage.getItem(`profilefolio_projects_${uid}`);
@@ -649,8 +713,8 @@ export function getProjects() {
 
 export function saveProjects(list) {
   const user = getActiveUser();
-  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
-  const isSunny = !user || user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+  const uid = user?.id || (isFlagshipSession(user) ? 'usr_mock_sunny_9921' : 'usr_default');
+  const isSunny = isFlagshipSession(user, uid);
 
   const scopedKey = `profilefolio_user_${uid}_projects`;
   localStorage.setItem(scopedKey, JSON.stringify(list));
@@ -698,7 +762,7 @@ export function getPublishSettings() {
     if (!user) return { ...DEFAULT_PUBLISH_SETTINGS };
 
     const uid = user.id || 'usr_mock_sunny_9921';
-    const isSunny = user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+    const isSunny = isFlagshipSession(user, uid);
 
     const scopedKey = `profilefolio_user_${uid}_publish`;
     const raw = localStorage.getItem(scopedKey) || localStorage.getItem(`profilefolio_publish_settings_${uid}`);
@@ -752,8 +816,8 @@ export function savePublishSettings(settings) {
     updatedAt: new Date().toISOString()
   };
   const user = getActiveUser();
-  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
-  const isSunny = !user || user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+  const uid = user?.id || (isFlagshipSession(user) ? 'usr_mock_sunny_9921' : 'usr_default');
+  const isSunny = isFlagshipSession(user, uid);
 
   const scopedKey = `profilefolio_user_${uid}_publish`;
   localStorage.setItem(scopedKey, JSON.stringify(updated));
@@ -1608,8 +1672,51 @@ export function getUserDataBySlug(slug) {
       if (raw) savedPublish = JSON.parse(raw);
     } catch (e) {}
 
+    let savedEdu = null;
+    let savedSkills = null;
+    let savedExp = null;
+    let savedCerts = null;
+    let savedProj = null;
+    let savedArticles = null;
+    try {
+      const raw = localStorage.getItem('profilefolio_education') || 
+                  localStorage.getItem('profilefolio_user_usr_mock_sunny_9921_education') ||
+                  localStorage.getItem('buildlab_education');
+      if (raw) savedEdu = JSON.parse(raw);
+    } catch (e) {}
+    try {
+      const raw = localStorage.getItem('profilefolio_skills') || 
+                  localStorage.getItem('profilefolio_user_usr_mock_sunny_9921_skills') ||
+                  localStorage.getItem('buildlab_skills');
+      if (raw) savedSkills = JSON.parse(raw);
+    } catch (e) {}
+    try {
+      const raw = localStorage.getItem('profilefolio_experiences') || 
+                  localStorage.getItem('profilefolio_user_usr_mock_sunny_9921_experiences') ||
+                  localStorage.getItem('buildlab_experiences');
+      if (raw) savedExp = JSON.parse(raw);
+    } catch (e) {}
+    try {
+      const raw = localStorage.getItem('profilefolio_certifications') || 
+                  localStorage.getItem('profilefolio_user_usr_mock_sunny_9921_certifications') ||
+                  localStorage.getItem('buildlab_certifications');
+      if (raw) savedCerts = JSON.parse(raw);
+    } catch (e) {}
+    try {
+      const raw = localStorage.getItem('profilefolio_projects') || 
+                  localStorage.getItem('profilefolio_user_usr_mock_sunny_9921_projects') ||
+                  localStorage.getItem('buildlab_projects');
+      if (raw) savedProj = JSON.parse(raw);
+    } catch (e) {}
+    try {
+      const raw = localStorage.getItem('profilefolio_blog_articles') || 
+                  localStorage.getItem('profilefolio_user_usr_mock_sunny_9921_articles') ||
+                  localStorage.getItem('ssrnovx_blog_articles');
+      if (raw) savedArticles = JSON.parse(raw);
+    } catch (e) {}
+
     const crossDeviceAvatar = savedProfile?.avatarUrl || '/images/portrait.png';
-    const resolvedName = savedProfile?.fullName || (cleanSlug === 'ssrnov' ? 'Sunny Kumar' : 'Sunny Kumar');
+    const resolvedName = savedProfile?.fullName || 'Sunny Kumar';
 
     return {
       profile: {
@@ -1620,12 +1727,12 @@ export function getUserDataBySlug(slug) {
         username: cleanSlug,
         portfolioUrl: `https://folioryn.dev/u/${cleanSlug}`
       },
-      education: [...DEFAULT_EDUCATION],
-      skills: [...DEFAULT_SKILLS],
-      experiences: [...DEFAULT_EXPERIENCES],
-      certifications: [...DEFAULT_CERTIFICATIONS],
-      projects: [...DEFAULT_PROJECTS],
-      articles: [...DEFAULT_BLOG_ARTICLES],
+      education: (savedEdu && savedEdu.length > 0) ? savedEdu : [...DEFAULT_EDUCATION],
+      skills: (savedSkills && savedSkills.length > 0) ? savedSkills : [...DEFAULT_SKILLS],
+      experiences: (savedExp && savedExp.length > 0) ? savedExp : [...DEFAULT_EXPERIENCES],
+      certifications: (savedCerts && savedCerts.length > 0) ? savedCerts : [...DEFAULT_CERTIFICATIONS],
+      projects: (savedProj && savedProj.length > 0) ? savedProj : [...DEFAULT_PROJECTS],
+      articles: (savedArticles && savedArticles.length > 0) ? savedArticles : [...DEFAULT_BLOG_ARTICLES],
       publishSettings: {
         ...DEFAULT_PUBLISH_SETTINGS,
         ...(savedPublish || {}),
@@ -1739,14 +1846,54 @@ export function getUserDataBySlug(slug) {
 // ==========================================
 export const DEFAULT_BLOG_ARTICLES = [
   {
-    id: 'post_1',
-    title: 'Zero-Dependency Vanilla JavaScript in 2026',
-    slug: 'zero-dependency-vanilla-javascript',
-    tags: 'JavaScript, Architecture, Web Standards',
-    excerpt: 'Why native browser APIs and modular ES modules are outperforming bloated single-page framework runtimes.',
+    id: "post_1",
+    title: "Building High-Performance Web Applications with Zero-Framework Vanilla JS",
+    slug: "high-performance-zero-framework-vanilla-js",
+    tags: "Frontend, Performance, JavaScript, Web Standards",
+    excerpt: "Why stripping away heavy runtime abstractions and leveraging modern browser APIs can produce lightning-fast, accessible user experiences.",
+    content: `# Building High-Performance Web Applications with Zero-Framework Vanilla JS\n\nIn an era where modern frontend development is dominated by megabyte-sized bundles and complex meta-frameworks, returning to the fundamentals of Vanilla JavaScript, semantic HTML5, and modern CSS3 provides immense performance advantages.\n\n## 1. The Power of Native Web Standards\n\nModern browser engines (V8, JavaScriptCore, Gecko) have evolved radically. Features that once required heavy polyfills or utility libraries—such as CSS custom properties, native modules (ESM), Web Storage, the Fetch API, and the Intersection Observer API—are now natively supported across all evergreen browsers.\n\nBy relying directly on native capabilities, we eliminate virtual DOM overhead, reduce the initial JavaScript execution phase, and achieve near-instant First Contentful Paint (FCP) and Largest Contentful Paint (LCP) scores.\n\n## 2. Clean Architecture Without Bloat\n\nWriting Vanilla JS does not mean writing unmaintainable spaghetti code. By adopting clean module separation, unidirectional data flows, and event delegation, we achieve clear architectural boundaries while shipping an order of magnitude less code to end users.\n\n> Keep it simple: choose standards over ephemeral library churn whenever possible.`,
+    isPublished: true,
+    updatedAt: "2026-10-08T12:00:00.000Z"
+  },
+  {
+    id: "post_2",
+    title: "Designing Scalable System Architecture: From Monolith to Microservices",
+    slug: "scalable-system-architecture-monolith-to-microservices",
+    tags: "System Design, Backend, Architecture, Microservices",
+    excerpt: "A pragmatic engineer's guide to decomposing monolithic systems without premature complexity or distributed transaction nightmares.",
+    content: `# Designing Scalable System Architecture: From Monolith to Microservices\n\nThe journey from a monolithic application to a microservices architecture is often romanticized, but premature distribution can easily turn a simple product into an operational quagmire.\n\n## 1. Start with a Modular Monolith\n\nBefore splitting code across network boundaries, define strict domain boundaries in a single deployable unit. A modular monolith enforces bounded contexts through clean interfaces, making future extraction straightforward while preserving transactional integrity and straightforward debugging.\n\n## 2. When to Actually Decompose\n\nExtract services only when specific organizational or technical scaling bottlenecks demand it: differing scaling profiles, team ownership boundaries, or isolated reliability requirements. Embrace asynchronous messaging (event-driven architecture) over synchronous RPC chains to prevent cascading failures.`,
+    isPublished: true,
+    updatedAt: "2026-09-24T12:00:00.000Z"
+  },
+  {
+    id: "post_3",
+    title: "Mastering Reactive State Management Patterns in JavaScript",
+    slug: "mastering-state-management-patterns-in-javascript",
+    tags: "JavaScript, State Management, Architecture, Design Patterns",
+    excerpt: "Exploring reactive state patterns, event emitters, and pub-sub architectures without external third-party dependencies.",
+    content: `# Mastering Reactive State Management Patterns in JavaScript\n\nState management is the single most common source of bugs in frontend applications. However, you don't always need complex external libraries to manage state predictably.\n\n## 1. The Observer Pattern and Event Target\n\nBy leveraging the browser's built-in \`EventTarget\` interface or implementing a lightweight publisher-subscriber store, components can subscribe to discrete state mutations and re-render only when relevant data updates.\n\n## 2. Immutability and Predictability\n\nPairing a centralized store with shallow object cloning ensures state transitions are traceable and predictable. This allows developers to reason about UI changes with confidence, even in complex interactive applications.`,
+    isPublished: true,
+    updatedAt: "2026-08-15T12:00:00.000Z"
+  },
+  {
+    id: "post_4",
+    title: "The Pragmatic Engineer's Guide to Clean Code and Refactoring",
+    slug: "pragmatic-engineers-guide-to-clean-code",
+    tags: "Software Engineering, Best Practices, Clean Code, Refactoring",
+    excerpt: "Practical guidelines for writing maintainable, readable, and resilient code that your future self and team will appreciate.",
+    content: `# The Pragmatic Engineer's Guide to Clean Code and Refactoring\n\nClean code is not about dogmatic adherence to rules; it is about reducing cognitive load for the humans who must read, maintain, and extend software months or years later.\n\n## 1. Intent-Revealing Naming\n\nCode is read far more often than it is written. Variable and function names should clearly convey purpose and behavior, reducing the need for explanatory comments that quickly become obsolete.\n\n## 2. The Boy Scout Rule in Practice\n\nAlways leave the codebase slightly cleaner than you found it. Small, incremental refactorings during regular feature development compound over time, preventing technical debt from accumulating into a major re-write.`,
+    isPublished: true,
+    updatedAt: "2026-07-12T12:00:00.000Z"
+  },
+  {
+    id: "post_5",
+    title: "Zero-Dependency Vanilla JavaScript in 2026",
+    slug: "zero-dependency-vanilla-javascript",
+    tags: "JavaScript, Architecture, Web Standards",
+    excerpt: "Why native browser APIs and modular ES modules are outperforming bloated single-page framework runtimes.",
     content: `# Zero-Dependency Vanilla JavaScript in 2026\n\nModern browsers have evolved into extraordinary application runtimes. With native **Web Components**, custom events, CSS variables, and fetch streams, the need for 300KB runtime frameworks has vanished for high-speed developer platforms.\n\n## 1. Native Reactivity Without Virtual DOM\n\nBy leveraging standard DOM events and \`postMessage\`, we achieve zero-latency bidirectional synchronization with negligible memory footprint.\n\n\`\`\`javascript\nwindow.addEventListener('message', (event) => {\n  if (event.data?.type === 'UPDATE') {\n    applyChanges(event.data.payload);\n  }\n});\n\`\`\`\n\n> The fastest code is the code the browser already knows how to run natively.\n\n## 2. Production Performance Metrics\n\n- Zero hydration delay (Time to Interactive under 100ms)\n- 100/100 Lighthouse Performance scores\n- Universal compatibility across modern mobile and desktop browsers`,
     isPublished: true,
-    updatedAt: new Date().toISOString(),
+    updatedAt: "2026-10-10T12:00:00.000Z"
   }
 ];
 
@@ -1756,7 +1903,7 @@ export function getBlogArticles() {
     if (!user) return [...DEFAULT_BLOG_ARTICLES];
 
     const uid = user.id || 'usr_mock_sunny_9921';
-    const isSunny = user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+    const isSunny = !user || user.username === 'sunny' || user.username === 'ssrnov' || uid === 'usr_mock_sunny_9921';
 
     const scopedKey = `profilefolio_user_${uid}_articles`;
     const scopedRaw = localStorage.getItem(scopedKey);
@@ -1768,16 +1915,16 @@ export function getBlogArticles() {
       return [...DEFAULT_BLOG_ARTICLES];
     }
 
-    return [];
+    return [...DEFAULT_BLOG_ARTICLES];
   } catch (e) {
-    return [];
+    return [...DEFAULT_BLOG_ARTICLES];
   }
 }
 
 export function saveBlogArticles(articles) {
   const user = getActiveUser();
-  const uid = user?.id || (user?.username === 'sunny' ? 'usr_mock_sunny_9921' : 'usr_default');
-  const isSunny = !user || user.username === 'sunny' || uid === 'usr_mock_sunny_9921';
+  const uid = user?.id || (user?.username === 'sunny' || user?.username === 'ssrnov' ? 'usr_mock_sunny_9921' : 'usr_default');
+  const isSunny = !user || user.username === 'sunny' || user.username === 'ssrnov' || uid === 'usr_mock_sunny_9921';
 
   const scopedKey = `profilefolio_user_${uid}_articles`;
   localStorage.setItem(scopedKey, JSON.stringify(articles));

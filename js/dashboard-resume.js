@@ -174,7 +174,7 @@ export function renderA4Canvas({ profile, education, skills, experiences, certif
     skillsByCategory[cat].push(s.name);
   });
 
-  const featuredProjects = (projects || []).slice(0, 4);
+  const featuredProjects = (projects || []).filter(p => p.displayOnPortfolio !== false);
   const contactItems = [];
   if (profile?.email) {
     contactItems.push(`<a href="mailto:${escapeHtml(profile.email)}" style="color: #000; text-decoration: underline;">${escapeHtml(profile.email)}</a>`);
@@ -243,9 +243,9 @@ export function renderA4Canvas({ profile, education, skills, experiences, certif
               <strong>Coursework:</strong> ${escapeHtml(edu.coursework)}
             </p>
           ` : ''}
-          ${edu.achievements ? `
+          ${(edu.achievements || edu.honors) ? `
             <p style="font-size: 9.5px; color: #444; line-height: 1.4; margin: 2px 0 0 0; overflow-wrap: anywhere;">
-              <strong>Honors:</strong> ${escapeHtml(edu.achievements)}
+              <strong>Honors:</strong> ${escapeHtml(edu.achievements || edu.honors)}
             </p>
           ` : ''}
         </div>
@@ -301,8 +301,8 @@ export function renderA4Canvas({ profile, education, skills, experiences, certif
         Selected Projects &amp; Systems
       </h3>
       ${featuredProjects.length > 0 ? featuredProjects.map(proj => {
-        const repoUrl = proj.repo_url || proj.github_url || '';
-        const liveUrl = proj.live_url || proj.demo_url || '';
+        const repoUrl = proj.repo_url || proj.github_url || proj.githubUrl || '';
+        const liveUrl = proj.live_url || proj.demo_url || proj.liveUrl || '';
         const cleanRepo = repoUrl.replace(/^https?:\/\//, '').replace(/\/+$/, '');
         const cleanLive = liveUrl.replace(/^https?:\/\//, '').replace(/\/+$/, '');
 
