@@ -62,6 +62,30 @@ function applyLiveUpdates(data) {
     document.documentElement.setAttribute('data-template', data.template);
     document.body.className = `template-${data.template}`;
   }
+
+  // 8. Portrait / Avatar Image
+  if (data.avatarUrl !== undefined) {
+    document.querySelectorAll('[data-builder-target="avatar_img"]').forEach((el) => {
+      if (data.avatarUrl) {
+        el.setAttribute('src', data.avatarUrl);
+        el.style.display = 'block';
+      } else {
+        el.removeAttribute('src');
+        el.style.display = 'none';
+      }
+    });
+
+    document.querySelectorAll('[data-builder-target="avatar_placeholder"]').forEach((el) => {
+      el.style.display = data.avatarUrl ? 'none' : 'flex';
+    });
+  }
+
+  if (data.displayName !== undefined) {
+    const initial = (data.displayName || 'U').trim().charAt(0).toUpperCase() || '@';
+    document.querySelectorAll('[data-builder-target="avatar_initial"]').forEach((el) => {
+      el.textContent = initial;
+    });
+  }
 }
 
 // Notify parent that preview iframe is ready to receive state

@@ -112,26 +112,41 @@
       <!-- Hero Section -->
       <section id="hero" class="section-py" style="padding-top: var(--space-16); padding-bottom: var(--space-16); border-bottom: 1px solid var(--border-color);">
         <div class="container" style="max-width: 860px;">
-          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: var(--space-4);">
-            <span class="pulsing-dot"></span>
-            <span id="demo-status-text" style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);">Architecting hyperscale distributed systems &amp; developer platforms</span>
-          </div>
+          <div class="hero-split-grid" style="margin-bottom: var(--space-6);">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: var(--space-4);">
+                <span class="pulsing-dot"></span>
+                <span id="demo-status-text" style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);">Architecting hyperscale distributed systems &amp; developer platforms</span>
+              </div>
 
-          <h1 id="demo-headline" style="font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 900; line-height: 1.1; margin-bottom: var(--space-4); letter-spacing: -0.04em; color: var(--text-primary);">
-            Principal Systems Architect &amp; Distributed Infrastructure Lead
-          </h1>
+              <h1 id="demo-headline" style="font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 900; line-height: 1.1; margin-bottom: var(--space-4); letter-spacing: -0.04em; color: var(--text-primary);">
+                Principal Systems Architect &amp; Distributed Infrastructure Lead
+              </h1>
 
-          <p id="demo-bio" style="font-size: var(--text-lg); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-6); max-width: 680px;">
-            Principal engineer with deep expertise in distributed consensus, low-latency microsecond runtimes, zero-trust cloud infrastructure, and modern developer platforms.
-          </p>
+              <p id="demo-bio" style="font-size: var(--text-lg); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-6); max-width: 680px;">
+                Principal engineer with deep expertise in distributed consensus, low-latency microsecond runtimes, zero-trust cloud infrastructure, and modern developer platforms.
+              </p>
 
-          <div style="display: flex; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-6);">
-            <a href="#projects" class="btn btn-primary">
-              <span>View Projects</span>
-              <span aria-hidden="true">&rarr;</span>
-            </a>
-            <a href="#contact" class="btn btn-secondary">Get in Touch</a>
-            <a href="#experience" class="btn btn-secondary">Experience</a>
+              <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+                <a href="#projects" class="btn btn-primary">
+                  <span>View Projects</span>
+                  <span aria-hidden="true">&rarr;</span>
+                </a>
+                <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+                <a href="#experience" class="btn btn-secondary">Experience</a>
+              </div>
+            </div>
+
+            <!-- Hero Portrait Avatar Frame -->
+            <div class="hero-avatar-wrapper">
+              <div class="hero-avatar-frame interactive-3d-card" id="demo-avatar-card">
+                <img data-builder-target="avatar_img" id="demo-avatar-img" class="hero-avatar-img" src="" alt="Profile Portrait" />
+                <div data-builder-target="avatar_placeholder" id="demo-avatar-placeholder" class="hero-avatar-placeholder">
+                  <span data-builder-target="avatar_initial" id="demo-avatar-initial" style="font-size: 54px; font-weight: 800; font-family: var(--font-mono); color: var(--accent-primary); line-height: 1;">@</span>
+                  <span style="font-size: 10px; font-family: var(--font-mono); color: var(--text-muted); margin-top: 6px; letter-spacing: 0.05em; text-transform: uppercase;">Portrait</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div id="demo-meta-bar" style="display: flex; gap: var(--space-6); font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-muted); padding-top: var(--space-4); border-top: 1px solid var(--border-color); flex-wrap: wrap;">

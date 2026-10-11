@@ -31,6 +31,7 @@ let builderState = {
   skillsBackend: '',
   githubUrl: '',
   contactEmail: '',
+  avatarUrl: '',
 };
 
 // Autosave Engine State
@@ -178,6 +179,7 @@ function loadInitialState() {
     skillsBackend: 'Node.js, Express, REST APIs, Databases, WebSockets',
     githubUrl: profile.githubUrl || (activeUser?.github_handle ? `https://github.com/${activeUser.github_handle}` : ''),
     contactEmail: profile.email || activeUser?.email || '',
+    avatarUrl: profile.avatarUrl || profile.avatar_url || activeUser?.avatar_url || '',
   };
 
   // Merge saved draft from localStorage if present
@@ -192,6 +194,32 @@ function loadInitialState() {
   }
 
   populateFormInputs();
+  updateBuilderAvatarUI();
+}
+
+function updateBuilderAvatarUI() {
+  const previewImg = document.getElementById('builder-avatar-preview');
+  const placeholder = document.getElementById('builder-avatar-placeholder');
+  const removeBtn = document.getElementById('builder-avatar-remove-btn');
+
+  const avatar = builderState.avatarUrl;
+  if (avatar && previewImg && placeholder) {
+    previewImg.src = avatar;
+    previewImg.style.display = 'block';
+    placeholder.style.display = 'none';
+    if (removeBtn) removeBtn.style.display = 'inline-block';
+  } else {
+    if (previewImg) {
+      previewImg.src = '';
+      previewImg.style.display = 'none';
+    }
+    if (placeholder) {
+      placeholder.style.display = 'flex';
+      const initial = (builderState.displayName || 'U').trim().charAt(0).toUpperCase() || '@';
+      placeholder.textContent = initial;
+    }
+    if (removeBtn) removeBtn.style.display = 'none';
+  }
 }
 
 function populateFormInputs() {
@@ -213,6 +241,8 @@ function populateFormInputs() {
       el.value = builderState[key] || '';
     }
   });
+
+  updateBuilderAvatarUI();
 }
 
 function renderBuilderProjects() {
@@ -290,6 +320,53 @@ function bindInputListeners() {
     el.addEventListener('input', handler);
     el.addEventListener('change', handler);
   });
+
+  // Avatar Image Upload Controls
+  const avatarUploadBtn = document.getElementById('builder-avatar-upload-btn');
+  const avatarFileInput = document.getElementById('builder-avatar-file-input');
+  const avatarRemoveBtn = document.getElementById('builder-avatar-remove-btn');
+
+  if (avatarUploadBtn && avatarFileInput) {
+    avatarUploadBtn.addEventListener('click', () => {
+      avatarFileInput.click();
+    });
+
+    avatarFileInput.addEventListener('change', () => {
+      const file = avatarFileInput.files?.[0];
+      if (!file) return;
+
+      // Enforce file size limit: max 2.5 MB
+      if (file.size > 2.5 * 1024 * 1024) {
+        alert('File size exceeds 2.5 MB. Please select a compressed PNG or smaller image.');
+        avatarFileInput.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        recordTypingSnapshot();
+        builderState.avatarUrl = reader.result;
+        updateBuilderAvatarUI();
+        sendStateToPreview();
+        scheduleAutosave();
+      };
+      reader.onerror = () => {
+        alert('Could not read the selected image file.');
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (avatarRemoveBtn) {
+    avatarRemoveBtn.addEventListener('click', () => {
+      recordTypingSnapshot();
+      builderState.avatarUrl = '';
+      if (avatarFileInput) avatarFileInput.value = '';
+      updateBuilderAvatarUI();
+      sendStateToPreview();
+      scheduleAutosave();
+    });
+  }
 }
 
 // ==============================================================================
@@ -367,6 +444,7 @@ async function executeSave() {
       location: builderState.location,
       githubUrl: builderState.githubUrl,
       email: builderState.contactEmail,
+      avatarUrl: builderState.avatarUrl,
     });
 
     // Save publish settings template
@@ -383,6 +461,7 @@ async function executeSave() {
           bio: builderState.bio,
           location: builderState.location,
           github_handle: builderState.githubUrl?.replace('https://github.com/', ''),
+          avatar_url: builderState.avatarUrl,
         });
       } catch (remoteErr) {
         console.warn('Background Supabase autosave sync notice:', remoteErr);

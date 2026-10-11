@@ -92,40 +92,54 @@
     <!-- HERO SECTION -->
     <section class="section-py" id="about" style="padding-top: var(--space-16);">
       <div class="container">
-        <div class="hero-content">
-          <div style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid var(--border-color); background-color: var(--bg-secondary); margin-bottom: var(--space-4);">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #22c55e; display: inline-block;"></span>
-            <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-secondary);">Available for high-impact engineering roles</span>
+        <div class="hero-split-grid" style="margin-bottom: var(--space-6);">
+          <div class="hero-content">
+            <div style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid var(--border-color); background-color: var(--bg-secondary); margin-bottom: var(--space-4);">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #22c55e; display: inline-block;"></span>
+              <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-secondary);">Available for high-impact engineering roles</span>
+            </div>
+
+            <h1 data-builder-target="headline" style="font-size: clamp(var(--text-3xl), 5vw, var(--text-6xl)); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: var(--space-6); color: var(--text-primary);">
+              Engineering resilient backend systems and high-precision web interfaces.
+            </h1>
+
+            <p class="hero-lead" data-builder-target="bio" style="max-width: 720px;">
+              Architecting scalable software applications, high-performance web systems, and modern interfaces.
+            </p>
+
+            <div class="hero-cta-group" style="display: flex; gap: var(--space-4); flex-wrap: wrap; margin-bottom: var(--space-8);">
+              <a href="#projects" class="btn btn-primary btn-card">
+                <span>Explore Projects</span>
+                <span aria-hidden="true">&darr;</span>
+              </a>
+              <a href="/dashboard/resume" class="btn btn-secondary btn-card">
+                <span>ATS Resume (PDF)</span>
+                <span aria-hidden="true">&nearr;</span>
+              </a>
+              <button type="button" id="share-portfolio-btn" class="btn btn-secondary btn-card" aria-label="Share public portfolio">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="margin-right: 4px;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                <span>Share Portfolio</span>
+              </button>
+              <a href="#" data-builder-target="github_url" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="display: none;">
+                <span>GitHub Profile</span>
+                <span aria-hidden="true">&nearr;</span>
+              </a>
+            </div>
           </div>
 
-          <h1 data-builder-target="headline" style="font-size: clamp(var(--text-3xl), 5vw, var(--text-6xl)); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: var(--space-6); color: var(--text-primary);">
-            Engineering resilient backend systems and high-precision web interfaces.
-          </h1>
-
-          <p class="hero-lead" data-builder-target="bio" style="max-width: 720px;">
-            Architecting scalable software applications, high-performance web systems, and modern interfaces.
-          </p>
-
-          <div class="hero-cta-group" style="display: flex; gap: var(--space-4); flex-wrap: wrap; margin-bottom: var(--space-8);">
-            <a href="#projects" class="btn btn-primary btn-card">
-              <span>Explore Projects</span>
-              <span aria-hidden="true">&darr;</span>
-            </a>
-            <a href="/dashboard/resume" class="btn btn-secondary btn-card">
-              <span>ATS Resume (PDF)</span>
-              <span aria-hidden="true">&nearr;</span>
-            </a>
-            <button type="button" id="share-portfolio-btn" class="btn btn-secondary btn-card" aria-label="Share public portfolio">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="margin-right: 4px;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-              <span>Share Portfolio</span>
-            </button>
-            <a href="#" data-builder-target="github_url" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="display: none;">
-              <span>GitHub Profile</span>
-              <span aria-hidden="true">&nearr;</span>
-            </a>
+          <!-- Hero Portrait Avatar Visual Frame (Optimized for Plain PNG & 3D Floating Look) -->
+          <div class="hero-avatar-wrapper">
+            <div class="hero-avatar-frame interactive-3d-card" id="hero-avatar-card">
+              <img data-builder-target="avatar_img" class="hero-avatar-img" src="" alt="Profile Portrait" />
+              <div data-builder-target="avatar_placeholder" class="hero-avatar-placeholder">
+                <span data-builder-target="avatar_initial" style="font-size: 54px; font-weight: 800; font-family: var(--font-mono); color: var(--accent-primary); line-height: 1;">@</span>
+                <span style="font-size: 10px; font-family: var(--font-mono); color: var(--text-muted); margin-top: 6px; letter-spacing: 0.05em; text-transform: uppercase;">Portrait</span>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <!-- Highlights Bar -->
+        <!-- Highlights Bar -->
           <div id="hero-highlights-bar" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-4); padding-top: var(--space-6); border-top: 1px solid var(--border-color);">
             <div>
               <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary);">Showcase</div>

@@ -103,6 +103,71 @@ function hydrateProfileForm(profile, activeUser) {
   const saveStatus = document.getElementById('profile-save-status');
   const viewLiveBtn = document.getElementById('settings-view-live-btn');
 
+  // Avatar Photo Controls
+  let currentAvatarUrl = profile.avatarUrl || profile.avatar_url || activeUser?.avatar_url || '';
+  const avatarPreview = document.getElementById('settings-avatar-preview');
+  const avatarPlaceholder = document.getElementById('settings-avatar-placeholder');
+  const avatarFileInput = document.getElementById('settings-avatar-file-input');
+  const avatarUploadBtn = document.getElementById('settings-avatar-upload-btn');
+  const avatarRemoveBtn = document.getElementById('settings-avatar-remove-btn');
+
+  function updateSettingsAvatarUI() {
+    if (currentAvatarUrl && avatarPreview && avatarPlaceholder) {
+      avatarPreview.src = currentAvatarUrl;
+      avatarPreview.style.display = 'block';
+      avatarPlaceholder.style.display = 'none';
+      if (avatarRemoveBtn) avatarRemoveBtn.style.display = 'inline-block';
+    } else {
+      if (avatarPreview) {
+        avatarPreview.src = '';
+        avatarPreview.style.display = 'none';
+      }
+      if (avatarPlaceholder) {
+        avatarPlaceholder.style.display = 'flex';
+        const initial = (inputFullName?.value || profile.fullName || 'U').trim().charAt(0).toUpperCase() || '@';
+        avatarPlaceholder.textContent = initial;
+      }
+      if (avatarRemoveBtn) avatarRemoveBtn.style.display = 'none';
+    }
+  }
+
+  updateSettingsAvatarUI();
+
+  if (avatarUploadBtn && avatarFileInput) {
+    avatarUploadBtn.addEventListener('click', () => {
+      avatarFileInput.click();
+    });
+
+    avatarFileInput.addEventListener('change', () => {
+      const file = avatarFileInput.files?.[0];
+      if (!file) return;
+
+      if (file.size > 2.5 * 1024 * 1024) {
+        alert('File size exceeds 2.5 MB. Please select a compressed PNG or smaller image.');
+        avatarFileInput.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        currentAvatarUrl = reader.result;
+        updateSettingsAvatarUI();
+      };
+      reader.onerror = () => {
+        alert('Could not read image file.');
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (avatarRemoveBtn) {
+    avatarRemoveBtn.addEventListener('click', () => {
+      currentAvatarUrl = '';
+      if (avatarFileInput) avatarFileInput.value = '';
+      updateSettingsAvatarUI();
+    });
+  }
+
   if (inputFullName) inputFullName.value = profile.fullName || activeUser?.display_name || '';
   if (inputDisplayName) inputDisplayName.value = profile.displayName || profile.fullName || activeUser?.display_name || '';
   if (inputSlug) inputSlug.value = profile.username || activeUser?.username || 'sunny';
@@ -172,6 +237,7 @@ function hydrateProfileForm(profile, activeUser) {
         linkedinUrl,
         twitterUrl,
         websiteUrl,
+        avatarUrl: currentAvatarUrl,
         portfolioUrl: `https://folioryn.dev/u/${rawSlug}`
       });
 
@@ -188,6 +254,7 @@ function hydrateProfileForm(profile, activeUser) {
             linkedin_url: linkedinUrl,
             twitter_handle: twitterUrl?.replace('https://x.com/', '').replace('https://twitter.com/', ''),
             website_url: websiteUrl,
+            avatar_url: currentAvatarUrl,
           });
         } catch (remoteErr) {
           console.warn('Supabase remote profile sync notice:', remoteErr);
