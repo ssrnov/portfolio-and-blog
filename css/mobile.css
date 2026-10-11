@@ -595,8 +595,15 @@
     gap: 12px !important;
   }
 
-  .floating-card {
-    padding: 12px 14px !important;
+  .floating-card,
+  .card,
+  .card-standard,
+  .card-elevated,
+  .card-glass,
+  .card-featured,
+  .case-study-card,
+  .card-warm-accent {
+    padding: 16px 18px !important;
   }
 
   .education-github-grid {

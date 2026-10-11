@@ -242,8 +242,8 @@
   padding: 0 var(--space-8);
   border-bottom: 1px solid var(--border-color);
   background-color: var(--header-backdrop);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -286,10 +286,19 @@
 }
 
 .stat-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
+  background-color: var(--glass-bg, var(--bg-surface));
+  backdrop-filter: blur(var(--glass-blur, 16px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px));
+  border: 1px solid var(--glass-border, var(--border-color));
   border-radius: var(--radius-lg);
   padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), border-color var(--transition-base);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-hover);
 }
 
 .stat-label {
@@ -297,10 +306,12 @@
   font-size: var(--text-xs);
   color: var(--text-muted);
   text-transform: uppercase;
+  letter-spacing: 0.05em;
   margin-bottom: var(--space-2);
 }
 
 .stat-number {
+  font-family: var(--font-heading, var(--font-sans));
   font-size: var(--text-3xl);
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -314,7 +325,9 @@
 }
 
 .portfolio-manager-card {
-  background-color: var(--bg-surface);
+  background-color: var(--glass-bg, var(--bg-surface));
+  backdrop-filter: blur(var(--glass-blur, 16px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px));
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: var(--space-8);
@@ -324,6 +337,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: var(--space-6);
+  box-shadow: var(--shadow-sm);
 }
 
 .portfolio-manager-info h3 {

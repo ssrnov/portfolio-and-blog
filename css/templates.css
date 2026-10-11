@@ -240,8 +240,9 @@
 .template-editorial h1,
 .template-editorial h2,
 .template-editorial h3 {
-  letter-spacing: -0.04em !important;
-  font-weight: 800 !important;
+  font-family: var(--font-serif, Georgia, serif) !important;
+  letter-spacing: -0.02em !important;
+  font-weight: 700 !important;
   text-transform: none !important;
 }
 

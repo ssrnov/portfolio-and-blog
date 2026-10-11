@@ -65,6 +65,13 @@ body {
   outline-offset: 3px;
 }
 
+/* Base Headings Typography (Neo-Apple & Deep-Teal Editorial) */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading, var(--font-sans));
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
 /* Common Layout Container */
 .container {
   width: 100%;
@@ -82,8 +89,8 @@ body {
   z-index: 1000;
   height: var(--header-height);
   background-color: var(--header-backdrop);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-color);
   transition: border-color var(--transition-base), background-color var(--transition-base);
 }
@@ -370,10 +377,11 @@ body {
 }
 
 .hero-title {
+  font-family: var(--font-heading, var(--font-sans));
   font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
   font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: var(--leading-tight);
+  letter-spacing: -0.04em;
+  line-height: 1.1;
   color: var(--text-primary);
   margin-bottom: var(--space-4);
   max-width: 800px;
