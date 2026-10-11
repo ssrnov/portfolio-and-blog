@@ -1,0 +1,402 @@
+/* ==========================================================================
+   FOLIORYN — CINEMATIC INTRO ANIMATION SYSTEM
+   Three-Theme-Aware: Dark (Obsidian), Light (Ivory), Night (Warm Stone)
+   Target Duration: 2.0s – 2.4s
+   ========================================================================== */
+
+#folioryn-cinematic-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--intro-bg, #050706);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--intro-logo-text, #F4F7F4);
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Inter', sans-serif);
+  user-select: none;
+  -webkit-user-select: none;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 380ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+/* --------------------------------------------------------------------------
+   Scene 1: The Digital Canvas (Grid, Ambient Glow & Architectural Accents)
+   -------------------------------------------------------------------------- */
+.intro-canvas-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, var(--intro-lines, #26352B) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--intro-lines, #26352B) 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-position: center center;
+  opacity: 0.16;
+  mask-image: radial-gradient(circle at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.1) 70%, transparent 85%);
+  -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.1) 70%, transparent 85%);
+  animation: introGridFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.intro-atmosphere-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 580px;
+  height: 580px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--intro-glow, rgba(143, 224, 174, 0.16)) 0%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+  opacity: 0;
+  animation: introGlowReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+}
+
+/* Corner Architectural Crosshair Accents */
+.intro-corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: var(--intro-lines, #26352B);
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.intro-corner-tl {
+  top: 32px;
+  left: 32px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.intro-corner-tr {
+  top: 32px;
+  right: 32px;
+  border-top: 1px solid;
+  border-right: 1px solid;
+}
+
+.intro-corner-bl {
+  bottom: 32px;
+  left: 32px;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+}
+
+.intro-corner-br {
+  bottom: 32px;
+  right: 32px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* --------------------------------------------------------------------------
+   Central Brand Composition
+   -------------------------------------------------------------------------- */
+.intro-brand-composition {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-4, 16px);
+  max-width: 90vw;
+}
+
+/* --------------------------------------------------------------------------
+   Scene 2: Identity Forms (SVG Emblem Assembly & Light Beam Sweep)
+   -------------------------------------------------------------------------- */
+.intro-emblem-container {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro-emblem-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Geometric Emblem Paths */
+.intro-path-frame {
+  stroke: var(--intro-lines, #26352B);
+  stroke-width: 1.25;
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: introDrawPath 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+}
+
+.intro-path-folio {
+  stroke: var(--intro-accent, #8FE0AE);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 180;
+  stroke-dashoffset: 180;
+  animation: introDrawPath 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+}
+
+.intro-path-spine {
+  stroke: var(--intro-logo-text, #F4F7F4);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: introDrawPath 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+}
+
+.intro-path-facet {
+  stroke: var(--intro-accent-secondary, #315C46);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-dasharray: 80;
+  stroke-dashoffset: 80;
+  animation: introDrawPath 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+}
+
+/* Narrow Light Beam Sweep across the emblem */
+.intro-light-beam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60px;
+  width: 40px;
+  background: var(--intro-beam);
+  filter: blur(8px);
+  transform: skewX(-25deg);
+  opacity: 0;
+  pointer-events: none;
+  animation: introBeamPass 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) 0.55s forwards;
+}
+
+/* --------------------------------------------------------------------------
+   Scene 3: Brand Reveal (FOLIORYN Wordmark with Subtle Light Sweep)
+   -------------------------------------------------------------------------- */
+.intro-wordmark-wrapper {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.intro-wordmark {
+  font-size: clamp(2.35rem, 5.5vw, 4.25rem);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--intro-logo-text, #F4F7F4);
+  line-height: 1.1;
+  opacity: 0;
+  transform: translateY(8px);
+  background: linear-gradient(
+    115deg,
+    var(--intro-logo-text, #F4F7F4) 30%,
+    var(--intro-accent, #8FE0AE) 50%,
+    var(--intro-logo-text, #F4F7F4) 70%
+  );
+  background-size: 240% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: 
+    introWordmarkReveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.95s forwards,
+    introWordmarkShine 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 1.05s forwards;
+}
+
+/* --------------------------------------------------------------------------
+   Scene 4: Brand Signature ("Your Identity. Your Portfolio. Your Story.")
+   -------------------------------------------------------------------------- */
+.intro-tagline {
+  font-size: clamp(0.825rem, 1.8vw, 1.05rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--intro-tagline, #B8C3BB);
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: introTaglineReveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) 1.55s forwards;
+}
+
+/* --------------------------------------------------------------------------
+   Scene 5: Seamless Website Reveal (Iris Expansion / Dissolve into Site)
+   -------------------------------------------------------------------------- */
+#folioryn-cinematic-intro.intro-revealing {
+  opacity: 0;
+  transform: scale(1.035);
+  pointer-events: none;
+  transition: opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 460ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Minimal Editorial Skip Control */
+.intro-skip-btn {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  z-index: 10;
+  background: transparent;
+  border: 1px solid var(--intro-lines, #26352B);
+  border-radius: var(--radius-full, 9999px);
+  color: var(--intro-muted, #929F95);
+  font-size: 11px;
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  opacity: 0;
+  transition: color 150ms ease, border-color 150ms ease, opacity 250ms ease, transform 150ms ease;
+  animation: introSkipFadeIn 0.4s ease 0.8s forwards;
+}
+
+.intro-skip-btn:hover {
+  color: var(--intro-logo-text, #F4F7F4);
+  border-color: var(--intro-border-strong, #35463A);
+  transform: translateY(-1px);
+}
+
+.intro-skip-btn:active {
+  transform: scale(0.96);
+}
+
+.intro-skip-btn:focus-visible {
+  outline: 2px solid var(--intro-accent, #8FE0AE);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Keyframe Sequences
+   -------------------------------------------------------------------------- */
+@keyframes introGridFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 0.16; }
+}
+
+@keyframes introGlowReveal {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.75); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes introDrawPath {
+  0% {
+    stroke-dashoffset: 200;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes introBeamPass {
+  0% {
+    left: -80px;
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.85;
+  }
+  100% {
+    left: 110px;
+    opacity: 0;
+  }
+}
+
+@keyframes introWordmarkReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+    letter-spacing: 0.14em;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: 0.22em;
+  }
+}
+
+@keyframes introWordmarkShine {
+  0% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes introTaglineReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes introSkipFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 0.75; }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Layout Adjustments
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .intro-emblem-container {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 16px;
+  }
+  .intro-wordmark {
+    font-size: 2.15rem;
+    letter-spacing: 0.15em;
+  }
+  .intro-tagline {
+    font-size: 0.825rem;
+    line-height: 1.45;
+  }
+  .intro-skip-btn {
+    top: 18px;
+    right: 18px;
+    padding: 4px 10px;
+    font-size: 10px;
+  }
+  .intro-corner {
+    width: 16px;
+    height: 16px;
+  }
+  .intro-corner-tl, .intro-corner-tr { top: 18px; }
+  .intro-corner-tl, .intro-corner-bl { left: 18px; }
+  .intro-corner-tr, .intro-corner-br { right: 18px; }
+  .intro-corner-bl, .intro-corner-br { bottom: 18px; }
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility: Reduced Motion Guard
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  #folioryn-cinematic-intro {
+    transition: opacity 120ms ease !important;
+  }
+  #folioryn-cinematic-intro * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

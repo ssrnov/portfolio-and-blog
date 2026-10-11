@@ -10,8 +10,10 @@ import { initHomepage } from './homepage.js';
 import { getActiveUser, getProfile } from './profile-data.js';
 import { initThemeManager, getTheme, setTheme, cycleTheme } from './theme.js';
 import { initButtonInteractions, initAllSegmentedControls } from './button-interactions.js';
+import { initCinematicIntro } from './cinematic-intro.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+  initCinematicIntro();
   initThemeToggle();
   initButtonInteractions();
   initMobileNavigation();
