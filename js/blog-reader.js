@@ -4,7 +4,9 @@
  * and renders title, metadata, and formatted markdown content.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+import { DEFAULT_BLOG_ARTICLES } from './profile-data.js';
+
+document.addEventListener('DOMContentLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
   const slug = params.get('slug');
 
@@ -13,8 +15,22 @@ document.addEventListener('DOMContentLoaded', () => {
   try {
     const raw = localStorage.getItem('profilefolio_blog_articles') || 
                 localStorage.getItem('ssrnovx_blog_articles');
-    const articles = raw ? JSON.parse(raw) : [];
-    const post = articles.find((a) => a.slug === slug);
+    let articles = raw ? JSON.parse(raw) : [];
+    let post = articles.find((a) => a.slug === slug);
+
+    if (!post && Array.isArray(DEFAULT_BLOG_ARTICLES)) {
+      post = DEFAULT_BLOG_ARTICLES.find((a) => a.slug === slug);
+    }
+
+    if (!post) {
+      try {
+        const res = await fetch('/data/blog.json');
+        if (res.ok) {
+          const fallback = await res.json();
+          post = fallback.find((a) => a.slug === slug);
+        }
+      } catch (err) {}
+    }
 
     if (!post) return;
 

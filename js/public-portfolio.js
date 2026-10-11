@@ -1090,7 +1090,7 @@ function renderArticlesSection(articlesList, username, publishSettings) {
     const readingTime = art.readingTime ? `${escapeHtml(String(art.readingTime))} min read` : '4 min read';
     const dateFormatted = art.publishedAt || art.createdAt ? new Date(art.publishedAt || art.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently published';
     const slug = art.slug || art.id;
-    const postUrl = `/blog/post.html?slug=${encodeURIComponent(slug)}`;
+    const postUrl = `/blog/sample-article/?slug=${encodeURIComponent(slug)}`;
     const rawTags = art.tags;
     const tags = Array.isArray(rawTags) ? rawTags : (typeof rawTags === 'string' ? rawTags.split(',').map(t => t.trim()) : []);
 

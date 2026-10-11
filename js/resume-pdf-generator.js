@@ -244,12 +244,18 @@ export function generateAtsResumePdf(data = {}, username = 'developer') {
 
   // Contact line
   const contactParts = [];
-  if (profile.email) contactParts.push(profile.email);
+  const contactEmail = profile.email || profile.contact_email || profile.contactEmail;
+  if (contactEmail) contactParts.push(contactEmail);
   if (profile.phone) contactParts.push(profile.phone);
   if (profile.location) contactParts.push(profile.location);
   contactParts.push(`folioryn.dev/u/${username}`);
-  if (profile.githubUrl) {
-    contactParts.push(profile.githubUrl.replace(/^https?:\/\//, '').replace(/\/+$/, ''));
+  const gh = profile.githubUrl || profile.github_url || profile.github;
+  if (gh) {
+    contactParts.push(gh.replace(/^https?:\/\//, '').replace(/\/+$/, ''));
+  }
+  const li = profile.linkedinUrl || profile.linkedin_url || profile.linkedin;
+  if (li) {
+    contactParts.push(li.replace(/^https?:\/\//, '').replace(/\/+$/, ''));
   }
 
   const contactStr = contactParts.join('  •  ');
@@ -306,6 +312,17 @@ export function generateAtsResumePdf(data = {}, username = 'developer') {
           doc.currentY -= 10.5;
         }
       }
+
+      const honors = edu.achievements || edu.honors;
+      if (honors) {
+        const hLines = doc.wrapText(`Honors & Awards: ${honors}`, 108);
+        for (const line of hLines) {
+          doc.checkPageBreak(11);
+          doc.drawText(line, { size: 8.5, font: 'regular', color: [0.2, 0.2, 0.2] });
+          doc.currentY -= 10.5;
+        }
+      }
+
       doc.currentY -= 4;
     }
     doc.currentY -= 3;
@@ -318,12 +335,22 @@ export function generateAtsResumePdf(data = {}, username = 'developer') {
     for (const s of skills) {
       const cat = s.category || 'Competencies';
       if (!skillsByCategory[cat]) skillsByCategory[cat] = [];
-      skillsByCategory[cat].push(s.name);
+      const skillName = typeof s === 'string' ? s : (s.name || s.skill || s.title || '');
+      if (skillName) skillsByCategory[cat].push(skillName);
     }
+
+    const categoryLabels = {
+      languages: 'Programming Languages',
+      frontend: 'Frontend & UI Engineering',
+      backend: 'Backend & Systems Architecture',
+      databases: 'Databases & Storage',
+      cloud: 'Cloud & Infrastructure',
+      tools: 'Developer Tooling & DevOps'
+    };
 
     for (const [cat, list] of Object.entries(skillsByCategory)) {
       doc.checkPageBreak(14);
-      const catLabel = cat.charAt(0).toUpperCase() + cat.slice(1);
+      const catLabel = categoryLabels[cat.toLowerCase()] || (cat.charAt(0).toUpperCase() + cat.slice(1));
       const skillText = `•  ${catLabel}: ${list.join(', ')}`;
       const lines = doc.wrapText(skillText, 105);
       for (const line of lines) {
@@ -356,28 +383,55 @@ export function generateAtsResumePdf(data = {}, username = 'developer') {
           doc.currentY -= 10.5;
         }
       }
+
+      const expHighlights = exp.highlights || exp.bullets;
+      if (expHighlights && Array.isArray(expHighlights)) {
+        for (const hl of expHighlights) {
+          const hlLines = doc.wrapText(`•  ${hl}`, 105);
+          for (const line of hlLines) {
+            doc.checkPageBreak(11);
+            doc.drawText(line, { size: 8.5, font: 'regular', color: [0.2, 0.2, 0.2] });
+            doc.currentY -= 10.5;
+          }
+        }
+      }
+
       doc.currentY -= 5;
     }
     doc.currentY -= 3;
   }
 
   // 6. SELECTED PROJECTS & SYSTEMS
-  const featuredProjects = projects.slice(0, 4);
-  if (featuredProjects.length > 0) {
+  const activeProjects = (projects || []).filter(p => p.displayOnPortfolio !== false);
+  if (activeProjects.length > 0) {
     renderSectionHeader('Selected Projects & Systems');
-    for (const proj of featuredProjects) {
+    for (const proj of activeProjects) {
       doc.checkPageBreak(30);
       doc.drawText(proj.title || '', { size: 10, font: 'bold', color: [0, 0, 0] });
       
-      const repoUrl = proj.repo_url || proj.github_url || '';
-      const liveUrl = proj.live_url || proj.demo_url || '';
-      const linkParts = [];
-      if (repoUrl) linkParts.push('Repository');
-      if (liveUrl) linkParts.push('Live Demo');
+      const repoUrl = proj.repo_url || proj.github_url || proj.githubUrl || '';
+      const liveUrl = proj.live_url || proj.demo_url || proj.liveUrl || '';
 
-      if (linkParts.length > 0) {
-        const linkStr = linkParts.join('  •  ');
-        doc.drawText(linkStr, { size: 8.5, font: 'bold', align: 'right', color: [0.1, 0.1, 0.1] });
+      if (repoUrl || liveUrl) {
+        let rightCursor = rightX;
+        if (liveUrl) {
+          const liveText = 'Live Demo';
+          const w = doc.getTextWidth(liveText, 8.5, 'bold');
+          const x = rightCursor - w;
+          doc.drawText(liveText, { x, y: doc.currentY, size: 8.5, font: 'bold', color: [0.1, 0.35, 0.75] });
+          doc.addLinkAnnotation(x, doc.currentY - 2, rightCursor, doc.currentY + 9, liveUrl.startsWith('http') ? liveUrl : 'https://' + liveUrl);
+          rightCursor = x - 10;
+          if (repoUrl) {
+            doc.drawText('•', { x: rightCursor + 3, y: doc.currentY, size: 8.5, font: 'regular', color: [0.5, 0.5, 0.5] });
+          }
+        }
+        if (repoUrl) {
+          const repoText = 'Repository';
+          const w = doc.getTextWidth(repoText, 8.5, 'bold');
+          const x = rightCursor - w;
+          doc.drawText(repoText, { x, y: doc.currentY, size: 8.5, font: 'bold', color: [0.1, 0.35, 0.75] });
+          doc.addLinkAnnotation(x, doc.currentY - 2, rightCursor, doc.currentY + 9, repoUrl.startsWith('http') ? repoUrl : 'https://' + repoUrl);
+        }
       }
       doc.currentY -= 11;
 
@@ -395,6 +449,18 @@ export function generateAtsResumePdf(data = {}, username = 'developer') {
           doc.currentY -= 10.5;
         }
       }
+
+      if (proj.highlights && Array.isArray(proj.highlights)) {
+        for (const hl of proj.highlights) {
+          const hlLines = doc.wrapText(`•  ${hl}`, 105);
+          for (const line of hlLines) {
+            doc.checkPageBreak(11);
+            doc.drawText(line, { size: 8.5, font: 'regular', color: [0.2, 0.2, 0.2] });
+            doc.currentY -= 10.5;
+          }
+        }
+      }
+
       doc.currentY -= 5;
     }
     doc.currentY -= 3;
@@ -407,6 +473,14 @@ export function generateAtsResumePdf(data = {}, username = 'developer') {
       doc.checkPageBreak(14);
       const certText = `•  ${c.title} – ${c.issuer} (${c.issueDate || 'Verified'})`;
       doc.drawText(certText, { size: 9, font: 'regular', color: [0.15, 0.15, 0.15] });
+      const certUrl = c.credentialUrl || c.credential_url || c.url;
+      if (certUrl) {
+        const verifyText = 'Verify ↗';
+        const w = doc.getTextWidth(verifyText, 8.5, 'bold');
+        const x = rightX - w;
+        doc.drawText(verifyText, { x, y: doc.currentY, size: 8.5, font: 'bold', color: [0.1, 0.35, 0.75] });
+        doc.addLinkAnnotation(x, doc.currentY - 2, rightX, doc.currentY + 9, certUrl.startsWith('http') ? certUrl : 'https://' + certUrl);
+      }
       doc.currentY -= 11.5;
     }
   }

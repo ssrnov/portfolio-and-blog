@@ -50,6 +50,11 @@ function foliorynRouterPlugin() {
             return next();
           }
 
+          if (pathname === '/blog/post') {
+            req.url = '/blog/post.html' + urlObj.search;
+            return next();
+          }
+
           // 3. Rewrite dashboard subroutes without trailing slashes
           if (pathname.startsWith('/dashboard/')) {
             const sub = pathname.replace('/dashboard/', '');
@@ -77,6 +82,7 @@ export default defineConfig({
         about: resolve(__dirname, 'about/index.html'),
         projects: resolve(__dirname, 'projects/index.html'),
         blog: resolve(__dirname, 'blog/index.html'),
+        blogPost: resolve(__dirname, 'blog/post.html'),
         blogArticle: resolve(__dirname, 'blog/sample-article/index.html'),
         contact: resolve(__dirname, 'contact/index.html'),
         notFound: resolve(__dirname, '404.html'),

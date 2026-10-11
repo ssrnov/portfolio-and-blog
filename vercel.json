@@ -6,6 +6,8 @@
   "rewrites": [
     { "source": "/templates/demo", "destination": "/templates/demo.html" },
     { "source": "/templates/demo/", "destination": "/templates/demo.html" },
+    { "source": "/blog/post", "destination": "/blog/post.html" },
+    { "source": "/blog/post/", "destination": "/blog/post.html" },
     { "source": "/u/:username/resume", "destination": "/u/resume.html" },
     { "source": "/u/:username/resume/", "destination": "/u/resume.html" },
     { "source": "/u/ssrnov", "destination": "/u/ssrnov/index.html" },
