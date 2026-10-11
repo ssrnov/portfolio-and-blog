@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap');
+
 /* ==========================================================================
    CSS VARIABLES & DESIGN TOKENS
    Folioryn Portfolio & Blog Platform
@@ -10,7 +12,19 @@
 :root {
   /* Font Family Stacks */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-heading: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Newsreader', 'Playfair Display', Georgia, serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace;
+
+  /* Shared Brand Palette Tokens */
+  --brand-teal-deep: #124E4A;
+  --brand-teal-dark: #0B3533;
+  --brand-forest-green: #315C46;
+  --brand-emerald: #2D8A68;
+  --brand-emerald-soft: #BFE7D4;
+  --brand-orange: #F29A52;
+  --brand-orange-soft: #F8D2AD;
+  --brand-botanical: #71866D;
 
   /* Typography Scale */
   --text-xs: 0.75rem;     /* 12px */
@@ -125,6 +139,21 @@
   --chart-views: #8FE0AE;
   --chart-project: #8FC7FF;
   --chart-interactions: #6EE7A0;
+
+  /* Neo-Apple Glass & Elevated Surface Tokens */
+  --glass-bg: rgba(16, 21, 18, 0.72);
+  --glass-border: rgba(38, 53, 43, 0.75);
+  --glass-blur: 16px;
+  --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --surface-warm-featured: #151B17;
+  --surface-warm-accent: #F2B47E;
+  --surface-teal-accent: #124E4A;
+  --surface-teal-dark: #0B3533;
+  --accent-orange: #F29A52;
+  --accent-orange-soft: #F8D2AD;
+  --ambient-orb-1: rgba(18, 78, 74, 0.28);
+  --ambient-orb-2: rgba(143, 224, 174, 0.12);
+  --ambient-orb-warm: rgba(242, 180, 126, 0.08);
 }
 
 /* ==========================================================================
@@ -187,6 +216,21 @@
   --chart-views: #8FE0AE;
   --chart-project: #8FC7FF;
   --chart-interactions: #6EE7A0;
+
+  /* Neo-Apple Glass & Deep-Teal Editorial Surfaces */
+  --glass-bg: rgba(16, 21, 18, 0.72);
+  --glass-border: rgba(38, 53, 43, 0.75);
+  --glass-blur: 16px;
+  --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --surface-warm-featured: #151B17;
+  --surface-warm-accent: #F2B47E;
+  --surface-teal-accent: #124E4A;
+  --surface-teal-dark: #0B3533;
+  --accent-orange: #F2B47E;
+  --accent-orange-soft: #F8D2AD;
+  --ambient-orb-1: rgba(18, 78, 74, 0.28);
+  --ambient-orb-2: rgba(143, 224, 174, 0.12);
+  --ambient-orb-warm: rgba(242, 180, 126, 0.08);
 
   /* Cinematic Intro Animation Tokens — Dark Theme (Premium Obsidian) */
   --intro-bg: #050706;
@@ -267,6 +311,21 @@
   --chart-views: #315C46;
   --chart-project: #315D83;
   --chart-interactions: #267347;
+
+  /* Neo-Apple Ivory & Forest Green Surfaces */
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(229, 226, 216, 0.85);
+  --glass-blur: 16px;
+  --glass-shadow: 0 10px 30px rgba(32, 55, 45, 0.08);
+  --surface-warm-featured: #FFF0E2;
+  --surface-warm-accent: #F8D2AD;
+  --surface-teal-accent: #124E4A;
+  --surface-teal-dark: #0B3533;
+  --accent-orange: #F29A52;
+  --accent-orange-soft: #F8D2AD;
+  --ambient-orb-1: rgba(191, 231, 212, 0.45);
+  --ambient-orb-2: rgba(113, 134, 109, 0.20);
+  --ambient-orb-warm: rgba(248, 210, 173, 0.35);
 
   /* Cinematic Intro Animation Tokens — Light Theme (Ivory + Forest Green) */
   --intro-bg: #F7F5EF;
@@ -350,6 +409,21 @@
   --chart-views: #D6D1C7;
   --chart-project: #8FC7FF;
   --chart-interactions: #22c55e;
+
+  /* Preserved Warm Stone Glass & Surfaces */
+  --glass-bg: rgba(20, 21, 21, 0.75);
+  --glass-border: rgba(41, 42, 42, 0.85);
+  --glass-blur: 16px;
+  --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  --surface-warm-featured: #171818;
+  --surface-warm-accent: #D6D1C7;
+  --surface-teal-accent: #124E4A;
+  --surface-teal-dark: #0B3533;
+  --accent-orange: #F29A52;
+  --accent-orange-soft: #F8D2AD;
+  --ambient-orb-1: rgba(209, 204, 194, 0.06);
+  --ambient-orb-2: rgba(214, 209, 199, 0.04);
+  --ambient-orb-warm: rgba(242, 154, 82, 0.05);
 
   /* Cinematic Intro Animation Tokens — Night Theme (Preserved Warm Stone Monochrome) */
   --intro-bg: #080909;

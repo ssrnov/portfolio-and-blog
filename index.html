@@ -26,10 +26,10 @@
   <!-- Favicon (Monochrome SVG Monogram) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080909' stroke='%23292A2A' stroke-width='2'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%23F5F5F5' text-anchor='middle'>F</text></svg>" />
 
-  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <!-- Google Fonts: Inter, Manrope, Newsreader & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet" />
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/css/variables.css" />
@@ -106,12 +106,17 @@
     <!-- =========================================================================
          SECTION 2: HERO SECTION
          ========================================================================= -->
-    <section id="hero" class="hero-section section-py" aria-labelledby="hero-title" style="padding-top: var(--space-16); padding-bottom: var(--space-16);">
-      <div class="container hero-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: var(--space-12); align-items: center;">
+    <section id="hero" class="hero-section section-py" aria-labelledby="hero-title" style="padding-top: var(--space-16); padding-bottom: var(--space-16); position: relative; overflow: hidden;">
+      <!-- Neo-Apple Soft Ambient Lighting & Organic Gradient Orbs -->
+      <div class="ambient-orb ambient-orb-teal" style="top: -120px; left: -100px; opacity: 0.35;" aria-hidden="true"></div>
+      <div class="ambient-orb ambient-orb-warm" style="bottom: -80px; right: 8%; opacity: 0.22;" aria-hidden="true"></div>
+
+      <div class="container hero-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: var(--space-12); align-items: center; position: relative; z-index: 1;">
         
         <!-- Left Side: Copy and Primary CTAs -->
         <div>
-          <div class="gradient-badge" style="margin-bottom: var(--space-4);">
+          <div class="editorial-badge editorial-badge-warm" style="margin-bottom: var(--space-4);">
+            <span class="pulsing-dot" style="background: var(--brand-orange, #F29A52);"></span>
             <span>YOUR IDENTITY. YOUR PORTFOLIO. YOUR STORY.</span>
           </div>
 
@@ -145,7 +150,7 @@
           <!-- Top Row: Template Archetypes Controller Header -->
           <div class="floating-card" style="display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--accent-primary);">
             <div style="display: flex; align-items: center; gap: var(--space-3);">
-              <div style="width: 42px; height: 42px; border-radius: var(--radius-sm); background: #191A1A; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--text-primary); font-family: var(--font-mono);">
+              <div style="width: 42px; height: 42px; border-radius: var(--radius-sm); background: var(--bg-surface-elevated, var(--bg-secondary)); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--text-primary); font-family: var(--font-mono);">
                 6T
               </div>
               <div>
@@ -162,7 +167,7 @@
           <!-- Middle Split: Archetypes Gallery Highlights -->
           <div class="education-github-grid">
             <!-- Archetype Preview 1 -->
-            <a href="/templates/demo.html?template=minimal-professional" class="floating-card" style="text-decoration: none; color: inherit; display: block; transition: border-color var(--transition-fast);">
+            <a href="/templates/demo.html?template=minimal-professional" class="floating-card card-interactive" style="text-decoration: none; color: inherit; display: block; transition: border-color var(--transition-fast);">
               <span class="badge" style="font-size: 10px; margin-bottom: 8px; display: inline-block;">Minimal</span>
               <h3 style="font-size: var(--text-xs); font-weight: 700; margin: 0 0 4px 0; color: var(--text-primary);">Sunny Singh &bull; Systems</h3>
               <p style="font-size: 11px; color: var(--text-muted); margin: 0 0 6px 0;">Restrained borders, executive clarity</p>
@@ -172,7 +177,7 @@
             </a>
 
             <!-- Archetype Preview 2 -->
-            <a href="/templates/demo.html?template=developer-portfolio" class="floating-card" style="text-decoration: none; color: inherit; display: block; transition: border-color var(--transition-fast);">
+            <a href="/templates/demo.html?template=developer-portfolio" class="floating-card card-interactive" style="text-decoration: none; color: inherit; display: block; transition: border-color var(--transition-fast);">
               <span class="badge" style="font-size: 10px; margin-bottom: 8px; display: inline-block;">Developer</span>
               <h3 style="font-size: var(--text-xs); font-weight: 700; margin: 0 0 4px 0; color: var(--text-primary);">Aditya Sharma &bull; OSS</h3>
               <p style="font-size: 11px; color: var(--text-muted); margin: 0 0 6px 0;">Terminal telemetry, prompt layout</p>
@@ -183,7 +188,7 @@
           </div>
 
           <!-- Featured Showcase Card: Unified Core Features -->
-          <div class="case-study-card">
+          <div class="case-study-card card-featured">
             <div class="case-study-header">
               <span class="badge" style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Unified Career Engine</span>
               <span class="badge" style="background: var(--bg-secondary); border-color: var(--border-color); color: var(--text-primary);">All-in-One</span>
@@ -203,7 +208,7 @@
           </div>
 
           <!-- Live Public URL Bar -->
-          <div style="background: var(--bg-surface); border: 1px dashed var(--border-color); border-radius: var(--radius-md); padding: 8px 14px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-family: var(--font-mono);">
+          <div style="background: var(--glass-bg, var(--bg-surface)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px dashed var(--border-color); border-radius: var(--radius-md); padding: 8px 14px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-family: var(--font-mono);">
             <span style="color: var(--text-muted);">folioryn.dev/templates/demo.html</span>
             <a href="/templates/demo.html" style="color: var(--text-primary); text-decoration: underline; display: flex; align-items: center; gap: 6px;">
               <span class="pulsing-dot"></span> Test All 6 Demos &rarr;
@@ -508,15 +513,15 @@
         <div class="template-gallery-grid" id="template-cards-container">
           
           <!-- Template 1: Minimal Professional -->
-          <article class="template-gallery-card" data-categories="minimal">
-            <div class="template-preview-canvas" style="background: #101111; border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; align-items: center; justify-content: center;">
+          <article class="template-gallery-card card-interactive" data-categories="minimal">
+            <div class="template-preview-canvas" style="border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; align-items: center; justify-content: center;">
               <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
-                <rect width="220" height="120" rx="4" fill="#141515" stroke="#292A2A"/>
-                <rect x="20" y="24" width="32" height="32" rx="4" fill="#EDE8E1"/>
-                <rect x="62" y="26" width="90" height="8" rx="2" fill="#EDE8E1"/>
-                <rect x="62" y="38" width="60" height="6" rx="2" fill="#A8A39D"/>
-                <rect x="20" y="68" width="85" height="38" rx="4" fill="#101111" stroke="#292A2A"/>
-                <rect x="115" y="68" width="85" height="38" rx="4" fill="#101111" stroke="#292A2A"/>
+                <rect width="220" height="120" rx="4" fill="var(--bg-surface)" stroke="var(--border-color)"/>
+                <rect x="20" y="24" width="32" height="32" rx="4" fill="var(--text-primary)"/>
+                <rect x="62" y="26" width="90" height="8" rx="2" fill="var(--text-primary)"/>
+                <rect x="62" y="38" width="60" height="6" rx="2" fill="var(--text-muted)"/>
+                <rect x="20" y="68" width="85" height="38" rx="4" fill="var(--bg-secondary)" stroke="var(--border-color)"/>
+                <rect x="115" y="68" width="85" height="38" rx="4" fill="var(--bg-secondary)" stroke="var(--border-color)"/>
               </svg>
             </div>
             <div class="template-gallery-content">
@@ -535,18 +540,18 @@
           </article>
 
           <!-- Template 2: Developer Portfolio -->
-          <article class="template-gallery-card" data-categories="developer">
-            <div class="template-preview-canvas" style="background: #080909; border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; align-items: center; justify-content: center;">
+          <article class="template-gallery-card card-interactive" data-categories="developer">
+            <div class="template-preview-canvas" style="border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; align-items: center; justify-content: center;">
               <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
-                <rect width="220" height="120" rx="4" fill="#080909" stroke="#292A2A"/>
-                <rect x="14" y="14" width="192" height="16" rx="2" fill="#141515"/>
-                <circle cx="24" cy="22" r="2.5" fill="#454545"/>
-                <circle cx="32" cy="22" r="2.5" fill="#454545"/>
-                <circle cx="40" cy="22" r="2.5" fill="#454545"/>
-                <text x="18" y="50" fill="#EDE8E1" font-family="monospace" font-size="8">&gt; whoami --developer</text>
-                <text x="18" y="64" fill="#A8A39D" font-family="monospace" font-size="8">&gt; ls -la ./projects</text>
-                <rect x="18" y="76" width="88" height="30" rx="2" fill="#141515" stroke="#292A2A"/>
-                <rect x="114" y="76" width="88" height="30" rx="2" fill="#141515" stroke="#292A2A"/>
+                <rect width="220" height="120" rx="4" fill="var(--bg-surface)" stroke="var(--border-color)"/>
+                <rect x="14" y="14" width="192" height="16" rx="2" fill="var(--bg-secondary)"/>
+                <circle cx="24" cy="22" r="2.5" fill="var(--text-muted)"/>
+                <circle cx="32" cy="22" r="2.5" fill="var(--text-muted)"/>
+                <circle cx="40" cy="22" r="2.5" fill="var(--text-muted)"/>
+                <text x="18" y="50" fill="var(--text-primary)" font-family="monospace" font-size="8">&gt; whoami --developer</text>
+                <text x="18" y="64" fill="var(--text-muted)" font-family="monospace" font-size="8">&gt; ls -la ./projects</text>
+                <rect x="18" y="76" width="88" height="30" rx="2" fill="var(--bg-secondary)" stroke="var(--border-color)"/>
+                <rect x="114" y="76" width="88" height="30" rx="2" fill="var(--bg-secondary)" stroke="var(--border-color)"/>
               </svg>
             </div>
             <div class="template-gallery-content">
@@ -565,15 +570,15 @@
           </article>
 
           <!-- Template 3: Student Portfolio -->
-          <article class="template-gallery-card" data-categories="student">
-            <div class="template-preview-canvas" style="background: #101111; border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; align-items: center; justify-content: center;">
+          <article class="template-gallery-card card-interactive" data-categories="student">
+            <div class="template-preview-canvas" style="border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; align-items: center; justify-content: center;">
               <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
-                <rect width="220" height="120" rx="4" fill="#141515" stroke="#292A2A"/>
-                <rect x="18" y="16" width="184" height="28" rx="3" fill="#191A1A" stroke="#454545"/>
-                <text x="28" y="30" fill="#EDE8E1" font-family="monospace" font-size="7" font-weight="bold">DEGREE &bull; CGPA 9.24/10.0</text>
-                <text x="28" y="38" fill="#A8A39D" font-family="sans-serif" font-size="6">SRM Institute of Science and Technology</text>
-                <rect x="18" y="54" width="88" height="52" rx="3" fill="#101111" stroke="#292A2A"/>
-                <rect x="114" y="54" width="88" height="52" rx="3" fill="#101111" stroke="#292A2A"/>
+                <rect width="220" height="120" rx="4" fill="var(--bg-surface)" stroke="var(--border-color)"/>
+                <rect x="18" y="16" width="184" height="28" rx="3" fill="var(--bg-secondary)" stroke="var(--border-color)"/>
+                <text x="28" y="30" fill="var(--text-primary)" font-family="monospace" font-size="7" font-weight="bold">DEGREE &bull; CGPA 9.24/10.0</text>
+                <text x="28" y="38" fill="var(--text-muted)" font-family="sans-serif" font-size="6">SRM Institute of Science and Technology</text>
+                <rect x="18" y="54" width="88" height="52" rx="3" fill="var(--bg-secondary)" stroke="var(--border-color)"/>
+                <rect x="114" y="54" width="88" height="52" rx="3" fill="var(--bg-secondary)" stroke="var(--border-color)"/>
               </svg>
             </div>
             <div class="template-gallery-content">
@@ -592,16 +597,16 @@
           </article>
 
           <!-- Template 4: Creative Portfolio -->
-          <article class="template-gallery-card" data-categories="creative">
-            <div class="template-preview-canvas" style="background: #141515; border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; align-items: center; justify-content: center;">
+          <article class="template-gallery-card card-interactive" data-categories="creative">
+            <div class="template-preview-canvas" style="border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; align-items: center; justify-content: center;">
               <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
-                <rect width="220" height="120" rx="4" fill="#080909" stroke="#292A2A"/>
-                <rect x="18" y="18" width="184" height="42" rx="4" fill="#191A1A"/>
-                <circle cx="38" cy="39" r="12" fill="#EDE8E1"/>
-                <rect x="60" y="32" width="70" height="7" rx="2" fill="#EDE8E1"/>
-                <rect x="60" y="42" width="90" height="5" rx="2" fill="#737373"/>
-                <rect x="18" y="70" width="88" height="38" rx="4" fill="#141515" stroke="#292A2A"/>
-                <rect x="114" y="70" width="88" height="38" rx="4" fill="#141515" stroke="#292A2A"/>
+                <rect width="220" height="120" rx="4" fill="var(--bg-surface)" stroke="var(--border-color)"/>
+                <rect x="18" y="18" width="184" height="42" rx="4" fill="var(--bg-secondary)"/>
+                <circle cx="38" cy="39" r="12" fill="var(--accent-primary)"/>
+                <rect x="60" y="32" width="70" height="7" rx="2" fill="var(--text-primary)"/>
+                <rect x="60" y="42" width="90" height="5" rx="2" fill="var(--text-muted)"/>
+                <rect x="18" y="70" width="88" height="38" rx="4" fill="var(--bg-secondary)" stroke="var(--border-color)"/>
+                <rect x="114" y="70" width="88" height="38" rx="4" fill="var(--bg-secondary)" stroke="var(--border-color)"/>
               </svg>
             </div>
             <div class="template-gallery-content">
@@ -620,16 +625,16 @@
           </article>
 
           <!-- Template 5: Editorial Portfolio -->
-          <article class="template-gallery-card" data-categories="editorial">
-            <div class="template-preview-canvas" style="background: #101111; border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; align-items: center; justify-content: center;">
+          <article class="template-gallery-card card-interactive" data-categories="editorial">
+            <div class="template-preview-canvas" style="border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; align-items: center; justify-content: center;">
               <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
-                <rect width="220" height="120" rx="4" fill="#141515" stroke="#292A2A"/>
-                <rect x="20" y="24" width="180" height="10" rx="2" fill="#EDE8E1"/>
-                <line x1="20" y1="44" x2="200" y2="44" stroke="#292A2A"/>
-                <rect x="20" y="54" width="160" height="6" rx="2" fill="#A3A3A3"/>
-                <rect x="20" y="66" width="130" height="6" rx="2" fill="#737373"/>
-                <rect x="20" y="78" width="170" height="6" rx="2" fill="#A3A3A3"/>
-                <rect x="20" y="94" width="80" height="14" rx="2" fill="#191A1A" stroke="#454545"/>
+                <rect width="220" height="120" rx="4" fill="var(--bg-surface)" stroke="var(--border-color)"/>
+                <rect x="20" y="24" width="180" height="10" rx="2" fill="var(--text-primary)"/>
+                <line x1="20" y1="44" x2="200" y2="44" stroke="var(--border-color)"/>
+                <rect x="20" y="54" width="160" height="6" rx="2" fill="var(--text-secondary)"/>
+                <rect x="20" y="66" width="130" height="6" rx="2" fill="var(--text-muted)"/>
+                <rect x="20" y="78" width="170" height="6" rx="2" fill="var(--text-secondary)"/>
+                <rect x="20" y="94" width="80" height="14" rx="2" fill="var(--bg-secondary)" stroke="var(--border-color)"/>
               </svg>
             </div>
             <div class="template-gallery-content">
@@ -648,15 +653,15 @@
           </article>
 
           <!-- Template 6: Experience-Focused Portfolio -->
-          <article class="template-gallery-card" data-categories="experience">
-            <div class="template-preview-canvas" style="background: #141515; border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; align-items: center; justify-content: center;">
+          <article class="template-gallery-card card-interactive" data-categories="experience">
+            <div class="template-preview-canvas" style="border-bottom: 1px solid var(--border-color); padding: 20px; display: flex; align-items: center; justify-content: center;">
               <svg width="220" height="120" viewBox="0 0 220 120" fill="none">
-                <rect width="220" height="120" rx="4" fill="#080909" stroke="#292A2A"/>
-                <line x1="30" y1="20" x2="30" y2="100" stroke="#454545" stroke-width="2"/>
-                <circle cx="30" cy="30" r="4" fill="#EDE8E1"/>
-                <circle cx="30" cy="65" r="4" fill="#A8A39D"/>
-                <rect x="44" y="24" width="150" height="24" rx="3" fill="#141515" stroke="#292A2A"/>
-                <rect x="44" y="58" width="150" height="24" rx="3" fill="#141515" stroke="#292A2A"/>
+                <rect width="220" height="120" rx="4" fill="var(--bg-surface)" stroke="var(--border-color)"/>
+                <line x1="30" y1="20" x2="30" y2="100" stroke="var(--border-hover)" stroke-width="2"/>
+                <circle cx="30" cy="30" r="4" fill="var(--accent-primary)"/>
+                <circle cx="30" cy="65" r="4" fill="var(--text-muted)"/>
+                <rect x="44" y="24" width="150" height="24" rx="3" fill="var(--bg-secondary)" stroke="var(--border-color)"/>
+                <rect x="44" y="58" width="150" height="24" rx="3" fill="var(--bg-secondary)" stroke="var(--border-color)"/>
               </svg>
             </div>
             <div class="template-gallery-content">

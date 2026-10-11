@@ -31,11 +31,13 @@
 }
 
 .section-title {
+  font-family: var(--font-heading, var(--font-sans));
   font-size: clamp(var(--text-2xl), 3.5vw, var(--text-4xl));
   font-weight: 800;
   letter-spacing: -0.03em;
   color: var(--text-primary);
   margin-bottom: var(--space-3);
+  line-height: var(--leading-tight);
 }
 
 .section-subtitle {
@@ -1474,14 +1476,188 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: var(--radius-full);
   border: 1px solid var(--border-color);
-  background: var(--bg-secondary);
+  background: var(--glass-bg, var(--bg-secondary));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--text-primary);
   font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* ==========================================================================
+   REUSABLE SURFACE & GLASS SYSTEM (NEO-APPLE + DEEP TEAL EDITORIAL)
+   7 Variants: Standard, Elevated, Soft Glass, Featured, Warm Accent, Selected, Interactive
+   ========================================================================== */
+
+/* 1. Standard Surface */
+.card,
+.card-standard {
+  box-sizing: border-box;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+  min-width: 0;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+/* 2. Elevated Surface */
+.card-elevated {
+  box-sizing: border-box;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+  min-width: 0;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+}
+.card-elevated:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* 3. Soft Glass Surface (Neo-Apple UI) */
+.card-glass,
+.glass-surface,
+.floating-card {
+  box-sizing: border-box;
+  background: var(--glass-bg, var(--bg-surface));
+  backdrop-filter: blur(var(--glass-blur, 16px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px));
+  border: 1px solid var(--glass-border, var(--border-color));
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+  min-width: 0;
+  box-shadow: var(--glass-shadow, var(--shadow-md));
+  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+}
+.card-glass:hover,
+.floating-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-hover);
+}
+
+/* 4. Featured Project Surface */
+.card-featured,
+.case-study-card {
+  box-sizing: border-box;
+  background: linear-gradient(155deg, var(--bg-surface) 0%, var(--bg-secondary) 100%);
+  border: 1px solid var(--border-strong, var(--border-color));
+  border-radius: 20px;
+  padding: 24px 26px;
+  min-width: 0;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+}
+.card-featured::before,
+.case-study-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--brand-teal-deep, #124E4A), var(--accent-primary), var(--brand-orange, #F29A52));
+  opacity: 0.85;
+}
+.card-featured:hover,
+.case-study-card:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+}
+
+/* 5. Warm Accent Surface */
+.card-warm-accent {
+  box-sizing: border-box;
+  background-color: var(--surface-warm-featured, var(--bg-surface));
+  border: 1px solid var(--surface-warm-accent, var(--border-color));
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+  min-width: 0;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), border-color var(--transition-base);
+}
+
+/* 6. Selected State */
+.card-selected,
+.selected-surface,
+[aria-selected="true"].card,
+[aria-selected="true"].template-gallery-card {
+  background-color: var(--bg-selected);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 1px var(--accent-primary), var(--shadow-sm);
+}
+
+/* 7. Interactive Card */
+.card-interactive {
+  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+}
+.card-interactive:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+}
+
+/* Ambient Decorative Orbs & Shapes */
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(60px);
+  z-index: 0;
+  opacity: 0.85;
+}
+.ambient-orb-teal {
+  width: 450px;
+  height: 450px;
+  background: var(--ambient-orb-1, rgba(18, 78, 74, 0.25));
+}
+.ambient-orb-emerald {
+  width: 380px;
+  height: 380px;
+  background: var(--ambient-orb-2, rgba(143, 224, 174, 0.14));
+}
+.ambient-orb-warm {
+  width: 320px;
+  height: 320px;
+  background: var(--ambient-orb-warm, rgba(242, 180, 126, 0.12));
+}
+
+/* Editorial Badges & Neo-Apple Pill Accents */
+.editorial-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background: var(--glass-bg, var(--bg-secondary));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-primary);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.editorial-badge-warm {
+  border-color: var(--brand-orange, #F29A52);
+  color: var(--text-primary);
+  background: var(--surface-warm-featured, var(--bg-secondary));
+}
+.editorial-badge-teal {
+  border-color: var(--brand-teal-deep, #124E4A);
+  color: var(--text-primary);
+  background: var(--bg-accent-tinted);
 }
 
 /* Hero Floating Component Composition */
@@ -1491,38 +1667,6 @@
   flex-direction: column;
   gap: var(--space-4);
   width: 100%;
-}
-
-.floating-card {
-  box-sizing: border-box;
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  min-width: 0;
-  box-shadow: var(--shadow-md);
-  transition: transform var(--transition-base), border-color var(--transition-base);
-}
-
-.floating-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--border-hover);
-}
-
-/* Featured Case Study Card - Specifically tuned breathing room & wrapping */
-.case-study-card {
-  box-sizing: border-box;
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  padding: 22px 24px;
-  min-width: 0;
-  box-shadow: var(--shadow-md);
-  transition: transform var(--transition-base), border-color var(--transition-base);
-}
-
-.case-study-card:hover {
-  border-color: var(--border-hover);
 }
 
 .case-study-header {
@@ -1542,6 +1686,7 @@
 }
 
 .case-study-title {
+  font-family: var(--font-heading, var(--font-sans));
   font-size: var(--text-base);
   font-weight: 700;
   color: var(--text-primary);
@@ -2704,6 +2849,7 @@
 }
 
 .hero-avatar-wrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -2711,8 +2857,24 @@
   gap: 12px;
 }
 
+.hero-avatar-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -10%);
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--ambient-orb-2, rgba(45, 138, 104, 0.18)) 0%, transparent 70%);
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .hero-avatar-frame {
   position: relative;
+  z-index: 1;
   width: 172px;
   height: 172px;
   border-radius: var(--radius-xl);
@@ -2729,8 +2891,8 @@
 
 .hero-avatar-frame:hover {
   transform: perspective(600px) rotateY(-5deg) rotateX(4deg) translateY(-4px) scale(1.02);
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45), 0 0 20px rgba(56, 189, 248, 0.15);
-  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45), 0 0 24px rgba(45, 138, 104, 0.22);
+  border-color: var(--accent-primary);
 }
 
 .hero-avatar-caption {
