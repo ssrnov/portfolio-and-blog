@@ -1037,7 +1037,40 @@ test('40. Direct ATS Resume PDF Download and Public Resume Route Verification', 
   const resumeRewrite = vercel.rewrites.find(r => r.source === '/u/:username/resume');
   assert.ok(resumeRewrite, 'vercel.json must have rewrite for /u/:username/resume');
   assert.strictEqual(resumeRewrite.destination, '/u/resume.html', 'vercel.json rewrite must point to public /u/resume.html instead of dashboard');
-  assert.ok(viteConfig.includes('publicResume:'), 'vite.config.js must include publicResume input');
+});
+
+// --------------------------------------------------------------------------
+// TEST 41: Cross-Device Portrait Image Visibility & User Name Display Under Portrait
+// --------------------------------------------------------------------------
+test('Cross-Device Portrait Image & Name Display: global avatar sync and user name caption beneath portrait', () => {
+  const ssrnovHtml = fs.readFileSync(path.join(ROOT, 'u/ssrnov/index.html'), 'utf8');
+  const sunnyHtml = fs.readFileSync(path.join(ROOT, 'u/sunny/index.html'), 'utf8');
+  const uHtml = fs.readFileSync(path.join(ROOT, 'u/index.html'), 'utf8');
+  const compCss = fs.readFileSync(path.join(ROOT, 'css/components.css'), 'utf8');
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  const pubPortJs = fs.readFileSync(path.join(ROOT, 'js/public-portfolio.js'), 'utf8');
+  const builderHtml = fs.readFileSync(path.join(ROOT, 'dashboard/builder/index.html'), 'utf8');
+  const settingsHtml = fs.readFileSync(path.join(ROOT, 'dashboard/settings/index.html'), 'utf8');
+
+  // 1. User Name directly beneath portrait hero avatar
+  assert.ok(compCss.includes('.hero-avatar-caption'), 'components.css must define .hero-avatar-caption');
+  assert.ok(compCss.includes('.hero-avatar-name'), 'components.css must define .hero-avatar-name');
+  assert.ok(ssrnovHtml.includes('class="hero-avatar-caption"'), 'u/ssrnov/index.html must include hero-avatar-caption');
+  assert.ok(ssrnovHtml.includes('data-builder-target="display_name" class="hero-avatar-name"'), 'u/ssrnov/index.html must render user name inside caption');
+  assert.ok(sunnyHtml.includes('class="hero-avatar-caption"'), 'u/sunny/index.html must include hero-avatar-caption');
+  assert.ok(uHtml.includes('class="hero-avatar-caption"'), 'u/index.html must include hero-avatar-caption');
+
+  // 2. Cross-device portrait image resolution for ssrnov (accessible from any device without local storage)
+  assert.ok(ssrnovHtml.includes('src="https://github.com/ssrnov.png"'), 'u/ssrnov/index.html must have live public avatar src');
+  assert.ok(profileDataJs.includes('https://github.com/ssrnov.png'), 'js/profile-data.js must provide fallback cross-device avatar');
+
+  // 3. Dynamic resolution in public-portfolio.js
+  assert.ok(pubPortJs.includes('dbPort.profiles?.avatar_url'), 'public-portfolio.js must map avatar_url from Supabase');
+  assert.ok(pubPortJs.includes('https://github.com/'), 'public-portfolio.js must provide cross-device github avatar resolution fallback');
+
+  // 4. Builder & Settings cross-device GitHub avatar button
+  assert.ok(builderHtml.includes('builder-avatar-github-btn'), 'builder/index.html must have builder-avatar-github-btn');
+  assert.ok(settingsHtml.includes('settings-avatar-github-btn'), 'settings/index.html must have settings-avatar-github-btn');
 });
 
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);

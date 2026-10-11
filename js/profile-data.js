@@ -1517,9 +1517,13 @@ export function getUserDataBySlug(slug) {
 
     if (isMatchActive) {
       const activePublish = getPublishSettings();
+      const crossDeviceAvatar = activeProfile?.avatarUrl || 
+        ((cleanSlug === 'ssrnov' || cleanSlug === 'sunny') ? 'https://github.com/ssrnov.png' : 
+        (activeGithub ? `https://github.com/${activeGithub}.png` : ''));
       return {
         profile: {
           ...DEFAULT_PROFILE,
+          avatarUrl: crossDeviceAvatar,
           ...(activeProfile || {}),
           username: cleanSlug,
           portfolioUrl: `https://folioryn.dev/u/${cleanSlug}`
@@ -1559,9 +1563,14 @@ export function getUserDataBySlug(slug) {
       if (raw) savedPublish = JSON.parse(raw);
     } catch (e) {}
 
+    const crossDeviceAvatar = savedProfile?.avatarUrl || 'https://github.com/ssrnov.png';
+    const resolvedName = savedProfile?.fullName || (cleanSlug === 'ssrnov' ? 'Sunny Kumar' : 'Sunny');
+
     return {
       profile: {
         ...DEFAULT_PROFILE,
+        fullName: resolvedName,
+        avatarUrl: crossDeviceAvatar,
         ...(savedProfile || {}),
         username: cleanSlug,
         portfolioUrl: `https://folioryn.dev/u/${cleanSlug}`

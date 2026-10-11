@@ -368,6 +368,27 @@ function bindInputListeners() {
       scheduleAutosave();
     });
   }
+
+  const avatarGithubBtn = document.getElementById('builder-avatar-github-btn');
+  if (avatarGithubBtn) {
+    avatarGithubBtn.addEventListener('click', () => {
+      const activeUser = getActiveUser();
+      let ghHandle = activeUser?.github_handle || '';
+      if (!ghHandle && builderState.githubUrl) {
+        ghHandle = builderState.githubUrl.split('/').filter(Boolean).pop();
+      }
+      if (!ghHandle) {
+        ghHandle = prompt('Enter your GitHub username to use as portrait avatar across all devices:', 'ssrnov') || '';
+      }
+      if (ghHandle) {
+        recordTypingSnapshot();
+        builderState.avatarUrl = `https://github.com/${ghHandle.trim().replace(/^@/, '')}.png`;
+        updateBuilderAvatarUI();
+        sendStateToPreview();
+        scheduleAutosave();
+      }
+    });
+  }
 }
 
 // ==============================================================================
