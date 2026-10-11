@@ -2705,8 +2705,10 @@
 
 .hero-avatar-wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 12px;
 }
 
 .hero-avatar-frame {
@@ -2729,6 +2731,25 @@
   transform: perspective(600px) rotateY(-5deg) rotateX(4deg) translateY(-4px) scale(1.02);
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45), 0 0 20px rgba(56, 189, 248, 0.15);
   border-color: rgba(56, 189, 248, 0.4);
+}
+
+.hero-avatar-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 2px;
+}
+
+.hero-avatar-name {
+  font-family: var(--font-mono, monospace);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.03em;
+  line-height: 1.25;
+  transition: color var(--transition-fast, 180ms ease);
 }
 
 .hero-avatar-img {
@@ -2755,7 +2776,11 @@
   .hero-avatar-wrapper {
     order: -1;
     margin-bottom: var(--space-4);
-    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .hero-avatar-caption {
+    align-items: flex-start;
+    text-align: left;
   }
   .hero-avatar-frame {
     width: 130px;

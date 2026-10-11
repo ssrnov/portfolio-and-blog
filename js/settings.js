@@ -168,6 +168,23 @@ function hydrateProfileForm(profile, activeUser) {
     });
   }
 
+  const avatarGithubBtn = document.getElementById('settings-avatar-github-btn');
+  if (avatarGithubBtn) {
+    avatarGithubBtn.addEventListener('click', () => {
+      let ghHandle = activeUser?.github_handle || '';
+      if (!ghHandle && inputGithub) {
+        ghHandle = inputGithub.value.split('/').filter(Boolean).pop();
+      }
+      if (!ghHandle) {
+        ghHandle = prompt('Enter your GitHub username to use as portrait avatar across all devices:', 'ssrnov') || '';
+      }
+      if (ghHandle) {
+        currentAvatarUrl = `https://github.com/${ghHandle.trim().replace(/^@/, '')}.png`;
+        updateSettingsAvatarUI();
+      }
+    });
+  }
+
   if (inputFullName) inputFullName.value = profile.fullName || activeUser?.display_name || '';
   if (inputDisplayName) inputDisplayName.value = profile.displayName || profile.fullName || activeUser?.display_name || '';
   if (inputSlug) inputSlug.value = profile.username || activeUser?.username || 'sunny';

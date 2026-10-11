@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             location: dbPort.profiles?.location || '',
             githubUrl: dbPort.profiles?.github_handle ? `https://github.com/${dbPort.profiles.github_handle}` : '',
             email: dbPort.profiles?.email || 'contact@folioryn.dev',
+            avatarUrl: dbPort.profiles?.avatar_url || (dbPort.profiles?.github_handle ? `https://github.com/${dbPort.profiles.github_handle}.png` : ''),
           },
           education: dbPort.education || [],
           skills: dbPort.skills || [],
@@ -640,18 +641,33 @@ function renderPortfolio(data, username, templateId) {
   });
 
   // Portrait / Avatar Photo
-  const avatarUrl = profile.avatarUrl || profile.avatar_url || '';
+  let avatarUrl = profile.avatarUrl || profile.avatar_url || '';
+  if (!avatarUrl) {
+    const ghUser = profile.githubUrl ? profile.githubUrl.split('/').filter(Boolean).pop() : (username || 'ssrnov');
+    if (ghUser) {
+      avatarUrl = `https://github.com/${ghUser === 'sunny' ? 'ssrnov' : ghUser}.png`;
+    }
+  }
+
+  const avatarPlaceholders = document.querySelectorAll('[data-builder-target="avatar_placeholder"]');
+
   document.querySelectorAll('[data-builder-target="avatar_img"]').forEach((el) => {
     if (avatarUrl) {
       el.setAttribute('src', avatarUrl);
       el.style.display = 'block';
+      el.onerror = () => {
+        el.style.display = 'none';
+        avatarPlaceholders.forEach((p) => {
+          p.style.display = 'flex';
+        });
+      };
     } else {
       el.removeAttribute('src');
       el.style.display = 'none';
     }
   });
 
-  document.querySelectorAll('[data-builder-target="avatar_placeholder"]').forEach((el) => {
+  avatarPlaceholders.forEach((el) => {
     el.style.display = avatarUrl ? 'none' : 'flex';
   });
 
