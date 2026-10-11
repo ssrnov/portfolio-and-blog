@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ATS Resume — Folioryn</title>
+  <meta name="description" content="View and directly download ATS-compliant developer resume PDF." />
+  <meta name="robots" content="noindex, follow" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080909'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%23F5F5F5' text-anchor='middle'>F</text></svg>" />
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/mobile.css" />
+
+  <!-- Anti-FOUC Theme Initialization (No Auth Lock) -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('folioryn_theme') || localStorage.getItem('theme');
+        var valid = ['dark', 'light', 'night'];
+        var theme = (valid.indexOf(saved) !== -1) ? saved : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <style>
+    body.public-resume-page {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #public-resume-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--header-backdrop, rgba(5, 7, 6, 0.92));
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+    }
+
+    .resume-nav-container {
+      max-width: 1024px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .resume-canvas-outer {
+      flex: 1;
+      padding: 32px 16px 64px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow-x: auto;
+    }
+
+    .a4-preview-canvas {
+      width: 100%;
+      max-width: 820px;
+      min-height: 1100px;
+      background: #ffffff !important;
+      color: #000000 !important;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm, 4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      padding: 44px 48px;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .a4-preview-canvas a {
+      color: #000000 !important;
+      text-decoration: underline !important;
+    }
+
+    @media print {
+      #public-resume-nav,
+      .mobile-bottom-nav,
+      .site-header {
+        display: none !important;
+      }
+      body.public-resume-page {
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .resume-canvas-outer {
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
+      }
+      .a4-preview-canvas {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body class="public-resume-page">
+
+  <!-- Public Top Navigation Bar -->
+  <header id="public-resume-nav">
+    <div class="resume-nav-container">
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <a id="back-to-portfolio-link" href="/u/ssrnov" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 6px;">
+          <span>&larr;</span>
+          <span>Back to Portfolio</span>
+        </a>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e;"></span>
+          <span id="resume-person-name" style="font-weight: 700; font-size: 13px; color: var(--text-primary);">
+            Sunny Kumar — ATS Resume
+          </span>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <!-- Direct PDF Download Button -->
+        <button type="button" id="public-download-pdf-btn" class="btn btn-primary btn-sm" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 700;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Download PDF (Direct)</span>
+        </button>
+
+        <!-- Browser Print / Vector Print Button -->
+        <button type="button" id="public-print-pdf-btn" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          <span>Print / Save</span>
+        </button>
+
+        <!-- Dashboard Edit link (visible ONLY to portfolio owner) -->
+        <a id="owner-edit-resume-btn" href="/dashboard/resume" class="btn btn-secondary btn-sm" style="display: none; font-size: 11px; opacity: 0.9;">
+          <span>Edit in Dashboard &nearr;</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- A4 Document Canvas Preview -->
+  <main class="resume-canvas-outer">
+    <div class="a4-preview-canvas" id="a4-canvas" aria-label="A4 Resume Document Canvas">
+      <div style="text-align: center; padding: 40px; color: #666; font-family: monospace;">
+        Loading ATS Resume...
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="/js/public-resume.js"></script>
+</body>
+</html>

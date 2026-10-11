@@ -11,7 +11,14 @@ function foliorynRouterPlugin() {
           const urlObj = new URL(req.url, 'http://localhost');
           const pathname = urlObj.pathname.replace(/\/+$/, '') || '/';
 
-          // 1. Rewrite /u/:slug (except /u/sunny, /u/ssrnov and assets) to /u/index.html?u=:slug
+          // 1. Rewrite /u/:slug/resume to /u/resume.html?u=:slug
+          if (pathname.match(/^\/u\/([^/]+)\/resume$/)) {
+            const slug = RegExp.$1;
+            req.url = `/u/resume.html?u=${encodeURIComponent(slug)}` + (urlObj.search ? '&' + urlObj.search.slice(1) : '');
+            return next();
+          }
+
+          // 2. Rewrite /u/:slug (except /u/sunny, /u/ssrnov and assets) to /u/index.html?u=:slug
           if (pathname.startsWith('/u/') && pathname !== '/u/sunny' && pathname !== '/u/ssrnov' && !pathname.includes('.')) {
             const slug = pathname.replace('/u/', '');
             if (slug && slug !== 'index.html') {
@@ -87,6 +94,7 @@ export default defineConfig({
         dashboardExperience: resolve(__dirname, 'dashboard/experience/index.html'),
         dashboardPublish: resolve(__dirname, 'dashboard/publish/index.html'),
         dashboardAnalytics: resolve(__dirname, 'dashboard/analytics/index.html'),
+        publicResume: resolve(__dirname, 'u/resume.html'),
       },
     },
   },

@@ -993,6 +993,53 @@ test('39. Cinematic, Three-Theme-Aware Intro Animation Verification', () => {
   assert.ok(mainJs.includes('initCinematicIntro();'), 'main.js must call initCinematicIntro on DOMContentLoaded');
 });
 
+// =============================================================================
+// TEST 40: Direct ATS Resume PDF Download and Public Resume Route Verification
+// =============================================================================
+test('40. Direct ATS Resume PDF Download and Public Resume Route Verification', () => {
+  const resumeGenJs = fs.readFileSync(path.join(ROOT, 'js/resume-pdf-generator.js'), 'utf8');
+  const pubPortJs = fs.readFileSync(path.join(ROOT, 'js/public-portfolio.js'), 'utf8');
+  const pubResumeJs = fs.readFileSync(path.join(ROOT, 'js/public-resume.js'), 'utf8');
+  const pubResumeHtml = fs.readFileSync(path.join(ROOT, 'u/resume.html'), 'utf8');
+  const ssrnovHtml = fs.readFileSync(path.join(ROOT, 'u/ssrnov/index.html'), 'utf8');
+  const sunnyHtml = fs.readFileSync(path.join(ROOT, 'u/sunny/index.html'), 'utf8');
+  const vercelJson = fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8');
+  const viteConfig = fs.readFileSync(path.join(ROOT, 'vite.config.js'), 'utf8');
+
+  // 1. Client-side Vector PDF Generator
+  assert.ok(resumeGenJs.includes('export class SimplePdfBuilder'), 'resume-pdf-generator.js must export SimplePdfBuilder');
+  assert.ok(resumeGenJs.includes('export function generateAtsResumePdf'), 'resume-pdf-generator.js must export generateAtsResumePdf');
+  assert.ok(resumeGenJs.includes('export function downloadAtsResumePdf'), 'resume-pdf-generator.js must export downloadAtsResumePdf');
+  assert.ok(resumeGenJs.includes('%PDF-1.4'), 'resume-pdf-generator.js must output standard PDF-1.4 format');
+  assert.ok(resumeGenJs.includes('application/pdf'), 'resume-pdf-generator.js must construct PDF Blob');
+
+  // 2. Public Portfolio Direct Download Binding (Prevents sending public visitors to dashboard)
+  assert.ok(pubPortJs.includes("import { downloadAtsResumePdf } from './resume-pdf-generator.js';"), 'public-portfolio.js must import downloadAtsResumePdf');
+  assert.ok(pubPortJs.includes('bindPublicResumeDownload'), 'public-portfolio.js must define bindPublicResumeDownload');
+  assert.ok(pubPortJs.includes('downloadAtsResumePdf(userData, username);'), 'public-portfolio.js must call downloadAtsResumePdf on click');
+  assert.ok(pubPortJs.includes('owner-resume-dashboard-link'), 'public-portfolio.js must show owner dashboard link ONLY for owner session');
+
+  // 3. Public Portfolio HTML Links
+  assert.ok(ssrnovHtml.includes('data-action="download-resume"'), 'u/ssrnov/index.html must have data-action="download-resume"');
+  assert.ok(!ssrnovHtml.includes('href="/dashboard/resume"'), 'u/ssrnov/index.html must NOT link public visitors to /dashboard/resume');
+  assert.ok(sunnyHtml.includes('data-action="download-resume"'), 'u/sunny/index.html must have data-action="download-resume"');
+  assert.ok(!sunnyHtml.includes('href="/dashboard/resume"'), 'u/sunny/index.html must NOT link public visitors to /dashboard/resume');
+
+  // 4. Public Resume Viewer Page
+  assert.ok(pubResumeHtml.includes('public-download-pdf-btn'), 'u/resume.html must have direct download PDF button');
+  assert.ok(pubResumeHtml.includes('public-print-pdf-btn'), 'u/resume.html must have print button');
+  assert.ok(pubResumeHtml.includes('owner-edit-resume-btn'), 'u/resume.html must have owner edit button');
+  assert.ok(!pubResumeHtml.includes("window.location.replace('/login/"), 'u/resume.html must NOT force login redirect on public visitors');
+  assert.ok(pubResumeJs.includes('downloadAtsResumePdf'), 'public-resume.js must integrate downloadAtsResumePdf');
+
+  // 5. Routing Rewrites
+  const vercel = JSON.parse(vercelJson);
+  const resumeRewrite = vercel.rewrites.find(r => r.source === '/u/:username/resume');
+  assert.ok(resumeRewrite, 'vercel.json must have rewrite for /u/:username/resume');
+  assert.strictEqual(resumeRewrite.destination, '/u/resume.html', 'vercel.json rewrite must point to public /u/resume.html instead of dashboard');
+  assert.ok(viteConfig.includes('publicResume:'), 'vite.config.js must include publicResume input');
+});
+
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL REGRESSION TESTS PASSED SUCCESSFULLY! ✓');
