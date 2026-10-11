@@ -1164,7 +1164,9 @@ test('Complete ATS Resume Content & Cross-Device Data Synchronization: honors, a
   assert.ok(ssrnovHtml.includes('high-performance-zero-framework-vanilla-js'), 'u/ssrnov/index.html must pre-render articles');
   assert.ok(blogReaderJs.includes('DEFAULT_BLOG_ARTICLES'), 'blog-reader.js must fall back to DEFAULT_BLOG_ARTICLES');
   assert.ok(fs.existsSync(path.join(ROOT, 'blog/post.html')), 'blog/post.html redirector must exist');
+  assert.ok(fs.existsSync(path.join(ROOT, 'blog/sample-article.html')), 'blog/sample-article.html flat file must exist');
   assert.ok(vercelJson.includes('/blog/post'), 'vercel.json must rewrite /blog/post');
+  assert.ok(vercelJson.includes('/blog/sample-article'), 'vercel.json must rewrite /blog/sample-article');
 });
 
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);

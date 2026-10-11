@@ -42,5 +42,16 @@
     "tags": ["Software Engineering", "Best Practices", "Clean Code", "Refactoring"],
     "excerpt": "Practical guidelines for writing maintainable, readable, and resilient code that your future self and team will appreciate.",
     "content": "<p>Clean code is not about dogmatic adherence to rules; it is about reducing cognitive load for the humans who must read, maintain, and extend software months or years later.</p><h3>Intent-Revealing Naming</h3><p>Code is read far more often than it is written. Variable and function names should clearly convey purpose and behavior, reducing the need for explanatory comments that quickly become obsolete.</p><h3>The Boy Scout Rule in Practice</h3><p>Always leave the codebase slightly cleaner than you found it. Small, incremental refactorings during regular feature development compound over time, preventing technical debt from accumulating into a major re-write.</p>"
+  },
+  {
+    "id": "post-5",
+    "slug": "zero-dependency-vanilla-javascript",
+    "title": "Zero-Dependency Vanilla JavaScript in 2026",
+    "date": "October 10, 2026",
+    "readTime": "5 min read",
+    "category": "JavaScript",
+    "tags": ["JavaScript", "Architecture", "Web Standards"],
+    "excerpt": "Why native browser APIs and modular ES modules are outperforming bloated single-page framework runtimes.",
+    "content": "<p>Modern browsers have evolved into extraordinary application runtimes. With native <strong>Web Components</strong>, custom events, CSS variables, and fetch streams, the need for 300KB runtime frameworks has vanished for high-speed developer platforms.</p><h3>Native Reactivity Without Virtual DOM</h3><p>By leveraging standard DOM events and <code>postMessage</code>, we achieve zero-latency bidirectional synchronization with negligible memory footprint.</p><blockquote>The fastest code is the code the browser already knows how to run natively.</blockquote><h3>Production Performance Metrics</h3><p>Zero hydration delay (Time to Interactive under 100ms), 100/100 Lighthouse Performance scores, and universal compatibility across modern mobile and desktop browsers.</p>"
   }
 ]

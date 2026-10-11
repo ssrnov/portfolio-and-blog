@@ -1,6 +1,6 @@
 /**
  * ProfileFolio — Dynamic Public Article Reader
- * Resolves /blog/sample-article/?slug=:slug, queries published articles,
+ * Resolves /blog/sample-article/?slug=:slug or /blog/:slug, queries published articles,
  * and renders title, metadata, and formatted markdown content.
  */
 
@@ -8,28 +8,56 @@ import { DEFAULT_BLOG_ARTICLES } from './profile-data.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
-  const slug = params.get('slug');
+  let slug = params.get('slug') || params.get('id') || params.get('post');
 
-  if (!slug) return; // Keep default sample article if no slug provided
+  // Also support extracting slug from pathname e.g. /blog/sample-article/my-slug or /blog/my-slug
+  if (!slug) {
+    const parts = window.location.pathname.split('/').filter(Boolean);
+    if (parts.length >= 2 && parts[0] === 'blog') {
+      const last = parts[parts.length - 1].replace(/\.html$/, '');
+      if (last && last !== 'sample-article' && last !== 'post' && last !== 'index') {
+        slug = last;
+      }
+    }
+  }
 
   try {
     const raw = localStorage.getItem('profilefolio_blog_articles') || 
                 localStorage.getItem('ssrnovx_blog_articles');
     let articles = raw ? JSON.parse(raw) : [];
-    let post = articles.find((a) => a.slug === slug);
+    
+    // Find matching post by slug or ID (case-insensitive)
+    let post = null;
+    const matchFn = (a) => {
+      if (!a) return false;
+      if (!slug) return false;
+      const target = slug.toLowerCase();
+      return (a.slug && a.slug.toLowerCase() === target) || (a.id && String(a.id).toLowerCase() === target);
+    };
 
-    if (!post && Array.isArray(DEFAULT_BLOG_ARTICLES)) {
-      post = DEFAULT_BLOG_ARTICLES.find((a) => a.slug === slug);
+    if (slug) {
+      post = articles.find(matchFn);
+
+      if (!post && Array.isArray(DEFAULT_BLOG_ARTICLES)) {
+        post = DEFAULT_BLOG_ARTICLES.find(matchFn);
+      }
+
+      if (!post) {
+        try {
+          const res = await fetch('/data/blog.json');
+          if (res.ok) {
+            const fallback = await res.json();
+            if (Array.isArray(fallback)) {
+              post = fallback.find(matchFn);
+            }
+          }
+        } catch (err) {}
+      }
     }
 
-    if (!post) {
-      try {
-        const res = await fetch('/data/blog.json');
-        if (res.ok) {
-          const fallback = await res.json();
-          post = fallback.find((a) => a.slug === slug);
-        }
-      } catch (err) {}
+    // If no slug requested or no specific post found, default to first available article
+    if (!post && Array.isArray(DEFAULT_BLOG_ARTICLES) && DEFAULT_BLOG_ARTICLES.length > 0) {
+      post = DEFAULT_BLOG_ARTICLES[0];
     }
 
     if (!post) return;
@@ -40,7 +68,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Update Header Pill
     const categoryPill = document.querySelector('.category-pill');
     if (categoryPill) {
-      categoryPill.textContent = post.tags || 'Technical Engineering';
+      const rawTags = post.tags || post.category || 'Technical Engineering';
+      categoryPill.textContent = Array.isArray(rawTags) ? rawTags.join(' • ') : String(rawTags);
     }
 
     // Update Title
@@ -54,18 +83,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (metaBar) {
       const words = (post.content || '').trim().split(/\s+/).filter(Boolean).length;
       const minutes = Math.max(1, Math.ceil(words / 200));
-      const formattedDate = post.updatedAt 
-        ? new Date(post.updatedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+      const dateVal = post.updatedAt || post.publishedAt || post.date;
+      const formattedDate = dateVal
+        ? new Date(dateVal).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
         : 'October 2026';
 
       metaBar.innerHTML = `
-        <time datetime="${post.updatedAt || ''}">${formattedDate}</time>
+        <time datetime="${dateVal || ''}">${formattedDate}</time>
         <span>&bull;</span>
         <span>${minutes} min read</span>
         <span>&bull;</span>
         <span>${words} words</span>
         <span>&bull;</span>
-        <span>By @${post.authorUsername || 'developer'}</span>
+        <span>By @${post.authorUsername || 'ssrnov'}</span>
       `;
     }
 
@@ -77,9 +107,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Update Tags in Footer
     const tagsContainer = document.querySelector('.article-footer .project-tags');
-    if (tagsContainer && post.tags) {
-      const tagList = post.tags.split(',').map(t => t.trim()).filter(Boolean);
-      tagsContainer.innerHTML = tagList.map(t => `<span class="project-tag">${escapeHtml(t)}</span>`).join(' ');
+    if (tagsContainer) {
+      const rawTags = post.tags || post.category;
+      const tagList = Array.isArray(rawTags)
+        ? rawTags
+        : (typeof rawTags === 'string' ? rawTags.split(',').map(t => t.trim()).filter(Boolean) : []);
+      if (tagList.length > 0) {
+        tagsContainer.innerHTML = tagList.map(t => `<span class="project-tag">${escapeHtml(t)}</span>`).join(' ');
+      }
     }
 
   } catch (err) {
@@ -89,6 +124,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function parseMarkdownToHTML(md) {
   if (!md) return '';
+
+  // If already HTML (e.g. from static blog.json), wrap and return directly
+  const trimmed = md.trim();
+  if (trimmed.startsWith('<p>') || trimmed.startsWith('<div>') || (trimmed.includes('</p>') && !trimmed.includes('## '))) {
+    return `<div class="parsed-markdown-content" style="line-height: 1.8; color: var(--text-secondary);">${md}</div>`;
+  }
 
   let html = md
     .replace(/&/g, '&amp;')

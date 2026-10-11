@@ -50,8 +50,18 @@ function foliorynRouterPlugin() {
             return next();
           }
 
-          if (pathname === '/blog/post') {
+          if (pathname === '/blog/post' || pathname === '/blog/post/') {
             req.url = '/blog/post.html' + urlObj.search;
+            return next();
+          }
+
+          if (pathname === '/blog/sample-article' || pathname === '/blog/sample-article/') {
+            req.url = '/blog/sample-article/index.html' + urlObj.search;
+            return next();
+          }
+
+          if (pathname.startsWith('/blog/sample-article/') || pathname.startsWith('/blog/post/') || pathname.startsWith('/blog/article/')) {
+            req.url = '/blog/sample-article/index.html' + urlObj.search;
             return next();
           }
 
@@ -84,6 +94,7 @@ export default defineConfig({
         blog: resolve(__dirname, 'blog/index.html'),
         blogPost: resolve(__dirname, 'blog/post.html'),
         blogArticle: resolve(__dirname, 'blog/sample-article/index.html'),
+        blogArticleFlat: resolve(__dirname, 'blog/sample-article.html'),
         contact: resolve(__dirname, 'contact/index.html'),
         notFound: resolve(__dirname, '404.html'),
         login: resolve(__dirname, 'login/index.html'),
