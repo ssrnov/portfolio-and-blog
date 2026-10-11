@@ -3,7 +3,7 @@
  * TechSpace BuildLab B04
  */
 
-import { getEducation, addEducationItem, deleteEducationItem, saveEducation } from './profile-data.js';
+import { getEducation, addEducationItem, updateEducationItem, deleteEducationItem, saveEducation } from './profile-data.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   renderEducationList();
@@ -20,11 +20,12 @@ function renderEducationList() {
     container.innerHTML = `
       <div style="text-align: center; padding: var(--space-10); background: var(--bg-surface); border: 1px dashed var(--border-color); border-radius: var(--radius-lg);">
         <p style="color: var(--text-secondary); margin-bottom: var(--space-4);">No education records added yet.</p>
-        <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('add-education-dialog').showModal()">
+        <button type="button" class="btn btn-primary btn-sm" id="empty-add-edu-btn">
           + Add Your First Education Record
         </button>
       </div>
     `;
+    document.getElementById('empty-add-edu-btn')?.addEventListener('click', () => openEducationDialogForAdd());
     return;
   }
 
@@ -46,7 +47,10 @@ function renderEducationList() {
         </div>
 
         <div style="display: flex; gap: var(--space-2);">
-          <button type="button" class="btn btn-secondary btn-sm delete-edu-btn" data-id="${item.id}" style="padding: 4px 10px; font-size: 11px;">
+          <button type="button" class="btn btn-secondary btn-sm edit-edu-btn" data-id="${item.id}" style="padding: 4px 10px; font-size: 11px;">
+            Edit
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm delete-edu-btn" data-id="${item.id}" style="padding: 4px 10px; font-size: 11px; color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">
             Delete
           </button>
         </div>
@@ -74,6 +78,15 @@ function renderEducationList() {
     </article>
   `).join('');
 
+  // Attach edit handlers
+  container.querySelectorAll('.edit-edu-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      const item = list.find(ed => ed.id === id);
+      if (item) openEducationDialogForEdit(item);
+    });
+  });
+
   // Attach delete handlers
   container.querySelectorAll('.delete-edu-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -87,20 +100,86 @@ function renderEducationList() {
   });
 }
 
+function openEducationDialogForAdd() {
+  const form = document.getElementById('add-education-form');
+  const dialog = document.getElementById('add-education-dialog');
+  const title = document.getElementById('edu-dialog-title');
+  const editIdInput = document.getElementById('edu-edit-id');
+  const submitBtn = document.getElementById('edu-submit-btn');
+
+  if (form) form.reset();
+  if (editIdInput) editIdInput.value = '';
+  if (title) title.textContent = 'Add Education Record';
+  if (submitBtn) submitBtn.textContent = 'Save Record';
+
+  const endDateInput = document.getElementById('edu-end-date');
+  if (endDateInput) endDateInput.disabled = false;
+
+  dialog?.showModal();
+}
+
+function openEducationDialogForEdit(item) {
+  const dialog = document.getElementById('add-education-dialog');
+  const title = document.getElementById('edu-dialog-title');
+  const editIdInput = document.getElementById('edu-edit-id');
+  const submitBtn = document.getElementById('edu-submit-btn');
+
+  if (editIdInput) editIdInput.value = item.id;
+  if (title) title.textContent = 'Edit Education Record';
+  if (submitBtn) submitBtn.textContent = 'Update Record';
+
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val || '';
+  };
+
+  setVal('edu-institution', item.institution);
+  setVal('edu-type', item.institutionType || 'university');
+  setVal('edu-qualification', item.qualification);
+  setVal('edu-field', item.fieldOfStudy);
+  setVal('edu-start-date', item.startDate);
+  setVal('edu-end-date', item.endDate);
+
+  const currentlyStudyingCheckbox = document.getElementById('edu-currently-studying');
+  const endDateInput = document.getElementById('edu-end-date');
+  if (currentlyStudyingCheckbox) {
+    currentlyStudyingCheckbox.checked = Boolean(item.currentlyStudying);
+    if (endDateInput) endDateInput.disabled = Boolean(item.currentlyStudying);
+  }
+
+  setVal('edu-grade-type', item.gradeType || 'CGPA');
+  setVal('edu-grade-val', item.gradeValue);
+  setVal('edu-grade-scale', item.gradeScale);
+  setVal('edu-coursework', item.coursework);
+  setVal('edu-achievements', item.achievements);
+
+  const displayCheckbox = document.getElementById('edu-display');
+  if (displayCheckbox) {
+    displayCheckbox.checked = item.displayOnPortfolio !== false;
+  }
+
+  dialog?.showModal();
+}
+
 function initAddEducationForm() {
   const form = document.getElementById('add-education-form');
   const dialog = document.getElementById('add-education-dialog');
   const openBtn = document.getElementById('open-add-dialog-btn');
   const closeBtn = document.getElementById('close-add-dialog-btn');
+  const cancelBtn = document.getElementById('cancel-add-dialog-btn');
   const currentlyStudyingCheckbox = document.getElementById('edu-currently-studying');
   const endDateInput = document.getElementById('edu-end-date');
 
-  if (openBtn && dialog) {
-    openBtn.addEventListener('click', () => dialog.showModal());
+  if (openBtn) {
+    openBtn.addEventListener('click', () => openEducationDialogForAdd());
   }
 
   if (closeBtn && dialog) {
     closeBtn.addEventListener('click', () => dialog.close());
+  }
+
+  if (cancelBtn && dialog) {
+    cancelBtn.addEventListener('click', () => dialog.close());
   }
 
   if (currentlyStudyingCheckbox && endDateInput) {
@@ -114,6 +193,7 @@ function initAddEducationForm() {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
+      const editId = document.getElementById('edu-edit-id')?.value;
       const institution = document.getElementById('edu-institution').value.trim();
       const institutionType = document.getElementById('edu-type').value;
       const qualification = document.getElementById('edu-qualification').value.trim();
@@ -133,7 +213,7 @@ function initAddEducationForm() {
         return;
       }
 
-      addEducationItem({
+      const payload = {
         institution,
         institutionType,
         qualification,
@@ -147,12 +227,19 @@ function initAddEducationForm() {
         coursework,
         achievements,
         displayOnPortfolio
-      });
+      };
+
+      if (editId) {
+        updateEducationItem(editId, payload);
+        showToast('Education record updated successfully!');
+      } else {
+        addEducationItem(payload);
+        showToast('Education record added successfully!');
+      }
 
       form.reset();
       dialog.close();
       renderEducationList();
-      showToast('Education record added successfully!');
     });
   }
 }

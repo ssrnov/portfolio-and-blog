@@ -155,10 +155,11 @@
         </p>
       </div>
 
-      <!-- Add Skill Inline Form -->
+      <!-- Add / Edit Skill Inline Form -->
       <div class="floating-card" style="margin-bottom: var(--space-6); background: var(--bg-surface); padding: var(--space-5);">
-        <h3 style="font-size: var(--text-sm); font-weight: 700; margin: 0 0 var(--space-3) 0;">+ Add New Skill</h3>
+        <h3 id="skill-form-title" style="font-size: var(--text-sm); font-weight: 700; margin: 0 0 var(--space-3) 0;">+ Add New Skill</h3>
         <form id="add-skill-form" style="display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr auto; gap: var(--space-2); align-items: end;">
+          <input type="hidden" id="skill-edit-id" value="" />
           <div>
             <label for="skill-name" style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); display: block; margin-bottom: 2px;">Skill Name *</label>
             <input type="text" id="skill-name" required placeholder="e.g. Next.js, Rust, Docker" class="form-input" style="width: 100%;" />
@@ -193,8 +194,9 @@
             <input type="number" id="skill-years" min="1" max="30" placeholder="2" class="form-input" style="width: 100%;" />
           </div>
 
-          <div>
-            <button type="submit" class="btn btn-primary" style="height: 38px;">Add</button>
+          <div style="display: flex; gap: var(--space-2);">
+            <button type="submit" id="skill-submit-btn" class="btn btn-primary" style="height: 38px;">Add</button>
+            <button type="button" id="skill-cancel-edit-btn" class="btn btn-secondary" style="height: 38px; display: none;">Cancel</button>
           </div>
         </form>
 

@@ -3,7 +3,7 @@
  * TechSpace BuildLab B04
  */
 
-import { getSkills, addSkillItem, deleteSkillItem } from './profile-data.js';
+import { getSkills, addSkillItem, updateSkillItem, deleteSkillItem } from './profile-data.js';
 
 const CATEGORY_NAMES = {
   languages: "Programming Languages",
@@ -54,11 +54,12 @@ function renderSkillsMatrix() {
 
         <div style="display: flex; flex-wrap: wrap; gap: var(--space-2);">
           ${items.map(item => `
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: var(--radius-sm); font-size: var(--text-xs);">
+            <div class="skill-item-chip" style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: var(--radius-sm); font-size: var(--text-xs);">
               <span style="font-weight: 600; color: var(--text-primary);">${escapeHtml(item.name)}</span>
               ${item.proficiency ? `<span style="font-size: 10px; color: var(--accent-primary); font-family: var(--font-mono);">${escapeHtml(item.proficiency)}</span>` : ''}
               ${item.years ? `<span style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">${escapeHtml(item.years)}y</span>` : ''}
-              <button type="button" class="delete-skill-btn" data-id="${item.id}" aria-label="Delete ${escapeHtml(item.name)}" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 0; font-size: 14px; line-height: 1;">&times;</button>
+              <button type="button" class="edit-skill-btn" data-id="${item.id}" aria-label="Edit ${escapeHtml(item.name)}" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 0 2px; font-size: 12px; line-height: 1;" title="Edit Skill">&#9998;</button>
+              <button type="button" class="delete-skill-btn" data-id="${item.id}" aria-label="Delete ${escapeHtml(item.name)}" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 0; font-size: 14px; line-height: 1;" title="Remove Skill">&times;</button>
             </div>
           `).join('')}
         </div>
@@ -76,6 +77,15 @@ function renderSkillsMatrix() {
 
   container.innerHTML = html;
 
+  // Attach edit handlers
+  container.querySelectorAll('.edit-skill-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      const item = skills.find(s => s.id === id);
+      if (item) startEditingSkill(item);
+    });
+  });
+
   // Attach delete handlers
   container.querySelectorAll('.delete-skill-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -87,12 +97,58 @@ function renderSkillsMatrix() {
   });
 }
 
+function startEditingSkill(item) {
+  const editIdInput = document.getElementById('skill-edit-id');
+  const title = document.getElementById('skill-form-title');
+  const submitBtn = document.getElementById('skill-submit-btn');
+  const cancelBtn = document.getElementById('skill-cancel-edit-btn');
+  const nameInput = document.getElementById('skill-name');
+  const categorySelect = document.getElementById('skill-category');
+  const proficiencySelect = document.getElementById('skill-proficiency');
+  const yearsInput = document.getElementById('skill-years');
+
+  if (editIdInput) editIdInput.value = item.id;
+  if (title) title.textContent = `✎ Edit Skill: ${item.name}`;
+  if (submitBtn) submitBtn.textContent = 'Update';
+  if (cancelBtn) cancelBtn.style.display = 'inline-block';
+
+  if (nameInput) nameInput.value = item.name || '';
+  if (categorySelect) categorySelect.value = item.category || 'languages';
+  if (proficiencySelect) proficiencySelect.value = item.proficiency || 'Advanced';
+  if (yearsInput) yearsInput.value = item.years || '';
+
+  nameInput?.focus();
+  nameInput?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function resetSkillForm() {
+  const editIdInput = document.getElementById('skill-edit-id');
+  const title = document.getElementById('skill-form-title');
+  const submitBtn = document.getElementById('skill-submit-btn');
+  const cancelBtn = document.getElementById('skill-cancel-edit-btn');
+  const nameInput = document.getElementById('skill-name');
+  const yearsInput = document.getElementById('skill-years');
+
+  if (editIdInput) editIdInput.value = '';
+  if (title) title.textContent = '+ Add New Skill';
+  if (submitBtn) submitBtn.textContent = 'Add';
+  if (cancelBtn) cancelBtn.style.display = 'none';
+  if (nameInput) nameInput.value = '';
+  if (yearsInput) yearsInput.value = '';
+}
+
 function initAddSkillForm() {
   const form = document.getElementById('add-skill-form');
+  const cancelBtn = document.getElementById('skill-cancel-edit-btn');
   if (!form) return;
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => resetSkillForm());
+  }
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+    const editId = document.getElementById('skill-edit-id')?.value;
     const nameInput = document.getElementById('skill-name');
     const categorySelect = document.getElementById('skill-category');
     const proficiencySelect = document.getElementById('skill-proficiency');
@@ -101,17 +157,23 @@ function initAddSkillForm() {
     const name = nameInput.value.trim();
     if (!name) return;
 
-    addSkillItem({
+    const payload = {
       name,
       category: categorySelect.value,
       proficiency: proficiencySelect.value,
       years: yearsInput.value.trim()
-    });
+    };
 
-    nameInput.value = '';
-    yearsInput.value = '';
+    if (editId) {
+      updateSkillItem(editId, payload);
+      showToast(`Updated ${name}`);
+    } else {
+      addSkillItem(payload);
+      showToast(`Added ${name} to your skills`);
+    }
+
+    resetSkillForm();
     renderSkillsMatrix();
-    showToast(`Added ${name} to your skills`);
   });
 }
 

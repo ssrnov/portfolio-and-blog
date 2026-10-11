@@ -1073,6 +1073,61 @@ test('Cross-Device Portrait Image & Name Display: global avatar sync and user na
   assert.ok(settingsHtml.includes('settings-avatar-github-btn'), 'settings/index.html must have settings-avatar-github-btn');
 });
 
+// --------------------------------------------------------------------------
+// TEST 42: Universal Edit Functionality Across Dashboard Modules
+// --------------------------------------------------------------------------
+test('Universal Edit Functionality: Education, Experience, Certifications, Skills, and Projects', () => {
+  const profileDataJs = fs.readFileSync(path.join(ROOT, 'js/profile-data.js'), 'utf8');
+  const eduHtml = fs.readFileSync(path.join(ROOT, 'dashboard/education/index.html'), 'utf8');
+  const eduJs = fs.readFileSync(path.join(ROOT, 'js/dashboard-education.js'), 'utf8');
+  const expHtml = fs.readFileSync(path.join(ROOT, 'dashboard/experience/index.html'), 'utf8');
+  const expJs = fs.readFileSync(path.join(ROOT, 'js/dashboard-experience.js'), 'utf8');
+  const skillHtml = fs.readFileSync(path.join(ROOT, 'dashboard/skills/index.html'), 'utf8');
+  const skillJs = fs.readFileSync(path.join(ROOT, 'js/dashboard-skills.js'), 'utf8');
+  const projHtml = fs.readFileSync(path.join(ROOT, 'dashboard/projects/index.html'), 'utf8');
+  const projJs = fs.readFileSync(path.join(ROOT, 'js/projects-sync.js'), 'utf8');
+
+  // 1. Data Store Updates
+  assert.ok(profileDataJs.includes('export function updateEducationItem('), 'profile-data.js must export updateEducationItem');
+  assert.ok(profileDataJs.includes('export function updateExperienceItem('), 'profile-data.js must export updateExperienceItem');
+  assert.ok(profileDataJs.includes('export function updateCertificationItem('), 'profile-data.js must export updateCertificationItem');
+  assert.ok(profileDataJs.includes('export function updateSkillItem('), 'profile-data.js must export updateSkillItem');
+
+  // 2. Education Module
+  assert.ok(eduHtml.includes('id="edu-edit-id"'), 'dashboard/education/index.html must have edu-edit-id');
+  assert.ok(eduHtml.includes('id="edu-dialog-title"'), 'dashboard/education/index.html must have edu-dialog-title');
+  assert.ok(eduHtml.includes('id="edu-submit-btn"'), 'dashboard/education/index.html must have edu-submit-btn');
+  assert.ok(eduJs.includes('edit-edu-btn'), 'dashboard-education.js must render edit-edu-btn on education cards');
+  assert.ok(eduJs.includes('openEducationDialogForEdit'), 'dashboard-education.js must implement openEducationDialogForEdit');
+  assert.ok(eduJs.includes('updateEducationItem(editId,'), 'dashboard-education.js must invoke updateEducationItem on submit');
+
+  // 3. Experience & Certifications Module
+  assert.ok(expHtml.includes('id="exp-edit-id"'), 'dashboard/experience/index.html must have exp-edit-id');
+  assert.ok(expHtml.includes('id="exp-dialog-title"'), 'dashboard/experience/index.html must have exp-dialog-title');
+  assert.ok(expHtml.includes('id="cert-edit-id"'), 'dashboard/experience/index.html must have cert-edit-id');
+  assert.ok(expHtml.includes('id="cert-dialog-title"'), 'dashboard/experience/index.html must have cert-dialog-title');
+  assert.ok(expJs.includes('edit-exp-btn'), 'dashboard-experience.js must render edit-exp-btn');
+  assert.ok(expJs.includes('openExperienceDialogForEdit'), 'dashboard-experience.js must implement openExperienceDialogForEdit');
+  assert.ok(expJs.includes('updateExperienceItem(editId,'), 'dashboard-experience.js must invoke updateExperienceItem');
+  assert.ok(expJs.includes('edit-cert-btn'), 'dashboard-experience.js must render edit-cert-btn');
+  assert.ok(expJs.includes('openCertificationDialogForEdit'), 'dashboard-experience.js must implement openCertificationDialogForEdit');
+  assert.ok(expJs.includes('updateCertificationItem(editId,'), 'dashboard-experience.js must invoke updateCertificationItem');
+
+  // 4. Skills Module
+  assert.ok(skillHtml.includes('id="skill-edit-id"'), 'dashboard/skills/index.html must have skill-edit-id');
+  assert.ok(skillHtml.includes('id="skill-form-title"'), 'dashboard/skills/index.html must have skill-form-title');
+  assert.ok(skillHtml.includes('id="skill-cancel-edit-btn"'), 'dashboard/skills/index.html must have skill-cancel-edit-btn');
+  assert.ok(skillJs.includes('edit-skill-btn'), 'dashboard-skills.js must render edit-skill-btn on chips');
+  assert.ok(skillJs.includes('startEditingSkill'), 'dashboard-skills.js must implement startEditingSkill');
+  assert.ok(skillJs.includes('updateSkillItem(editId,'), 'dashboard-skills.js must invoke updateSkillItem');
+
+  // 5. Projects Module
+  assert.ok(projHtml.includes('id="edit-project-dialog"'), 'dashboard/projects/index.html must have edit-project-dialog');
+  assert.ok(projHtml.includes('id="edit-proj-id"'), 'dashboard/projects/index.html must have edit-proj-id');
+  assert.ok(projJs.includes('edit-proj-btn'), 'projects-sync.js must render edit-proj-btn');
+  assert.ok(projJs.includes('openEditProjectDialog'), 'projects-sync.js must implement openEditProjectDialog');
+});
+
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL REGRESSION TESTS PASSED SUCCESSFULLY! ✓');
@@ -1081,6 +1136,7 @@ if (passed === total) {
   console.error(`FAILED: ${total - passed} tests failed.`);
   process.exit(1);
 }
+
 
 
 
