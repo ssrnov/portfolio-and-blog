@@ -642,11 +642,8 @@ function renderPortfolio(data, username, templateId) {
 
   // Portrait / Avatar Photo
   let avatarUrl = profile.avatarUrl || profile.avatar_url || '';
-  if (!avatarUrl) {
-    const ghUser = profile.githubUrl ? profile.githubUrl.split('/').filter(Boolean).pop() : (username || 'ssrnov');
-    if (ghUser) {
-      avatarUrl = `https://github.com/${ghUser === 'sunny' ? 'ssrnov' : ghUser}.png`;
-    }
+  if (!avatarUrl || avatarUrl.includes('github.com')) {
+    avatarUrl = '/images/portrait.png';
   }
 
   const avatarPlaceholders = document.querySelectorAll('[data-builder-target="avatar_placeholder"]');
@@ -656,10 +653,14 @@ function renderPortfolio(data, username, templateId) {
       el.setAttribute('src', avatarUrl);
       el.style.display = 'block';
       el.onerror = () => {
-        el.style.display = 'none';
-        avatarPlaceholders.forEach((p) => {
-          p.style.display = 'flex';
-        });
+        if (el.getAttribute('src') !== '/images/portrait.png') {
+          el.setAttribute('src', '/images/portrait.png');
+        } else {
+          el.style.display = 'none';
+          avatarPlaceholders.forEach((p) => {
+            p.style.display = 'flex';
+          });
+        }
       };
     } else {
       el.removeAttribute('src');
@@ -669,6 +670,10 @@ function renderPortfolio(data, username, templateId) {
 
   avatarPlaceholders.forEach((el) => {
     el.style.display = avatarUrl ? 'none' : 'flex';
+  });
+
+  document.querySelectorAll('.hero-avatar-name').forEach((el) => {
+    el.textContent = displayName;
   });
 
   const initialLetter = displayName.trim().charAt(0).toUpperCase() || '@';

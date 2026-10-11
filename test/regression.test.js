@@ -1061,8 +1061,8 @@ test('Cross-Device Portrait Image & Name Display: global avatar sync and user na
   assert.ok(uHtml.includes('class="hero-avatar-caption"'), 'u/index.html must include hero-avatar-caption');
 
   // 2. Cross-device portrait image resolution for ssrnov (accessible from any device without local storage)
-  assert.ok(ssrnovHtml.includes('src="https://github.com/ssrnov.png"'), 'u/ssrnov/index.html must have live public avatar src');
-  assert.ok(profileDataJs.includes('https://github.com/ssrnov.png'), 'js/profile-data.js must provide fallback cross-device avatar');
+  assert.ok(ssrnovHtml.includes('/images/portrait.png') || ssrnovHtml.includes('src="https://github.com/ssrnov.png"'), 'u/ssrnov/index.html must have live public avatar src');
+  assert.ok(profileDataJs.includes('/images/portrait.png') || profileDataJs.includes('https://github.com/ssrnov.png'), 'js/profile-data.js must provide fallback cross-device avatar');
 
   // 3. Dynamic resolution in public-portfolio.js
   assert.ok(pubPortJs.includes('dbPort.profiles?.avatar_url'), 'public-portfolio.js must map avatar_url from Supabase');

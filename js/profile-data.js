@@ -5,54 +5,55 @@
 
 import { supabase, isSupabaseConfigured, MOCK_USER_PROFILE, analyticsService } from './supabase.js';
 
-// Default initial state for default/demo user "sunny"
+// Default initial state for default/demo user "ssrnov" / "sunny"
 export const DEFAULT_PROFILE = {
-  fullName: "Sunny",
-  username: "sunny",
-  headline: "Full-Stack Software Engineer & Systems Builder",
-  bio: "Architecting scalable web applications, distributed backend pipelines, and minimalist user interfaces. Passionate about native web standards, clean architecture, and performance engineering.",
+  fullName: "Sunny Kumar",
+  displayName: "Ssrnov",
+  username: "ssrnov",
+  headline: "Computer Science Student & Systems Builder",
+  bio: "Hey, I'm Sunny Kumar. I specialize in distributed computing, concurrency architectures, and native web performance. My focus is writing lean, production-ready software without bloated runtime dependencies.",
   location: "Bangalore, India",
   email: "",
-  portfolioUrl: "https://folioryn.dev/u/sunny",
+  portfolioUrl: "https://folioryn.dev/u/ssrnov",
   githubUrl: "",
   linkedinUrl: "",
   twitterUrl: "",
   availability: "Open to opportunities",
-  avatarUrl: "",
+  avatarUrl: "/images/portrait.png",
   theme: "dark"
 };
 
 export const DEFAULT_EDUCATION = [
   {
-    id: "edu-1",
-    institution: "SRM Institute of Science and Technology",
+    id: "edu-mit-1",
+    institution: "Massachusetts Institute of Technology",
     institutionType: "university",
-    qualification: "Bachelor of Technology (B.Tech)",
-    fieldOfStudy: "Computer Science & Engineering",
-    startDate: "2022-08",
-    endDate: "2026-05",
+    qualification: "Master of Science",
+    fieldOfStudy: "Computer Science & Artificial Intelligence",
+    startDate: "2024-09",
+    endDate: "Present",
     currentlyStudying: true,
     gradeType: "CGPA",
-    gradeValue: "9.24",
-    gradeScale: "10.0",
-    coursework: "Data Structures, Algorithms, Distributed Systems, Database Management, Operating Systems, Web Technologies",
-    achievements: "Dean's Merit List &bull; Core Technical Member at TechSpace BuildLab",
+    gradeValue: "3.98",
+    gradeScale: "4.0",
+    coursework: "Advanced Distributed Systems, Machine Learning Theory, Quantum Computing, Deep Learning, Distributed Consensus Protocols",
+    achievements: "MIT Presidential Fellow, Best Research Paper Award, Highest Honors",
     displayOnPortfolio: true
   },
   {
-    id: "edu-2",
-    institution: "Delhi Public School",
-    institutionType: "school",
-    qualification: "Senior Secondary (Class XII)",
-    fieldOfStudy: "Science (PCM + Computer Science)",
-    startDate: "2020-04",
-    endDate: "2022-03",
+    id: "edu-stanford-2",
+    institution: "Stanford University",
+    institutionType: "university",
+    qualification: "B.Tech",
+    fieldOfStudy: "Computer Science & Engineering",
+    startDate: "2020-02",
+    endDate: "2024-02",
     currentlyStudying: false,
-    gradeType: "Percentage",
-    gradeValue: "96.4",
-    gradeScale: "100",
-    coursework: "Physics, Chemistry, Mathematics, Python Programming, English",
-    achievements: "First in Computer Science &bull; National Science Olympiad Qualifier",
+    gradeType: "CGPA",
+    gradeValue: "9.5",
+    gradeScale: "10.0",
+    coursework: "Data Structures & Algorithms, Computer Architecture, Systems Programming, Operating Systems, Database Management Systems",
+    achievements: "Graduated with Distinction, Department Honors",
     displayOnPortfolio: true
   }
 ];
@@ -1562,8 +1563,8 @@ export function getUserDataBySlug(slug) {
     if (isMatchActive) {
       const activePublish = getPublishSettings();
       const crossDeviceAvatar = activeProfile?.avatarUrl || 
-        ((cleanSlug === 'ssrnov' || cleanSlug === 'sunny') ? 'https://github.com/ssrnov.png' : 
-        (activeGithub ? `https://github.com/${activeGithub}.png` : ''));
+        ((cleanSlug === 'ssrnov' || cleanSlug === 'sunny') ? '/images/portrait.png' : 
+        (activeGithub ? `https://github.com/${activeGithub}.png` : 'https://github.com/ssrnov.png'));
       return {
         profile: {
           ...DEFAULT_PROFILE,
@@ -1607,8 +1608,8 @@ export function getUserDataBySlug(slug) {
       if (raw) savedPublish = JSON.parse(raw);
     } catch (e) {}
 
-    const crossDeviceAvatar = savedProfile?.avatarUrl || 'https://github.com/ssrnov.png';
-    const resolvedName = savedProfile?.fullName || (cleanSlug === 'ssrnov' ? 'Sunny Kumar' : 'Sunny');
+    const crossDeviceAvatar = savedProfile?.avatarUrl || '/images/portrait.png';
+    const resolvedName = savedProfile?.fullName || (cleanSlug === 'ssrnov' ? 'Sunny Kumar' : 'Sunny Kumar');
 
     return {
       profile: {
