@@ -279,6 +279,38 @@ test('Accessibility: Theme selectors declare WCAG AA radiogroup & radio semantic
   assert.ok(themeJs.includes('role="menuitemradio"'), 'Dropdown items must declare role="menuitemradio"');
 });
 
+// --------------------------------------------------------------------------
+// TEST 12: Mobile Navigation & Theme Contrast Audit
+// --------------------------------------------------------------------------
+test('Mobile Navigation & Contrast: Demo bar, mobile drawer, and public portfolio header avoid collisions & dark-on-dark text', () => {
+  const demoHtml = fs.readFileSync(path.join(ROOT, 'templates/demo.html'), 'utf8');
+  const mobileCss = fs.readFileSync(path.join(ROOT, 'css/mobile.css'), 'utf8');
+  const mainCss = fs.readFileSync(path.join(ROOT, 'css/main.css'), 'utf8');
+  const mainJs = fs.readFileSync(path.join(ROOT, 'js/main.js'), 'utf8');
+  const ssrnovHtml = fs.readFileSync(path.join(ROOT, 'u/ssrnov/index.html'), 'utf8');
+
+  // 1. Demo bar contrast
+  assert.ok(!demoHtml.includes('rgba(12, 13, 14'), 'templates/demo.html must not hardcode dark background rgba(12, 13, 14');
+  assert.ok(demoHtml.includes('var(--bg-surface)'), 'templates/demo.html controller bar must use var(--bg-surface)');
+
+  // 2. Mobile drawer contrast
+  assert.ok(!mobileCss.includes('rgba(10, 11, 11'), 'css/mobile.css .nav-links must not hardcode dark background rgba(10, 11, 11');
+
+  // 3. Public portfolio header mobile isolation
+  assert.ok(mobileCss.includes('.site-header .nav-desktop'), 'mobile.css must style .site-header .nav-desktop drawer');
+  assert.ok(mobileCss.includes('.site-header .header-actions > .btn'), 'mobile.css must collapse header CTA on mobile to prevent hero overlap');
+  assert.ok(mainCss.includes('.logo'), 'main.css must define .logo');
+  assert.ok(mainCss.includes('.badge'), 'main.css must define theme-aware .badge');
+
+  // 4. Public portfolio HTML structure
+  assert.ok(ssrnovHtml.includes('id="public-menu-toggle"'), 'u/ssrnov/index.html must include mobile hamburger toggle');
+  assert.ok(ssrnovHtml.includes('public-portfolio-body'), 'u/ssrnov/index.html must use public-portfolio-body class');
+  assert.ok(ssrnovHtml.includes('href="/css/mobile.css"'), 'u/ssrnov/index.html must link mobile.css');
+
+  // 5. Exclude public portfolios from SaaS bottom nav
+  assert.ok(mainJs.includes("pathname.startsWith('/u/')"), 'js/main.js must exclude public portfolios from SaaS bottom nav');
+});
+
 console.log(`\n--- THEME TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL THEME TESTS PASSED SUCCESSFULLY! ✓\n');

@@ -386,6 +386,17 @@ function initMobileBottomNav() {
   if (document.querySelector('.mobile-bottom-nav')) return;
 
   const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+
+  // Do not inject SaaS marketing bottom dock on public user portfolios or template live demos
+  if (
+    pathname.startsWith('/u/') ||
+    pathname === '/u' ||
+    pathname.startsWith('/templates/demo') ||
+    (document.body && document.body.classList.contains('public-portfolio-body'))
+  ) {
+    return;
+  }
+
   const isDashboard = pathname.startsWith('/dashboard');
 
   const bottomNav = document.createElement('nav');
