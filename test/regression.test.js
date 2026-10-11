@@ -846,6 +846,71 @@ test('Direct Signup & Plain PNG Portrait: /dashboard/ direct landing and explici
   assert.ok(uHtml.includes('hero-avatar-frame'), 'u/index.html must include hero-avatar-frame container');
 });
 
+// --------------------------------------------------------------------------
+// TEST 38: Smooth Button Switching & Interaction Animation System
+// --------------------------------------------------------------------------
+test('Button Interaction & Animation System: segmented sliding pills, standard click states, and theme transitions', () => {
+  const varsCss = fs.readFileSync(path.join(ROOT, 'css/variables.css'), 'utf8');
+  const mainCss = fs.readFileSync(path.join(ROOT, 'css/main.css'), 'utf8');
+  const compCss = fs.readFileSync(path.join(ROOT, 'css/components.css'), 'utf8');
+  const dashCss = fs.readFileSync(path.join(ROOT, 'css/dashboard.css'), 'utf8');
+  const btnJs = fs.readFileSync(path.join(ROOT, 'js/button-interactions.js'), 'utf8');
+  const themeJs = fs.readFileSync(path.join(ROOT, 'js/theme.js'), 'utf8');
+  const mainJs = fs.readFileSync(path.join(ROOT, 'js/main.js'), 'utf8');
+  const demoJs = fs.readFileSync(path.join(ROOT, 'js/template-demo.js'), 'utf8');
+  const analyticsJs = fs.readFileSync(path.join(ROOT, 'js/dashboard-analytics.js'), 'utf8');
+  const builderJs = fs.readFileSync(path.join(ROOT, 'js/builder.js'), 'utf8');
+  const authJs = fs.readFileSync(path.join(ROOT, 'js/auth.js'), 'utf8');
+  const loginHtml = fs.readFileSync(path.join(ROOT, 'login/index.html'), 'utf8');
+
+  // 1. Animation & Timing Design Tokens
+  assert.ok(varsCss.includes('--ease-spring:'), 'variables.css must define --ease-spring token');
+  assert.ok(varsCss.includes('--transition-btn:'), 'variables.css must define --transition-btn token');
+  assert.ok(varsCss.includes('--transition-switch:'), 'variables.css must define --transition-switch token');
+  assert.ok(varsCss.includes('--theme-transition-duration:'), 'variables.css must define --theme-transition-duration token');
+
+  // 2. Sliding Indicator Pill System
+  assert.ok(compCss.includes('.segmented-slider-pill'), 'components.css must define .segmented-slider-pill');
+  assert.ok(compCss.includes('.preset-group.has-slider .preset-btn'), 'components.css must style preset buttons with slider transparency');
+  assert.ok(compCss.includes('.builder-viewport-controls.has-slider .viewport-btn'), 'components.css must style viewport buttons with slider transparency');
+  assert.ok(compCss.includes('.demo-switcher-tabs.has-slider .demo-switch-btn'), 'components.css must style demo switch buttons with slider transparency');
+  assert.ok(compCss.includes('.tab-pane-transition'), 'components.css must define .tab-pane-transition');
+
+  // 3. Button Click Interactions (Hover, Press, Focus, Loading, Success, Disabled)
+  assert.ok(mainCss.includes('.btn:hover:not(:disabled)'), 'main.css must define subtle hover lift for buttons');
+  assert.ok(mainCss.includes('transform: translateY(0) scale(0.975)'), 'main.css must define micro scale-down press effect');
+  assert.ok(mainCss.includes('.btn:focus-visible'), 'main.css must provide visible keyboard focus ring');
+  assert.ok(mainCss.includes('.btn.is-loading'), 'main.css must define restrained is-loading state');
+  assert.ok(mainCss.includes('.btn.is-success'), 'main.css must define is-success state transition');
+  assert.ok(mainCss.includes('.btn:disabled'), 'main.css must declare proper disabled styles');
+
+  // 4. Smooth 3-Theme Switching
+  assert.ok(mainCss.includes('html.theme-transitioning'), 'main.css must define global html.theme-transitioning class');
+  assert.ok(mainCss.includes('@keyframes iconRotateIn'), 'main.css must animate theme toggle icon with iconRotateIn');
+  assert.ok(themeJs.includes('triggerThemeTransition'), 'theme.js must define triggerThemeTransition');
+  assert.ok(compCss.includes('.theme-radio-inner'), 'components.css must define .theme-radio-inner');
+
+  // 5. JavaScript Coordinator & Double-click Protection
+  assert.ok(btnJs.includes('initSegmentedControl'), 'button-interactions.js must export initSegmentedControl');
+  assert.ok(btnJs.includes('initButtonDoubleTapProtection'), 'button-interactions.js must protect against double-click submissions');
+  assert.ok(btnJs.includes('setButtonLoading'), 'button-interactions.js must export setButtonLoading');
+  assert.ok(btnJs.includes('setButtonSuccess'), 'button-interactions.js must export setButtonSuccess');
+  assert.ok(mainJs.includes('initButtonInteractions'), 'main.js must import and initialize button interactions');
+
+  // 6. Targeted Segmented Controls Integration
+  assert.ok(loginHtml.includes('auth-tab-group'), 'login/index.html must have auth-tab-group class');
+  assert.ok(authJs.includes('tab-pane-transition'), 'auth.js must apply tab-pane-transition when toggling tabs');
+  assert.ok(analyticsJs.includes('updateSegmentedSlider'), 'dashboard-analytics.js must update segmented slider');
+  assert.ok(builderJs.includes('updateSegmentedSlider'), 'builder.js must update segmented slider');
+  assert.ok(demoJs.includes('updateSegmentedSlider'), 'template-demo.js must update segmented slider');
+  assert.ok(demoJs.includes('tab-pane-transition'), 'template-demo.js must crossfade demo canvas');
+
+  // 7. Reduced Motion Accessibility
+  assert.ok(mainCss.includes('prefers-reduced-motion: reduce'), 'main.css must respect prefers-reduced-motion');
+  assert.ok(compCss.includes('prefers-reduced-motion: reduce'), 'components.css must respect prefers-reduced-motion');
+  assert.ok(btnJs.includes('prefersReducedMotion'), 'button-interactions.js must guard against reduced motion');
+});
+
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL REGRESSION TESTS PASSED SUCCESSFULLY! ✓');

@@ -1662,12 +1662,23 @@
   font-weight: 600;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-btn), border-color var(--transition-btn), transform var(--transition-btn);
   white-space: nowrap;
+  outline: none;
 }
 
 .preview-tab-btn:hover {
   color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.preview-tab-btn:active {
+  transform: scale(0.975);
+}
+
+.preview-tab-btn:focus-visible {
+  outline: 2px solid var(--accent-primary) !important;
+  outline-offset: 2px !important;
 }
 
 .preview-tab-btn.active {
@@ -1681,6 +1692,8 @@
   gap: var(--space-2);
   flex-wrap: wrap;
   margin-bottom: var(--space-8);
+  position: relative;
+  isolation: isolate;
 }
 
 .template-filter-btn {
@@ -1692,12 +1705,28 @@
   font-family: var(--font-mono);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: 
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-btn),
+    box-shadow var(--transition-btn);
+  outline: none;
 }
 
 .template-filter-btn:hover {
   color: var(--text-primary);
   border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.template-filter-btn:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.template-filter-btn:focus-visible {
+  outline: 2px solid var(--accent-primary) !important;
+  outline-offset: 2px !important;
 }
 
 .template-filter-btn.active {
@@ -1705,6 +1734,159 @@
   color: var(--accent-contrast);
   border-color: var(--accent-primary);
   font-weight: 600;
+  box-shadow: 0 2px 8px -2px var(--accent-subtle);
+}
+
+/* ==========================================================================
+   SEGMENTED CONTROLS & SLIDING ACTIVE INDICATOR SYSTEM
+   Smooth button-to-button switching animations with sliding background pill,
+   tactile hover/active feedback, and content crossfade transitions.
+   ========================================================================== */
+
+.segmented-control-container,
+.preset-group,
+.builder-viewport-controls,
+.demo-switcher-tabs,
+.preview-device-toggle,
+.auth-tab-group,
+.segmented-control {
+  position: relative;
+  isolation: isolate;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* The Sliding Background Indicator Pill */
+.segmented-slider-pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm, 6px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08);
+  transform: translate3d(0, 0, 0);
+  transition: 
+    transform var(--transition-switch), 
+    width var(--transition-switch), 
+    height var(--transition-switch), 
+    opacity var(--transition-fast),
+    background-color var(--transition-switch),
+    border-color var(--transition-switch);
+  will-change: transform, width, height;
+}
+
+/* Pill appearance for accent-themed segmented controls */
+.builder-viewport-controls .segmented-slider-pill,
+.demo-switcher-tabs .segmented-slider-pill {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  box-shadow: 0 2px 10px -2px var(--accent-subtle);
+}
+
+/* Child Buttons within Segmented Controls */
+.preset-btn,
+.viewport-btn,
+.demo-switch-btn,
+.device-toggle-btn,
+.auth-tab-btn,
+.segmented-btn {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+  transition: 
+    color var(--transition-btn), 
+    background-color var(--transition-fast), 
+    border-color var(--transition-fast),
+    transform var(--transition-btn);
+  outline: none;
+}
+
+.preset-btn:focus-visible,
+.viewport-btn:focus-visible,
+.demo-switch-btn:focus-visible,
+.device-toggle-btn:focus-visible,
+.auth-tab-btn:focus-visible,
+.segmented-btn:focus-visible {
+  outline: 2px solid var(--accent-primary) !important;
+  outline-offset: 2px !important;
+}
+
+/* When the dynamic slider pill is present, transparent button backgrounds let the pill slide smoothly beneath */
+.preset-group.has-slider .preset-btn,
+.builder-viewport-controls.has-slider .viewport-btn,
+.demo-switcher-tabs.has-slider .demo-switch-btn,
+.preview-device-toggle.has-slider .device-toggle-btn,
+.auth-tab-group.has-slider .auth-tab-btn,
+.segmented-control.has-slider .segmented-btn {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Selected state text and icon colors */
+.preset-group.has-slider .preset-btn.active {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.builder-viewport-controls.has-slider .viewport-btn.active,
+.demo-switcher-tabs.has-slider .demo-switch-btn.active {
+  color: var(--accent-contrast);
+  font-weight: 700;
+}
+
+.auth-tab-group.has-slider .auth-tab-btn.active {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Micro-press on segmented buttons */
+.preset-btn:active,
+.viewport-btn:active,
+.demo-switch-btn:active,
+.auth-tab-btn:active,
+.device-toggle-btn:active,
+.segmented-btn:active {
+  transform: scale(0.96);
+}
+
+/* Associated Content Switching Transitions (Micro-fade and slight lift) */
+.tab-pane-transition,
+.content-switch-fade {
+  animation: contentSwitchFadeIn var(--duration-panel, 240ms) var(--ease-spring) both;
+}
+
+@keyframes contentSwitchFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Accessibility: Respect Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  .segmented-slider-pill {
+    transition: none !important;
+  }
+  .tab-pane-transition,
+  .content-switch-fade {
+    animation: none !important;
+  }
+  .preset-btn:active,
+  .viewport-btn:active,
+  .demo-switch-btn:active,
+  .auth-tab-btn:active,
+  .device-toggle-btn:active,
+  .segmented-btn:active {
+    transform: none !important;
+  }
 }
 
 /* 3-Step Timeline */
@@ -2108,7 +2290,11 @@
   border-radius: var(--radius-lg);
   padding: var(--space-5);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: 
+    border-color var(--transition-switch),
+    background-color var(--transition-switch),
+    transform var(--transition-btn),
+    box-shadow var(--transition-switch);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -2123,15 +2309,19 @@
   box-shadow: var(--shadow-sm);
 }
 
+.theme-option-card:active {
+  transform: translateY(0) scale(0.985);
+}
+
 .theme-option-card:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
+  outline: 2px solid var(--accent-primary) !important;
+  outline-offset: 2px !important;
 }
 
 .theme-option-card.is-active {
   border-color: var(--accent-primary);
   background-color: var(--accent-subtle);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 0 0 1px var(--accent-primary), var(--shadow-md);
 }
 
 .theme-card-header {
@@ -2309,7 +2499,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-fast);
+  transition: border-color var(--transition-switch), background-color var(--transition-switch);
 }
 
 .theme-option-card.is-active .theme-radio-circle {
@@ -2322,11 +2512,14 @@
   height: 6px;
   border-radius: 50%;
   background-color: var(--accent-contrast);
-  display: none;
+  display: block;
+  transform: scale(0);
+  transition: transform var(--transition-switch);
 }
 
 .theme-option-card.is-active .theme-radio-inner {
   display: block;
+  transform: scale(1);
 }
 
 /* ==========================================================================
@@ -2405,7 +2598,7 @@
 .btn-primary,
 .btn-secondary {
   transform-style: preserve-3d;
-  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.4, 1), box-shadow 0.18s ease;
+  transition: transform var(--transition-btn), box-shadow 0.18s ease, background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
 }
 
 .btn-card:hover,
@@ -2415,8 +2608,16 @@
 }
 
 .btn-card:active,
-.btn-primary:active {
-  transform: translateY(1px) translateZ(0);
+.btn-primary:active,
+.btn-secondary:active {
+  transform: translateY(0) scale(0.975);
+}
+
+.btn-card:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--accent-primary) !important;
+  outline-offset: 2px !important;
 }
 
 /* Ambient 3D Floating Mesh Orbs */

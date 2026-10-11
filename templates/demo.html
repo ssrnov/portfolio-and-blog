@@ -280,18 +280,34 @@
       border-radius: var(--radius-sm);
       cursor: pointer;
       white-space: nowrap;
-      transition: all var(--transition-fast);
+      transition: color var(--transition-btn), transform var(--transition-btn);
+      position: relative;
+      z-index: 2;
+      outline: none;
     }
     .demo-switch-btn:hover {
       color: var(--text-primary);
       border-color: var(--border-hover);
-      background: var(--bg-surface-hover);
+    }
+    .demo-switch-btn:active {
+      transform: scale(0.96);
+    }
+    .demo-switch-btn:focus-visible {
+      outline: 2px solid var(--accent-primary) !important;
+      outline-offset: 2px !important;
     }
     .demo-switch-btn.active {
       background: var(--accent-primary);
       color: var(--accent-contrast);
       border-color: var(--accent-primary);
       font-weight: 700;
+    }
+    .demo-switcher-tabs.has-slider .demo-switch-btn {
+      background: transparent !important;
+      border-color: transparent !important;
+    }
+    .demo-switcher-tabs.has-slider .demo-switch-btn.active {
+      color: var(--accent-contrast) !important;
     }
     @media (max-width: 768px) {
       #demo-controller-bar {

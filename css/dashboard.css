@@ -387,6 +387,8 @@
   padding: 3px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
+  position: relative;
+  isolation: isolate;
 }
 
 .viewport-btn {
@@ -398,13 +400,37 @@
   font-size: var(--text-xs);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-btn), transform var(--transition-btn);
+  position: relative;
+  z-index: 2;
+  outline: none;
+}
+
+.viewport-btn:hover {
+  color: var(--text-primary);
+}
+
+.viewport-btn:active {
+  transform: scale(0.96);
+}
+
+.viewport-btn:focus-visible {
+  outline: 2px solid var(--accent-primary) !important;
+  outline-offset: 2px !important;
 }
 
 .viewport-btn.active {
   background-color: var(--accent-primary);
   color: var(--accent-contrast);
   font-weight: 600;
+}
+
+.builder-viewport-controls.has-slider .viewport-btn {
+  background: transparent !important;
+}
+
+.builder-viewport-controls.has-slider .viewport-btn.active {
+  color: var(--accent-contrast);
 }
 
 .builder-body {
@@ -1304,6 +1330,8 @@ body.is-printing-pdf {
   border-radius: var(--radius-md);
   padding: 3px;
   gap: 2px;
+  position: relative;
+  isolation: isolate;
 }
 
 .preset-btn {
@@ -1315,18 +1343,40 @@ body.is-printing-pdf {
   font-weight: 600;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-btn), transform var(--transition-btn);
   white-space: nowrap;
+  position: relative;
+  z-index: 2;
+  outline: none;
 }
 
 .preset-btn:hover {
   color: var(--text-primary);
 }
 
+.preset-btn:active {
+  transform: scale(0.96);
+}
+
+.preset-btn:focus-visible {
+  outline: 2px solid var(--accent-primary) !important;
+  outline-offset: 2px !important;
+}
+
 .preset-btn.active {
   background: var(--bg-surface);
   color: var(--text-primary);
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.preset-group.has-slider .preset-btn {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.preset-group.has-slider .preset-btn.active {
+  background: transparent !important;
+  color: var(--text-primary) !important;
 }
 
 .custom-date-box {

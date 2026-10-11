@@ -3,6 +3,8 @@
  * TechSpace BuildLab B04
  */
 
+import { updateSegmentedSlider } from './button-interactions.js';
+
 export function initHomepage() {
   initHeroTilt();
   initPreviewTabs();
@@ -59,15 +61,13 @@ function initPreviewTabs() {
       btn.classList.add('active');
       btn.setAttribute('aria-selected', 'true');
 
-      // Update panels with crossfade
+      // Update panels with micro-fade/slide transition
       tabPanels.forEach((panel) => {
         if (panel.getAttribute('data-tab-content') === targetTab) {
           panel.style.display = 'block';
-          panel.style.opacity = '0';
-          setTimeout(() => {
-            panel.style.transition = 'opacity 0.25s ease';
-            panel.style.opacity = '1';
-          }, 10);
+          panel.classList.remove('tab-pane-transition');
+          void panel.offsetWidth;
+          panel.classList.add('tab-pane-transition');
         } else {
           panel.style.display = 'none';
         }
@@ -82,7 +82,12 @@ function initPreviewTabs() {
 function initPreviewDeviceToggle() {
   const deviceBtns = document.querySelectorAll('.device-toggle-btn');
   const previewStage = document.getElementById('interactive-preview-stage');
+  const deviceContainer = document.querySelector('.preview-device-toggle');
   if (!deviceBtns.length || !previewStage) return;
+
+  if (deviceContainer) {
+    updateSegmentedSlider(deviceContainer);
+  }
 
   deviceBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -90,6 +95,7 @@ function initPreviewDeviceToggle() {
 
       deviceBtns.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
+      if (deviceContainer) updateSegmentedSlider(deviceContainer);
 
       if (mode === 'mobile') {
         previewStage.classList.add('mobile-frame');
