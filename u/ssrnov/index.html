@@ -100,36 +100,50 @@
     <!-- HERO SECTION -->
     <section class="section-py" id="about" style="padding-top: var(--space-16);">
       <div class="container">
-        <div class="hero-content">
-          <div style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid var(--border-color); background-color: var(--bg-secondary); margin-bottom: var(--space-4);">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #22c55e; display: inline-block;"></span>
-            <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-secondary);">Student Portfolio &bull; Academic &amp; CGPA</span>
+        <div class="hero-split-grid" style="margin-bottom: var(--space-6);">
+          <div class="hero-content">
+            <div style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid var(--border-color); background-color: var(--bg-secondary); margin-bottom: var(--space-4);">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #22c55e; display: inline-block;"></span>
+              <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-secondary);">Student Portfolio &bull; Academic &amp; CGPA</span>
+            </div>
+
+            <h1 data-builder-target="headline" style="font-size: clamp(var(--text-3xl), 5vw, var(--text-6xl)); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: var(--space-6); color: var(--text-primary);">
+              Sunny Kumar &mdash; Computer Science Student &amp; Systems Builder.
+            </h1>
+
+            <p class="hero-lead" data-builder-target="bio" style="max-width: 720px;">
+              Hey, I'm <strong data-builder-target="display_name">Sunny Kumar</strong>. I specialize in distributed computing, concurrency architectures, and native web performance. My focus is writing lean, production-ready software without bloated runtime dependencies.
+            </p>
+
+            <div class="hero-cta-group" style="display: flex; gap: var(--space-4); flex-wrap: wrap; margin-bottom: var(--space-8);">
+              <a href="#projects" class="btn btn-primary btn-card">
+                <span>Explore Projects</span>
+                <span aria-hidden="true">&darr;</span>
+              </a>
+              <a href="/dashboard/resume" class="btn btn-secondary btn-card">
+                <span>ATS Resume (PDF)</span>
+                <span aria-hidden="true">&nearr;</span>
+              </a>
+              <a href="#" data-builder-target="github_url" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="display: none;">
+                <span>GitHub Profile</span>
+                <span aria-hidden="true">&nearr;</span>
+              </a>
+            </div>
           </div>
 
-          <h1 data-builder-target="headline" style="font-size: clamp(var(--text-3xl), 5vw, var(--text-6xl)); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: var(--space-6); color: var(--text-primary);">
-            Sunny Kumar &mdash; Computer Science Student &amp; Systems Builder.
-          </h1>
-
-          <p class="hero-lead" data-builder-target="bio" style="max-width: 720px;">
-            Hey, I'm <strong data-builder-target="display_name">Sunny Kumar</strong>. I specialize in distributed computing, concurrency architectures, and native web performance. My focus is writing lean, production-ready software without bloated runtime dependencies.
-          </p>
-
-          <div class="hero-cta-group" style="display: flex; gap: var(--space-4); flex-wrap: wrap; margin-bottom: var(--space-8);">
-            <a href="#projects" class="btn btn-primary btn-card">
-              <span>Explore Projects</span>
-              <span aria-hidden="true">&darr;</span>
-            </a>
-            <a href="/dashboard/resume" class="btn btn-secondary btn-card">
-              <span>ATS Resume (PDF)</span>
-              <span aria-hidden="true">&nearr;</span>
-            </a>
-            <a href="#" data-builder-target="github_url" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card" style="display: none;">
-              <span>GitHub Profile</span>
-              <span aria-hidden="true">&nearr;</span>
-            </a>
+          <!-- Hero Portrait Avatar Visual Frame (Optimized for Plain PNG & 3D Floating Look) -->
+          <div class="hero-avatar-wrapper">
+            <div class="hero-avatar-frame interactive-3d-card" id="hero-avatar-card">
+              <img data-builder-target="avatar_img" class="hero-avatar-img" src="" alt="Profile Portrait" />
+              <div data-builder-target="avatar_placeholder" class="hero-avatar-placeholder">
+                <span data-builder-target="avatar_initial" style="font-size: 54px; font-weight: 800; font-family: var(--font-mono); color: var(--accent-primary); line-height: 1;">@</span>
+                <span style="font-size: 10px; font-family: var(--font-mono); color: var(--text-muted); margin-top: 6px; letter-spacing: 0.05em; text-transform: uppercase;">Portrait</span>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <!-- Quick Metric Highlights -->
+        <!-- Quick Metric Highlights -->
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-4); padding-top: var(--space-6); border-top: 1px solid var(--border-color);">
             <div>
               <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary);">9.24 CGPA</div>

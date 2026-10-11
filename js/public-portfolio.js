@@ -584,6 +584,27 @@ function renderPortfolio(data, username, templateId) {
     el.textContent = username;
   });
 
+  // Portrait / Avatar Photo
+  const avatarUrl = profile.avatarUrl || profile.avatar_url || '';
+  document.querySelectorAll('[data-builder-target="avatar_img"]').forEach((el) => {
+    if (avatarUrl) {
+      el.setAttribute('src', avatarUrl);
+      el.style.display = 'block';
+    } else {
+      el.removeAttribute('src');
+      el.style.display = 'none';
+    }
+  });
+
+  document.querySelectorAll('[data-builder-target="avatar_placeholder"]').forEach((el) => {
+    el.style.display = avatarUrl ? 'none' : 'flex';
+  });
+
+  const initialLetter = displayName.trim().charAt(0).toUpperCase() || '@';
+  document.querySelectorAll('[data-builder-target="avatar_initial"]').forEach((el) => {
+    el.textContent = initialLetter;
+  });
+
   // Dynamic Hero Highlights
   renderHighlightsBar(data, username);
 

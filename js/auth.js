@@ -699,10 +699,10 @@ function initSignupForm(form) {
         githubHandle
       });
 
-      showAuthAlert('Account created successfully! Preparing your onboarding guide...', 'success');
+      showAuthAlert('Account created successfully! Redirecting directly to your dashboard...', 'success');
       setTimeout(() => {
-        window.location.href = `/onboarding/?username=${encodeURIComponent(username)}`;
-      }, 600);
+        window.location.href = '/dashboard/';
+      }, 500);
     } catch (err) {
       showAuthAlert(err.message || 'Registration failed. The username or email might already be registered.', 'error');
       if (submitBtn) {

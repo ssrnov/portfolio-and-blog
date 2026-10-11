@@ -128,7 +128,8 @@ export const authService = {
   /**
    * Register with Email & Password
    */
-  async signUp(email, password, { username, fullName, dob = '', securityQuestion = '', securityAnswer = '' } = {}) {
+  async signUp(email, password, options = {}) {
+    const { username, fullName, dob = '', securityQuestion = '', securityAnswer = '', githubHandle = '' } = options;
     const cleanUsername = (username || '').trim().toLowerCase();
     const cleanEmail = (email || '').trim().toLowerCase();
 
@@ -149,6 +150,7 @@ export const authService = {
             full_name: fullName,
             dob: dob ? dob.trim() : '',
             security_question: securityQuestion ? securityQuestion.trim() : '',
+            github_handle: (githubHandle || '').trim(),
           },
         },
       });
@@ -163,7 +165,7 @@ export const authService = {
       throw new Error('An account with this username or email already exists.');
     }
 
-    const cleanGh = (options.githubHandle || options.github_handle || '').trim().replace(/^https?:\/\/(www\.)?github\.com\//i, '').replace(/^@+/, '').split('/')[0];
+    const cleanGh = (githubHandle || options.github_handle || '').trim().replace(/^https?:\/\/(www\.)?github\.com\//i, '').replace(/^@+/, '').split('/')[0];
     const passwordHash = await hashPassword(password);
     const userId = 'usr_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     const newUser = {

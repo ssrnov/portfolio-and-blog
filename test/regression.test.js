@@ -799,6 +799,53 @@ test('User Identity Decoupling: Dynamic contact email and credentials without ha
   assert.ok(supabaseJs.includes("github_handle: ''"), 'MOCK_USER_PROFILE must have empty github_handle default');
 });
 
+// --------------------------------------------------------------------------
+// TEST 37: Direct Signup Dashboard Redirection & Plain PNG Portrait Upload Guidance
+// --------------------------------------------------------------------------
+test('Direct Signup & Plain PNG Portrait: /dashboard/ direct landing and explicit PNG background guidance', () => {
+  const authJs = fs.readFileSync(path.join(ROOT, 'js/auth.js'), 'utf8');
+  const builderHtml = fs.readFileSync(path.join(ROOT, 'dashboard/builder/index.html'), 'utf8');
+  const settingsHtml = fs.readFileSync(path.join(ROOT, 'dashboard/settings/index.html'), 'utf8');
+  const builderJs = fs.readFileSync(path.join(ROOT, 'js/builder.js'), 'utf8');
+  const settingsJs = fs.readFileSync(path.join(ROOT, 'js/settings.js'), 'utf8');
+  const previewListenerJs = fs.readFileSync(path.join(ROOT, 'js/preview-listener.js'), 'utf8');
+  const publicPortfolioJs = fs.readFileSync(path.join(ROOT, 'js/public-portfolio.js'), 'utf8');
+  const uHtml = fs.readFileSync(path.join(ROOT, 'u/index.html'), 'utf8');
+
+  // 1. Verify signup redirects directly to /dashboard/ and NOT /onboarding/
+  assert.ok(authJs.includes("window.location.href = '/dashboard/';"), 'auth.js must redirect to /dashboard/ upon successful signup');
+  assert.ok(!authJs.includes("window.location.href = `/onboarding/"), 'auth.js must not redirect to /onboarding/');
+
+  // 2. Verify Builder UI has portrait upload and plain PNG background guidance
+  assert.ok(builderHtml.includes('id="builder-avatar-file-input"'), 'builder/index.html must include avatar file input');
+  assert.ok(builderHtml.includes('id="builder-avatar-upload-btn"'), 'builder/index.html must include avatar upload button');
+  assert.ok(builderHtml.includes('Recommended: Plain PNG'), 'builder/index.html must recommend plain PNG');
+  assert.ok(builderHtml.includes('plain or transparent background'), 'builder/index.html must prompt for plain or transparent background');
+
+  // 3. Verify Settings UI has portrait upload and plain PNG background guidance
+  assert.ok(settingsHtml.includes('id="settings-avatar-file-input"'), 'settings/index.html must include avatar file input');
+  assert.ok(settingsHtml.includes('id="settings-avatar-upload-btn"'), 'settings/index.html must include avatar upload button');
+  assert.ok(settingsHtml.includes('Recommended: Plain PNG'), 'settings/index.html must recommend plain PNG');
+  assert.ok(settingsHtml.includes('plain or transparent background'), 'settings/index.html must prompt for plain or transparent background');
+
+  // 4. Verify builder.js manages avatarUrl and updates preview
+  assert.ok(builderJs.includes('avatarUrl:'), 'builder.js must manage avatarUrl in state');
+  assert.ok(builderJs.includes('updateBuilderAvatarUI'), 'builder.js must define updateBuilderAvatarUI');
+  assert.ok(builderJs.includes('builder-avatar-file-input'), 'builder.js must bind file input change');
+
+  // 5. Verify settings.js persists avatarUrl in saveProfile
+  assert.ok(settingsJs.includes('settings-avatar-file-input'), 'settings.js must bind avatar file input');
+  assert.ok(settingsJs.includes('avatarUrl: currentAvatarUrl'), 'settings.js must save avatarUrl');
+
+  // 6. Verify preview-listener.js and public-portfolio.js render avatar_img
+  assert.ok(previewListenerJs.includes('[data-builder-target="avatar_img"]'), 'preview-listener.js must update avatar_img target');
+  assert.ok(publicPortfolioJs.includes('[data-builder-target="avatar_img"]'), 'public-portfolio.js must hydrate avatar_img target');
+
+  // 7. Verify u/index.html has hero avatar card frame
+  assert.ok(uHtml.includes('data-builder-target="avatar_img"'), 'u/index.html must include avatar_img target');
+  assert.ok(uHtml.includes('hero-avatar-frame'), 'u/index.html must include hero-avatar-frame container');
+});
+
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL REGRESSION TESTS PASSED SUCCESSFULLY! ✓');

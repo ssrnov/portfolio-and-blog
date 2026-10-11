@@ -18,6 +18,7 @@ export const DEFAULT_PROFILE = {
   linkedinUrl: "",
   twitterUrl: "",
   availability: "Open to opportunities",
+  avatarUrl: "",
   theme: "dark"
 };
 
@@ -277,6 +278,7 @@ export function getProfile() {
       linkedinUrl: user.linkedin_url || "",
       twitterUrl: user.twitter_handle ? (user.twitter_handle.startsWith('http') ? user.twitter_handle : `https://x.com/${user.twitter_handle}`) : "",
       availability: "Open to opportunities",
+      avatarUrl: user.avatar_url || "",
       theme: "dark"
     };
 
