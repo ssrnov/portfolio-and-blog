@@ -11,6 +11,7 @@
 
 import { portfolioService, contactService } from './supabase.js';
 import { getUserDataBySlug, getActiveUser, verifyPreviewToken, trackAnalyticsEvent, getBlogArticles, DEFAULT_BLOG_ARTICLES } from './profile-data.js';
+import { downloadAtsResumePdf } from './resume-pdf-generator.js';
 
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -90,6 +91,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 6. Bind Share Button & Web Share API
     bindShareControls(userData, username, isPublished);
+
+    // 7. Bind Direct ATS Resume PDF Download (Prevents public visitors going to dashboard)
+    bindPublicResumeDownload(userData, username, isOwnerSession);
 
     // 7. Reliable Public Telemetry Event Collection
     // Excludes draft/preview modes and owner sessions from public metrics
@@ -345,6 +349,57 @@ function showShareFeedback(btn, message) {
     btn.innerHTML = originalHtml;
     btn.removeAttribute('style');
   }, 2500);
+}
+
+// ==============================================================================
+// ATS Resume Direct Download Handling (Public Visitors vs. Portfolio Owner)
+// ==============================================================================
+function bindPublicResumeDownload(userData, username, isOwnerSession) {
+  const resumeSelectors = [
+    '#download-resume-btn',
+    '[data-action="download-resume"]',
+    'a[href="/dashboard/resume"]',
+    'a[href*="/resume"]'
+  ];
+
+  const resumeLinks = document.querySelectorAll(resumeSelectors.join(', '));
+  resumeLinks.forEach((link) => {
+    // Update href to public resume viewer route (never /dashboard/resume)
+    link.setAttribute('href', `/u/${encodeURIComponent(username)}/resume`);
+    link.setAttribute('data-action', 'download-resume');
+    link.setAttribute('title', 'Directly download ATS Resume as PDF');
+
+    const textSpans = link.querySelectorAll('span');
+    if (textSpans.length >= 2) {
+      textSpans[0].textContent = 'ATS Resume (PDF)';
+      textSpans[1].innerHTML = '&darr;';
+    }
+
+    // Direct download trigger without routing away
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      downloadAtsResumePdf(userData, username);
+      trackAnalyticsEvent({
+        username,
+        eventType: 'resume_download'
+      });
+    });
+  });
+
+  // Provide Dashboard Edit link strictly for the authenticated owner
+  if (isOwnerSession) {
+    const ctaGroup = document.querySelector('.hero-cta-group');
+    if (ctaGroup && !document.getElementById('owner-resume-dashboard-link')) {
+      const ownerBtn = document.createElement('a');
+      ownerBtn.id = 'owner-resume-dashboard-link';
+      ownerBtn.href = '/dashboard/resume';
+      ownerBtn.className = 'btn btn-secondary btn-card btn-sm';
+      ownerBtn.style.cssText = 'font-size: 11px; opacity: 0.85; display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px;';
+      ownerBtn.innerHTML = `<span>Edit Resume in Dashboard</span><span aria-hidden="true">&nearr;</span>`;
+      ctaGroup.appendChild(ownerBtn);
+    }
+  }
 }
 
 // ==============================================================================

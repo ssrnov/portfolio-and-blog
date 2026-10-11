@@ -6,8 +6,8 @@
   "rewrites": [
     { "source": "/templates/demo", "destination": "/templates/demo.html" },
     { "source": "/templates/demo/", "destination": "/templates/demo.html" },
-    { "source": "/u/:username/resume", "destination": "/dashboard/resume/index.html" },
-    { "source": "/u/:username/resume/", "destination": "/dashboard/resume/index.html" },
+    { "source": "/u/:username/resume", "destination": "/u/resume.html" },
+    { "source": "/u/:username/resume/", "destination": "/u/resume.html" },
     { "source": "/u/ssrnov", "destination": "/u/ssrnov/index.html" },
     { "source": "/u/ssrnov/", "destination": "/u/ssrnov/index.html" },
     { "source": "/u/sunny", "destination": "/u/sunny/index.html" },
