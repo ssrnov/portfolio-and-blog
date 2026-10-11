@@ -187,6 +187,23 @@
   --chart-views: #8FE0AE;
   --chart-project: #8FC7FF;
   --chart-interactions: #6EE7A0;
+
+  /* Cinematic Intro Animation Tokens — Dark Theme (Premium Obsidian) */
+  --intro-bg: #050706;
+  --intro-surface: #101512;
+  --intro-atmosphere: #13251B;
+  --intro-selected: #1C2920;
+  --intro-accent: #8FE0AE;
+  --intro-accent-hover: #A6EABD;
+  --intro-accent-pressed: #73CB96;
+  --intro-accent-secondary: #315C46;
+  --intro-logo-text: #F4F7F4;
+  --intro-tagline: #B8C3BB;
+  --intro-muted: #929F95;
+  --intro-lines: #26352B;
+  --intro-border-strong: #35463A;
+  --intro-glow: rgba(143, 224, 174, 0.16);
+  --intro-beam: linear-gradient(90deg, transparent 0%, rgba(143, 224, 174, 0.45) 50%, transparent 100%);
 }
 
 /* ==========================================================================
@@ -250,6 +267,27 @@
   --chart-views: #315C46;
   --chart-project: #315D83;
   --chart-interactions: #267347;
+
+  /* Cinematic Intro Animation Tokens — Light Theme (Ivory + Forest Green) */
+  --intro-bg: #F7F5EF;
+  --intro-surface: #FFFFFF;
+  --intro-surface-secondary: #EFEEE6;
+  --intro-atmosphere: rgba(113, 134, 109, 0.12);
+  --intro-selected: #E8EEE7;
+  --intro-accent: #315C46;
+  --intro-accent-hover: #264A38;
+  --intro-accent-pressed: #203D2F;
+  --intro-accent-secondary: #71866D;
+  --intro-accent-botanical: #71866D;
+  --intro-logo-text: #20372D;
+  --intro-body: #41483F;
+  --intro-tagline: #555B54;
+  --intro-muted: #62685F;
+  --intro-lines: #E5E2D8;
+  --intro-border-strong: #CFCFC4;
+  --intro-lighting-soft: rgba(113, 134, 109, 0.12);
+  --intro-glow: rgba(113, 134, 109, 0.14);
+  --intro-beam: linear-gradient(90deg, transparent 0%, rgba(49, 92, 70, 0.35) 50%, transparent 100%);
 }
 
 /* ==========================================================================
@@ -312,4 +350,21 @@
   --chart-views: #D6D1C7;
   --chart-project: #8FC7FF;
   --chart-interactions: #22c55e;
+
+  /* Cinematic Intro Animation Tokens — Night Theme (Preserved Warm Stone Monochrome) */
+  --intro-bg: #080909;
+  --intro-surface: #141515;
+  --intro-atmosphere: rgba(209, 204, 194, 0.08);
+  --intro-selected: #191A1A;
+  --intro-accent: #D6D1C7;
+  --intro-accent-hover: #C5C0B6;
+  --intro-accent-pressed: #B0ABA1;
+  --intro-accent-secondary: #98938A;
+  --intro-logo-text: #D1CCC2;
+  --intro-tagline: #98938A;
+  --intro-muted: #726E67;
+  --intro-lines: #292A2A;
+  --intro-border-strong: #454545;
+  --intro-glow: rgba(209, 204, 194, 0.10);
+  --intro-beam: linear-gradient(90deg, transparent 0%, rgba(209, 204, 194, 0.35) 50%, transparent 100%);
 }

@@ -911,6 +911,88 @@ test('Button Interaction & Animation System: segmented sliding pills, standard c
   assert.ok(btnJs.includes('prefersReducedMotion'), 'button-interactions.js must guard against reduced motion');
 });
 
+// =============================================================================
+// TEST 39: Cinematic, Three-Theme-Aware Website Intro Animation Verification
+// =============================================================================
+test('39. Cinematic, Three-Theme-Aware Intro Animation Verification', () => {
+  const varsCss = fs.readFileSync(path.join(ROOT, 'css/variables.css'), 'utf8');
+  const compCss = fs.readFileSync(path.join(ROOT, 'css/components.css'), 'utf8');
+  const introCss = fs.readFileSync(path.join(ROOT, 'css/intro.css'), 'utf8');
+  const introJs = fs.readFileSync(path.join(ROOT, 'js/cinematic-intro.js'), 'utf8');
+  const mainJs = fs.readFileSync(path.join(ROOT, 'js/main.js'), 'utf8');
+
+  // 1. Dark Theme (Premium Obsidian) exact tokens
+  assert.ok(varsCss.includes('--intro-bg: #050706'), 'Dark theme must define --intro-bg: #050706');
+  assert.ok(varsCss.includes('--intro-surface: #101512'), 'Dark theme must define --intro-surface: #101512');
+  assert.ok(varsCss.includes('--intro-atmosphere: #13251B'), 'Dark theme must define --intro-atmosphere: #13251B');
+  assert.ok(varsCss.includes('--intro-selected: #1C2920'), 'Dark theme must define --intro-selected: #1C2920');
+  assert.ok(varsCss.includes('--intro-accent: #8FE0AE'), 'Dark theme must define --intro-accent: #8FE0AE');
+  assert.ok(varsCss.includes('--intro-accent-hover: #A6EABD'), 'Dark theme must define --intro-accent-hover: #A6EABD');
+  assert.ok(varsCss.includes('--intro-accent-pressed: #73CB96'), 'Dark theme must define --intro-accent-pressed: #73CB96');
+  assert.ok(varsCss.includes('--intro-accent-secondary: #315C46'), 'Dark theme must define --intro-accent-secondary: #315C46');
+  assert.ok(varsCss.includes('--intro-logo-text: #F4F7F4'), 'Dark theme must define --intro-logo-text: #F4F7F4');
+  assert.ok(varsCss.includes('--intro-tagline: #B8C3BB'), 'Dark theme must define --intro-tagline: #B8C3BB');
+  assert.ok(varsCss.includes('--intro-muted: #929F95'), 'Dark theme must define --intro-muted: #929F95');
+  assert.ok(varsCss.includes('--intro-lines: #26352B'), 'Dark theme must define --intro-lines: #26352B');
+  assert.ok(varsCss.includes('--intro-border-strong: #35463A'), 'Dark theme must define --intro-border-strong: #35463A');
+
+  // 2. Light Theme (Ivory + Forest Green) exact tokens
+  assert.ok(varsCss.includes('--intro-bg: #F7F5EF'), 'Light theme must define --intro-bg: #F7F5EF');
+  assert.ok(varsCss.includes('--intro-surface: #FFFFFF'), 'Light theme must define --intro-surface: #FFFFFF');
+  assert.ok(varsCss.includes('--intro-surface-secondary: #EFEEE6'), 'Light theme must define --intro-surface-secondary: #EFEEE6');
+  assert.ok(varsCss.includes('--intro-selected: #E8EEE7'), 'Light theme must define --intro-selected: #E8EEE7');
+  assert.ok(varsCss.includes('--intro-logo-text: #20372D'), 'Light theme must define --intro-logo-text: #20372D');
+  assert.ok(varsCss.includes('--intro-body: #41483F'), 'Light theme must define --intro-body: #41483F');
+  assert.ok(varsCss.includes('--intro-tagline: #555B54'), 'Light theme must define --intro-tagline: #555B54');
+  assert.ok(varsCss.includes('--intro-muted: #62685F'), 'Light theme must define --intro-muted: #62685F');
+  assert.ok(varsCss.includes('--intro-accent: #315C46'), 'Light theme must define --intro-accent: #315C46');
+  assert.ok(varsCss.includes('--intro-accent-hover: #264A38'), 'Light theme must define --intro-accent-hover: #264A38');
+  assert.ok(varsCss.includes('--intro-accent-pressed: #203D2F'), 'Light theme must define --intro-accent-pressed: #203D2F');
+  assert.ok(varsCss.includes('--intro-accent-botanical: #71866D'), 'Light theme must define --intro-accent-botanical: #71866D');
+  assert.ok(varsCss.includes('--intro-lines: #E5E2D8'), 'Light theme must define --intro-lines: #E5E2D8');
+  assert.ok(varsCss.includes('--intro-border-strong: #CFCFC4'), 'Light theme must define --intro-border-strong: #CFCFC4');
+  assert.ok(varsCss.includes('--intro-lighting-soft: rgba(113, 134, 109, 0.12)'), 'Light theme must define --intro-lighting-soft');
+
+  // 3. Night Theme (Preserved warm stone monochrome)
+  assert.ok(varsCss.includes('--intro-bg: #080909'), 'Night theme must preserve --intro-bg: #080909');
+  assert.ok(varsCss.includes('--intro-surface: #141515'), 'Night theme must preserve --intro-surface: #141515');
+  assert.ok(varsCss.includes('--intro-accent: #D6D1C7'), 'Night theme must preserve --intro-accent: #D6D1C7');
+  assert.ok(varsCss.includes('--intro-logo-text: #D1CCC2'), 'Night theme must preserve --intro-logo-text: #D1CCC2');
+  assert.ok(varsCss.includes('--intro-tagline: #98938A'), 'Night theme must preserve --intro-tagline: #98938A');
+
+  // 4. CSS Import and Overlay Architecture
+  assert.ok(compCss.includes("@import './intro.css';"), 'components.css must import intro.css');
+  assert.ok(introCss.includes('#folioryn-cinematic-intro'), 'intro.css must define #folioryn-cinematic-intro overlay');
+  assert.ok(introCss.includes('.intro-canvas-grid'), 'intro.css must define .intro-canvas-grid');
+  assert.ok(introCss.includes('.intro-atmosphere-glow'), 'intro.css must define .intro-atmosphere-glow');
+  assert.ok(introCss.includes('.intro-emblem-container'), 'intro.css must define .intro-emblem-container');
+  assert.ok(introCss.includes('.intro-path-frame'), 'intro.css must define .intro-path-frame');
+  assert.ok(introCss.includes('.intro-path-folio'), 'intro.css must define .intro-path-folio');
+  assert.ok(introCss.includes('.intro-path-spine'), 'intro.css must define .intro-path-spine');
+  assert.ok(introCss.includes('.intro-path-facet'), 'intro.css must define .intro-path-facet');
+  assert.ok(introCss.includes('.intro-light-beam'), 'intro.css must define .intro-light-beam');
+  assert.ok(introCss.includes('.intro-wordmark'), 'intro.css must define .intro-wordmark');
+  assert.ok(introCss.includes('.intro-tagline'), 'intro.css must define .intro-tagline');
+  assert.ok(introCss.includes('.intro-revealing'), 'intro.css must define .intro-revealing seamless transition');
+  assert.ok(introCss.includes('.intro-skip-btn'), 'intro.css must define .intro-skip-btn');
+  assert.ok(introCss.includes('prefers-reduced-motion: reduce'), 'intro.css must respect prefers-reduced-motion');
+
+  // 5. JavaScript Orchestrator Architecture
+  assert.ok(introJs.includes('export function shouldPlayIntro'), 'cinematic-intro.js must export shouldPlayIntro');
+  assert.ok(introJs.includes('export function createIntroDOM'), 'cinematic-intro.js must export createIntroDOM');
+  assert.ok(introJs.includes('export function playCinematicIntro'), 'cinematic-intro.js must export playCinematicIntro');
+  assert.ok(introJs.includes('export function initCinematicIntro'), 'cinematic-intro.js must export initCinematicIntro');
+  assert.ok(introJs.includes('folioryn_intro_seen'), 'cinematic-intro.js must track intro seen in sessionStorage');
+  assert.ok(introJs.includes('INTRO_SAFETY_TIMEOUT_MS'), 'cinematic-intro.js must implement safety timeout');
+  assert.ok(introJs.includes('prefers-reduced-motion'), 'cinematic-intro.js must check prefers-reduced-motion');
+  assert.ok(introJs.includes('folioryn:theme-changed'), 'cinematic-intro.js must handle live theme changes');
+  assert.ok(introJs.includes('window.FoliorynIntro'), 'cinematic-intro.js must expose FoliorynIntro on window');
+
+  // 6. Integration in main.js
+  assert.ok(mainJs.includes("import { initCinematicIntro } from './cinematic-intro.js';"), 'main.js must import initCinematicIntro');
+  assert.ok(mainJs.includes('initCinematicIntro();'), 'main.js must call initCinematicIntro on DOMContentLoaded');
+});
+
 console.log(`\n--- TEST SUMMARY: ${passed} / ${total} TESTS PASSED ---`);
 if (passed === total) {
   console.log('ALL REGRESSION TESTS PASSED SUCCESSFULLY! ✓');
