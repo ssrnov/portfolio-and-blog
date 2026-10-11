@@ -238,29 +238,33 @@ function setupForgotPassword() {
   // Tab switching: Security Question vs Date of Birth
   tabQuestion?.addEventListener('click', () => {
     clearAlert();
-    if (panelQuestion) panelQuestion.style.display = 'block';
+    tabQuestion.classList.add('active');
+    tabDob?.classList.remove('active');
+    if (panelQuestion) {
+      panelQuestion.style.display = 'block';
+      panelQuestion.classList.remove('tab-pane-transition');
+      void panelQuestion.offsetWidth; // Force reflow for animation replay
+      panelQuestion.classList.add('tab-pane-transition');
+    }
     if (panelDob) panelDob.style.display = 'none';
-    tabQuestion.style.background = 'var(--bg-surface)';
-    tabQuestion.style.color = 'var(--text-primary)';
-    tabQuestion.style.borderColor = 'var(--border-color)';
-    if (tabDob) {
-      tabDob.style.background = 'transparent';
-      tabDob.style.color = 'var(--text-secondary)';
-      tabDob.style.borderColor = 'transparent';
+    if (typeof window !== 'undefined' && typeof window.updateSegmentedSliders === 'function') {
+      window.updateSegmentedSliders();
     }
   });
 
   tabDob?.addEventListener('click', () => {
     clearAlert();
+    tabDob.classList.add('active');
+    tabQuestion?.classList.remove('active');
     if (panelQuestion) panelQuestion.style.display = 'none';
-    if (panelDob) panelDob.style.display = 'block';
-    tabDob.style.background = 'var(--bg-surface)';
-    tabDob.style.color = 'var(--text-primary)';
-    tabDob.style.borderColor = 'var(--border-color)';
-    if (tabQuestion) {
-      tabQuestion.style.background = 'transparent';
-      tabQuestion.style.color = 'var(--text-secondary)';
-      tabQuestion.style.borderColor = 'transparent';
+    if (panelDob) {
+      panelDob.style.display = 'block';
+      panelDob.classList.remove('tab-pane-transition');
+      void panelDob.offsetWidth; // Force reflow for animation replay
+      panelDob.classList.add('tab-pane-transition');
+    }
+    if (typeof window !== 'undefined' && typeof window.updateSegmentedSliders === 'function') {
+      window.updateSegmentedSliders();
     }
   });
 

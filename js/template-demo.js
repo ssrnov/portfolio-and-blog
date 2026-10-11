@@ -6,6 +6,7 @@
 
 import { getActiveUser, savePublishSettings, getPublishSettings } from './profile-data.js';
 import { initThemeManager } from './theme.js';
+import { updateSegmentedSlider, setButtonLoading, setButtonSuccess } from './button-interactions.js';
 
 // ==============================================================================
 // 1. 6 Fictional Datasets for the 6 Archetypes
@@ -503,6 +504,12 @@ export function initDemoController() {
   // Initial render
   applyTemplateDemo(requestedTemplate);
 
+  // Initialize and synchronize switcher slider
+  const switcherContainer = document.querySelector('.demo-switcher-tabs');
+  if (switcherContainer) {
+    updateSegmentedSlider(switcherContainer);
+  }
+
   // Bind Switcher Buttons
   const switchBtns = document.querySelectorAll('.demo-switch-btn');
   switchBtns.forEach(btn => {
@@ -533,6 +540,7 @@ export function initDemoController() {
   const useTemplateBtn = document.getElementById('use-template-action-btn');
   if (useTemplateBtn) {
     useTemplateBtn.addEventListener('click', () => {
+      setButtonLoading(useTemplateBtn, true);
       handleUseTemplate();
     });
   }
@@ -542,13 +550,20 @@ export function initDemoController() {
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const statusEl = document.getElementById('demo-contact-status');
-      if (statusEl) {
-        statusEl.style.display = 'block';
-        setTimeout(() => {
-          contactForm.reset();
-        }, 1200);
-      }
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      if (submitBtn) setButtonLoading(submitBtn, true);
+
+      setTimeout(() => {
+        if (submitBtn) setButtonSuccess(submitBtn, 'Message Sent!', 1800);
+        const statusEl = document.getElementById('demo-contact-status');
+        if (statusEl) {
+          statusEl.style.display = 'block';
+          statusEl.classList.add('tab-pane-transition');
+          setTimeout(() => {
+            contactForm.reset();
+          }, 1200);
+        }
+      }, 500);
     });
   }
 }
@@ -563,7 +578,7 @@ export function applyTemplateDemo(templateId) {
   document.documentElement.setAttribute('data-template', templateId);
   document.body.className = `template-${templateId}`;
 
-  // 2. Update Active Tab Buttons
+  // 2. Update Active Tab Buttons & Slider Pill
   document.querySelectorAll('.demo-switch-btn').forEach(btn => {
     if (btn.getAttribute('data-template') === templateId) {
       btn.classList.add('active');
@@ -572,7 +587,20 @@ export function applyTemplateDemo(templateId) {
     }
   });
 
-  // 3. Update Banner Badges
+  const switcherContainer = document.querySelector('.demo-switcher-tabs');
+  if (switcherContainer) {
+    updateSegmentedSlider(switcherContainer);
+  }
+
+  // 3. Smooth canvas crossfade transition
+  const mainCanvas = document.querySelector('main.container');
+  if (mainCanvas) {
+    mainCanvas.classList.remove('tab-pane-transition');
+    void mainCanvas.offsetWidth;
+    mainCanvas.classList.add('tab-pane-transition');
+  }
+
+  // 4. Update Banner Badges
   const badgeEl = document.getElementById('demo-template-badge');
   if (badgeEl) {
     badgeEl.textContent = `${data.name} (${data.badge})`;

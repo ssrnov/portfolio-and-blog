@@ -18,6 +18,7 @@ import {
   calculatePeriodMetrics,
   comparePeriods
 } from './profile-data.js';
+import { updateSegmentedSlider, setButtonLoading, setButtonSuccess } from './button-interactions.js';
 
 // Application State
 const state = {
@@ -78,15 +79,26 @@ function bindControls() {
   const username = profile?.username || 'sunny';
 
   // Preset Buttons
+  const presetGroup = document.querySelector('.preset-group');
+  if (presetGroup) {
+    updateSegmentedSlider(presetGroup);
+  }
+
   document.querySelectorAll('.preset-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const preset = btn.getAttribute('data-preset');
       document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      if (presetGroup) updateSegmentedSlider(presetGroup);
 
       const customBox = document.getElementById('custom-date-container');
       if (preset === 'custom') {
-        if (customBox) customBox.style.display = 'flex';
+        if (customBox) {
+          customBox.style.display = 'flex';
+          customBox.classList.remove('tab-pane-transition');
+          void customBox.offsetWidth;
+          customBox.classList.add('tab-pane-transition');
+        }
         // Initialize custom date pickers with default 30d range
         const now = new Date();
         const start30 = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29);
@@ -121,6 +133,7 @@ function bindControls() {
         return;
       }
 
+      setButtonSuccess(applyCustomBtn, 'Applied!', 1800);
       state.preset = 'custom';
       state.customStart = startVal;
       state.customEnd = endVal;

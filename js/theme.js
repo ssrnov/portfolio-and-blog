@@ -121,6 +121,30 @@ export function getTheme() {
   return DEFAULT_THEME;
 }
 
+let themeTransitionTimer = null;
+
+/**
+ * Triggers a temporary smooth theme crossfade across the application
+ */
+export function triggerThemeTransition() {
+  if (typeof document === 'undefined') return;
+  try {
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+  } catch (e) {}
+
+  if (themeTransitionTimer) {
+    clearTimeout(themeTransitionTimer);
+  }
+
+  document.documentElement.classList.add('theme-transitioning');
+  themeTransitionTimer = setTimeout(() => {
+    document.documentElement.classList.remove('theme-transitioning');
+    themeTransitionTimer = null;
+  }, 280);
+}
+
 /**
  * Applies a theme immediately and persists it
  * @param {string} themeName - 'dark' | 'light' | 'night'
@@ -128,6 +152,11 @@ export function getTheme() {
  */
 export function setTheme(themeName, persist = true) {
   const targetTheme = isValidTheme(themeName) ? themeName.toLowerCase() : DEFAULT_THEME;
+
+  // Trigger smooth crossfade transition on user-initiated switches
+  if (persist) {
+    triggerThemeTransition();
+  }
 
   // 1. Apply to DOM root immediately
   document.documentElement.setAttribute('data-theme', targetTheme);

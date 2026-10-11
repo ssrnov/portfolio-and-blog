@@ -224,21 +224,34 @@ body {
   cursor: pointer;
   color: var(--text-primary);
   position: relative;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-btn), box-shadow var(--transition-btn);
+  outline: none;
 }
 
 .theme-toggle-btn:hover {
   background-color: var(--accent-subtle);
   border-color: var(--border-hover);
+  transform: translateY(-2px);
 }
 
 .theme-toggle-btn:focus-visible {
-  outline: 2px solid var(--focus-ring);
+  outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
 
 .theme-toggle-btn:active {
-  transform: scale(0.95);
+  transform: translateY(0) scale(0.92);
+}
+
+@keyframes iconRotateIn {
+  0% {
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
 }
 
 .theme-toggle-btn svg {
@@ -249,6 +262,7 @@ body {
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: transform var(--transition-btn), color var(--transition-fast);
 }
 
 .theme-toggle-btn .icon-moon,
@@ -261,6 +275,7 @@ body {
 .theme-toggle-btn .icon-moon,
 [data-theme="dark"] .theme-toggle-btn .icon-moon {
   display: block;
+  animation: iconRotateIn var(--transition-switch) forwards;
 }
 [data-theme="dark"] .theme-toggle-btn .icon-sun,
 [data-theme="dark"] .theme-toggle-btn .icon-star {
@@ -270,6 +285,7 @@ body {
 /* Light Theme shows Sun icon */
 [data-theme="light"] .theme-toggle-btn .icon-sun {
   display: block;
+  animation: iconRotateIn var(--transition-switch) forwards;
 }
 [data-theme="light"] .theme-toggle-btn .icon-moon,
 [data-theme="light"] .theme-toggle-btn .icon-star {
@@ -279,6 +295,7 @@ body {
 /* Night Theme shows Star icon */
 [data-theme="night"] .theme-toggle-btn .icon-star {
   display: block;
+  animation: iconRotateIn var(--transition-switch) forwards;
 }
 [data-theme="night"] .theme-toggle-btn .icon-moon,
 [data-theme="night"] .theme-toggle-btn .icon-sun {
@@ -386,18 +403,47 @@ body {
   font-weight: 600;
   text-decoration: none;
   border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
+  transition: 
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-btn),
+    box-shadow var(--transition-btn);
   cursor: pointer;
   border: 1px solid transparent;
+  outline: none;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.btn:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px -2px var(--accent-subtle, rgba(0, 0, 0, 0.25));
+}
+
+.btn:active:not(:disabled):not(.is-disabled):not(.is-loading) {
+  transform: translateY(0) scale(0.975);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent-primary) !important;
+  outline-offset: 2px !important;
 }
 
 .btn-primary {
   background-color: var(--accent-primary);
   color: var(--accent-contrast);
+  box-shadow: 0 2px 8px -2px var(--accent-subtle);
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
   background-color: var(--accent-hover);
+  box-shadow: 0 6px 18px -3px var(--accent-subtle);
+}
+
+.btn-primary:active:not(:disabled):not(.is-disabled):not(.is-loading) {
+  background-color: var(--accent-pressed);
 }
 
 .btn-secondary {
@@ -406,9 +452,124 @@ body {
   border-color: var(--border-color);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
   background-color: var(--accent-subtle);
   border-color: var(--border-hover);
+}
+
+.btn-secondary:active:not(:disabled):not(.is-disabled):not(.is-loading) {
+  background-color: var(--bg-selected);
+}
+
+/* Destructive / Danger Actions */
+.btn-destructive,
+.btn-danger {
+  background-color: transparent;
+  color: var(--color-error);
+  border-color: rgba(255, 133, 133, 0.3);
+}
+
+.btn-destructive:hover:not(:disabled):not(.is-disabled):not(.is-loading),
+.btn-danger:hover:not(:disabled):not(.is-disabled):not(.is-loading) {
+  background-color: rgba(255, 133, 133, 0.12);
+  border-color: var(--color-error);
+  transform: translateY(-1px);
+}
+
+.btn-destructive:active:not(:disabled):not(.is-disabled):not(.is-loading),
+.btn-danger:active:not(:disabled):not(.is-disabled):not(.is-loading) {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Loading State (Restrained & No Layout Shift) */
+.btn.is-loading,
+button[data-loading="true"] {
+  position: relative !important;
+  pointer-events: none !important;
+  cursor: wait !important;
+  color: transparent !important;
+}
+
+.btn.is-loading svg,
+button[data-loading="true"] svg {
+  visibility: hidden !important;
+}
+
+.btn.is-loading::after,
+button[data-loading="true"]::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  margin-top: -7.5px;
+  margin-left: -7.5px;
+  border: 2px solid currentColor;
+  border-right-color: transparent !important;
+  border-radius: 50%;
+  animation: btnSpin 0.65s linear infinite;
+  box-sizing: border-box;
+}
+
+.btn-primary.is-loading::after {
+  border-color: var(--accent-contrast);
+  border-right-color: transparent !important;
+}
+
+.btn-secondary.is-loading::after {
+  border-color: var(--text-primary);
+  border-right-color: transparent !important;
+}
+
+@keyframes btnSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Success State */
+.btn.is-success {
+  background-color: var(--color-success) !important;
+  color: #050706 !important;
+  border-color: var(--color-success) !important;
+  box-shadow: 0 4px 14px -2px rgba(110, 231, 160, 0.4) !important;
+  transform: translateY(0) !important;
+}
+
+/* Disabled State */
+.btn:disabled,
+.btn.is-disabled,
+button:disabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Global Smooth Theme Switching Transition Class */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: 
+    background-color var(--theme-transition-duration, 260ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+    border-color var(--theme-transition-duration, 260ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+    color var(--theme-transition-duration, 260ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+    box-shadow var(--theme-transition-duration, 260ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-transitioning,
+  html.theme-transitioning * {
+    transition: none !important;
+  }
+  .btn:hover,
+  .btn:active,
+  .theme-toggle-btn:hover,
+  .theme-toggle-btn:active {
+    transform: none !important;
+  }
 }
 
 /* Roadmap & Feature Grid Section */

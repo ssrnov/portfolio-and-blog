@@ -16,6 +16,7 @@ import {
   getProjects,
   getActiveUser
 } from './profile-data.js';
+import { updateSegmentedSlider, setButtonLoading, setButtonSuccess } from './button-interactions.js';
 
 let activeUser = null;
 let DRAFT_KEY = 'folioryn_portfolio_draft';
@@ -631,11 +632,17 @@ function bindHistoryControls() {
 function bindViewportControls() {
   const canvas = document.getElementById('preview-canvas');
   const buttons = document.querySelectorAll('.viewport-btn');
+  const controls = document.querySelector('.builder-viewport-controls');
+
+  if (controls) {
+    updateSegmentedSlider(controls);
+  }
 
   buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
       buttons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
+      if (controls) updateSegmentedSlider(controls);
 
       const mode = btn.getAttribute('data-viewport');
       if (!canvas) return;
@@ -653,8 +660,7 @@ function bindPublishButton() {
   if (!publishBtn) return;
 
   publishBtn.addEventListener('click', async () => {
-    publishBtn.disabled = true;
-    publishBtn.innerHTML = '<span>Publishing Live...</span>';
+    setButtonLoading(publishBtn, true, 'Publishing Live...');
 
     try {
       saveProfile({
@@ -696,19 +702,10 @@ function bindPublishButton() {
 
       localStorage.setItem(DRAFT_KEY, JSON.stringify(builderState));
 
-      publishBtn.disabled = false;
-      publishBtn.innerHTML = '<span>✓ Published Live!</span>';
-      publishBtn.style.backgroundColor = '#16a34a';
-      publishBtn.style.borderColor = '#16a34a';
-      publishBtn.style.color = '#FFFFFF';
-
-      setTimeout(() => {
-        publishBtn.innerHTML = '<span>Publish Live</span>';
-        publishBtn.removeAttribute('style');
-      }, 3000);
+      setButtonSuccess(publishBtn, 'Published Live!', 3000);
     } catch (err) {
       console.error('Publish error:', err);
-      publishBtn.disabled = false;
+      setButtonLoading(publishBtn, false);
       publishBtn.innerHTML = '<span>Error Publishing</span>';
       setTimeout(() => {
         publishBtn.innerHTML = '<span>Publish Live</span>';

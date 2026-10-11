@@ -167,11 +167,11 @@
         </p>
 
         <!-- Method Tabs -->
-        <div style="display: flex; gap: 6px; margin-bottom: var(--space-4); background: rgba(0, 0, 0, 0.25); padding: 4px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-          <button type="button" id="tab-recovery-question" class="btn btn-sm" style="flex: 1; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); font-weight: 600; font-size: 11px;">
+        <div class="auth-tab-group" style="display: flex; gap: 6px; margin-bottom: var(--space-4); background: rgba(0, 0, 0, 0.25); padding: 4px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); position: relative; isolation: isolate;">
+          <button type="button" id="tab-recovery-question" class="btn btn-sm auth-tab-btn active" style="flex: 1; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); font-weight: 600; font-size: 11px;">
             Security Question
           </button>
-          <button type="button" id="tab-recovery-dob" class="btn btn-sm" style="flex: 1; background: transparent; color: var(--text-secondary); border: 1px solid transparent; font-weight: 500; font-size: 11px;">
+          <button type="button" id="tab-recovery-dob" class="btn btn-sm auth-tab-btn" style="flex: 1; background: transparent; color: var(--text-secondary); border: 1px solid transparent; font-weight: 500; font-size: 11px;">
             Date of Birth (DOB)
           </button>
         </div>

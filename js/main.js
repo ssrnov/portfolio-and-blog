@@ -9,9 +9,11 @@ import { initContact } from './contact.js';
 import { initHomepage } from './homepage.js';
 import { getActiveUser, getProfile } from './profile-data.js';
 import { initThemeManager, getTheme, setTheme, cycleTheme } from './theme.js';
+import { initButtonInteractions, initAllSegmentedControls } from './button-interactions.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
+  initButtonInteractions();
   initMobileNavigation();
   initMobileBottomNav();
   initScrollAnimations();
@@ -249,6 +251,9 @@ function initExplore() {
 
       if (matchesCat && matchesSearch) {
         card.style.display = 'flex';
+        card.classList.remove('tab-pane-transition');
+        void card.offsetWidth;
+        card.classList.add('tab-pane-transition');
         visibleCount++;
       } else {
         card.style.display = 'none';
