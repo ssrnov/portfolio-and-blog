@@ -166,14 +166,15 @@
     </div>
   </main>
 
-  <!-- Add Education Modal Dialog -->
+  <!-- Add / Edit Education Modal Dialog -->
   <dialog id="add-education-dialog" style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); max-width: 560px; width: 90%;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
-      <h3 style="font-size: var(--text-lg); font-weight: 700; margin: 0;">Add Education Record</h3>
+      <h3 id="edu-dialog-title" style="font-size: var(--text-lg); font-weight: 700; margin: 0;">Add Education Record</h3>
       <button type="button" id="close-add-dialog-btn" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px;">&times;</button>
     </div>
 
     <form id="add-education-form" style="display: flex; flex-direction: column; gap: var(--space-4);">
+      <input type="hidden" id="edu-edit-id" value="" />
       
       <div>
         <label for="edu-institution" style="font-size: var(--text-xs); font-family: var(--font-mono); color: var(--text-secondary); display: block; margin-bottom: 4px;">Institution / University Name *</label>
@@ -258,7 +259,8 @@
       </div>
 
       <div style="display: flex; gap: var(--space-3); margin-top: var(--space-2);">
-        <button type="submit" class="btn btn-primary" style="flex: 1;">Save Record</button>
+        <button type="submit" id="edu-submit-btn" class="btn btn-primary" style="flex: 1;">Save Record</button>
+        <button type="button" id="cancel-add-dialog-btn" class="btn btn-secondary" style="padding: 8px 16px;">Cancel</button>
       </div>
 
     </form>

@@ -181,13 +181,14 @@
     </div>
   </main>
 
-  <!-- Add Experience Modal -->
+  <!-- Add / Edit Experience Modal -->
   <dialog id="add-exp-dialog" style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); max-width: 520px; width: 90%;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
-      <h3 style="font-size: var(--text-lg); font-weight: 700; margin: 0;">Add Work Experience</h3>
+      <h3 id="exp-dialog-title" style="font-size: var(--text-lg); font-weight: 700; margin: 0;">Add Work Experience</h3>
       <button type="button" id="close-add-exp-btn" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px;">&times;</button>
     </div>
     <form id="add-exp-form" style="display: flex; flex-direction: column; gap: var(--space-3);">
+      <input type="hidden" id="exp-edit-id" value="" />
       <div>
         <label for="exp-org" style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); display: block; margin-bottom: 2px;">Company / Organization *</label>
         <input type="text" id="exp-org" required placeholder="e.g. Stripe or Google" class="form-input" style="width: 100%;" />
@@ -218,17 +219,21 @@
         <label for="exp-desc" style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); display: block; margin-bottom: 2px;">Key Contributions &amp; Impact</label>
         <textarea id="exp-desc" rows="3" placeholder="Key metrics, technologies used, problems solved..." class="form-input" style="width: 100%;"></textarea>
       </div>
-      <button type="submit" class="btn btn-primary" style="margin-top: var(--space-2);">Save Experience</button>
+      <div style="display: flex; gap: var(--space-3); margin-top: var(--space-2);">
+        <button type="submit" id="exp-submit-btn" class="btn btn-primary" style="flex: 1;">Save Experience</button>
+        <button type="button" id="cancel-add-exp-btn" class="btn btn-secondary" style="padding: 8px 16px;">Cancel</button>
+      </div>
     </form>
   </dialog>
 
-  <!-- Add Certification Modal -->
+  <!-- Add / Edit Certification Modal -->
   <dialog id="add-cert-dialog" style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-6); max-width: 500px; width: 90%;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
-      <h3 style="font-size: var(--text-lg); font-weight: 700; margin: 0;">Add Certification / Award</h3>
+      <h3 id="cert-dialog-title" style="font-size: var(--text-lg); font-weight: 700; margin: 0;">Add Certification / Award</h3>
       <button type="button" id="close-add-cert-btn" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px;">&times;</button>
     </div>
     <form id="add-cert-form" style="display: flex; flex-direction: column; gap: var(--space-3);">
+      <input type="hidden" id="cert-edit-id" value="" />
       <div>
         <label for="cert-title" style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); display: block; margin-bottom: 2px;">Certification or Award Title *</label>
         <input type="text" id="cert-title" required placeholder="e.g. AWS Solutions Architect or HackMIT 1st Place" class="form-input" style="width: 100%;" />
@@ -245,7 +250,10 @@
         <label for="cert-url" style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); display: block; margin-bottom: 2px;">Verification URL / Credential Link</label>
         <input type="url" id="cert-url" placeholder="https://..." class="form-input" style="width: 100%;" />
       </div>
-      <button type="submit" class="btn btn-primary" style="margin-top: var(--space-2);">Save Certification</button>
+      <div style="display: flex; gap: var(--space-3); margin-top: var(--space-2);">
+        <button type="submit" id="cert-submit-btn" class="btn btn-primary" style="flex: 1;">Save Certification</button>
+        <button type="button" id="cancel-add-cert-btn" class="btn btn-secondary" style="padding: 8px 16px;">Cancel</button>
+      </div>
     </form>
   </dialog>
 

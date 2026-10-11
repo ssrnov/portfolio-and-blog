@@ -397,6 +397,17 @@ export function addEducationItem(item) {
   return newItem;
 }
 
+export function updateEducationItem(id, updates) {
+  const list = getEducation();
+  const idx = list.findIndex(item => item.id === id);
+  if (idx !== -1) {
+    list[idx] = { ...list[idx], ...updates };
+    saveEducation(list);
+    return list[idx];
+  }
+  return null;
+}
+
 export function deleteEducationItem(id) {
   const list = getEducation().filter(item => item.id !== id);
   saveEducation(list);
@@ -453,6 +464,17 @@ export function addSkillItem(item) {
   list.push(newItem);
   saveSkills(list);
   return newItem;
+}
+
+export function updateSkillItem(id, updates) {
+  const list = getSkills();
+  const idx = list.findIndex(item => item.id === id);
+  if (idx !== -1) {
+    list[idx] = { ...list[idx], ...updates };
+    saveSkills(list);
+    return list[idx];
+  }
+  return null;
 }
 
 export function deleteSkillItem(id) {
@@ -512,6 +534,17 @@ export function addExperienceItem(item) {
   return newItem;
 }
 
+export function updateExperienceItem(id, updates) {
+  const list = getExperiences();
+  const idx = list.findIndex(item => item.id === id);
+  if (idx !== -1) {
+    list[idx] = { ...list[idx], ...updates };
+    saveExperiences(list);
+    return list[idx];
+  }
+  return null;
+}
+
 export function deleteExperienceItem(id) {
   const list = getExperiences().filter(item => item.id !== id);
   saveExperiences(list);
@@ -564,6 +597,17 @@ export function addCertificationItem(item) {
   list.push(newItem);
   saveCertifications(list);
   return newItem;
+}
+
+export function updateCertificationItem(id, updates) {
+  const list = getCertifications();
+  const idx = list.findIndex(item => item.id === id);
+  if (idx !== -1) {
+    list[idx] = { ...list[idx], ...updates };
+    saveCertifications(list);
+    return list[idx];
+  }
+  return null;
 }
 
 export function deleteCertificationItem(id) {
