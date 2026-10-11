@@ -97,11 +97,48 @@ document.addEventListener('DOMContentLoaded', async () => {
       trackPublicPortfolioTelemetry(username, userData);
     }
 
+    // 8. Mobile Navigation Drawer Toggle
+    initPublicMobileNav();
+
   } catch (err) {
     console.error('Error rendering public portfolio:', err);
     renderNotFoundState(username);
   }
 });
+
+/**
+ * Binds public portfolio mobile navigation drawer toggle and interaction handlers
+ */
+function initPublicMobileNav() {
+  const toggleBtn = document.getElementById('public-menu-toggle');
+  const navMenu = document.getElementById('public-nav-menu') || document.querySelector('.site-header .nav-desktop');
+  if (!toggleBtn || !navMenu) return;
+
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = navMenu.classList.toggle('is-open');
+    toggleBtn.classList.toggle('is-active', isOpen);
+    toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  // Smooth scroll & auto-close drawer upon clicking any link
+  navMenu.querySelectorAll('.nav-link, a').forEach(link => {
+    link.addEventListener('click', () => {
+      navMenu.classList.remove('is-open');
+      toggleBtn.classList.remove('is-active');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Close drawer when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!navMenu.contains(e.target) && !toggleBtn.contains(e.target)) {
+      navMenu.classList.remove('is-open');
+      toggleBtn.classList.remove('is-active');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
 
 function isCurrentSessionOwner(username) {
   try {
