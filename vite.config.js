@@ -77,6 +77,7 @@ export default defineConfig({
         publicPortfolio: resolve(__dirname, 'u/sunny/index.html'),
         ssrnovPortfolio: resolve(__dirname, 'u/ssrnov/index.html'),
         multiTenantPortfolio: resolve(__dirname, 'u/index.html'),
+        uPage: resolve(__dirname, 'u.html'),
         features: resolve(__dirname, 'features/index.html'),
         explore: resolve(__dirname, 'explore/index.html'),
         privacy: resolve(__dirname, 'privacy/index.html'),

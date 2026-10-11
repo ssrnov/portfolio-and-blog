@@ -143,7 +143,8 @@ function extractUsernameSlug() {
   const activeUser = getActiveUser();
   if (activeUser?.username) return activeUser.username.toLowerCase();
 
-  return null;
+  // Default fallback for /u root or direct preview
+  return 'ssrnov';
 }
 
 // ==============================================================================
