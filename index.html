@@ -121,9 +121,9 @@
           </div>
 
           <h1 id="hero-title" class="hero-title" style="font-size: clamp(2.8rem, 5.5vw, 4.4rem); line-height: 1.08; margin-bottom: var(--space-5); font-weight: 900; letter-spacing: -0.04em;">
-            Your Identity.<br />
-            Your Portfolio.<br />
-            <span class="hero-title-accent">Your Story.</span>
+            <span class="motion-mask-block"><span class="motion-line motion-stagger-1">Your Identity.</span></span>
+            <span class="motion-mask-block"><span class="motion-line motion-stagger-2">Your Portfolio.</span></span>
+            <span class="motion-mask-block"><span class="motion-line motion-stagger-3 hero-title-accent">Your Story.</span></span>
           </h1>
 
           <p class="hero-lead" style="font-size: var(--text-lg); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-8); max-width: 540px;">
@@ -131,9 +131,12 @@
           </p>
 
           <div class="hero-actions" style="display: flex; gap: var(--space-4); flex-wrap: wrap; margin-bottom: var(--space-4);">
-            <a href="/signup/" class="btn btn-primary btn-lg" style="padding: 14px 32px; font-weight: 700; border-radius: var(--radius-full);">
+            <a href="/signup/" class="btn btn-primary btn-lg btn-arrow-slide" style="padding: 14px 32px; font-weight: 700; border-radius: var(--radius-full);">
               <span>Build Your Portfolio</span>
-              <span aria-hidden="true">&rarr;</span>
+              <span class="btn-arrow-icon" aria-hidden="true">
+                <svg class="arrow-primary" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                <svg class="arrow-clone" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </span>
             </a>
             <a href="/templates/" class="btn btn-secondary btn-lg" style="padding: 14px 26px; border-radius: var(--radius-full);">
               <span>Explore Templates</span>
@@ -143,19 +146,19 @@
           <!-- Social Proof Metrics Bar (From Master Reference) -->
           <div class="hero-metrics-bar">
             <div class="hero-metric-item">
-              <span class="hero-metric-val">10K+</span>
+              <span class="hero-metric-val" data-counter="10K+">10K+</span>
               <span class="hero-metric-lbl">Creators</span>
             </div>
             <div class="hero-metric-item">
-              <span class="hero-metric-val">50K+</span>
+              <span class="hero-metric-val" data-counter="50K+">50K+</span>
               <span class="hero-metric-lbl">Portfolios</span>
             </div>
             <div class="hero-metric-item">
-              <span class="hero-metric-val">100K+</span>
+              <span class="hero-metric-val" data-counter="100K+">100K+</span>
               <span class="hero-metric-lbl">Projects</span>
             </div>
             <div class="hero-metric-item">
-              <span class="hero-metric-val">4.9 ★</span>
+              <span class="hero-metric-val" data-counter="4.9 ★">4.9 ★</span>
               <span class="hero-metric-lbl">User Rating</span>
             </div>
           </div>

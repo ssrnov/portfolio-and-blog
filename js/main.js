@@ -11,9 +11,11 @@ import { getActiveUser, getProfile } from './profile-data.js';
 import { initThemeManager, getTheme, setTheme, cycleTheme } from './theme.js';
 import { initButtonInteractions, initAllSegmentedControls } from './button-interactions.js';
 import { initCinematicIntro } from './cinematic-intro.js';
+import { initMotionSystem } from './motion.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initCinematicIntro();
+  initMotionSystem();
   initThemeToggle();
   initButtonInteractions();
   initMobileNavigation();

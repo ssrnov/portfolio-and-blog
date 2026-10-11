@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "license": "MIT",
   "type": "module",
-
   "description": "Folioryn — Multi-User Portfolio Builder & Publishing Platform",
   "scripts": {
     "dev": "vite",
@@ -16,6 +15,7 @@
     "vite": "^6.2.0"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.117.3"
+    "@supabase/supabase-js": "^2.117.3",
+    "gsap": "^3.15.0"
   }
 }

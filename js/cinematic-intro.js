@@ -209,6 +209,10 @@ export function playCinematicIntro(options = {}) {
         try { onComplete(); } catch (e) { /* ignore */ }
       }
 
+      try {
+        window.dispatchEvent(new CustomEvent('folioryn:intro-complete'));
+      } catch (e) { /* ignore */ }
+
       if (_currentResolve) {
         _currentResolve(true);
         _currentResolve = null;

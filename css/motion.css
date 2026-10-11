@@ -1,0 +1,423 @@
+/* ==========================================================================
+   FOLIORYN CINEMATIC MOTION SYSTEM (Inspired by Casa di Solare)
+   Fluid Easing, Masked Line Reveals, Staggered Scroll Cards, 
+   Micro-Interactions, Dynamic Number Counters & Page Transitions
+   ========================================================================== */
+
+:root {
+  /* Signature Casa di Solare luxury easing tokens */
+  --ease-cinematic: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-fluid: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring-soft: cubic-bezier(0.34, 1.3, 0.64, 1);
+  
+  /* Motion durations */
+  --dur-reveal-hero: 0.92s;
+  --dur-reveal-card: 0.68s;
+  --dur-reveal-text: 0.78s;
+  --dur-micro: 0.36s;
+  --dur-fast: 0.2s;
+}
+
+/* --------------------------------------------------------------------------
+   1. TYPOGRAPHY MASKED REVEALS (Casa di Solare Signature)
+   Text slides up smoothly from an overflow-hidden mask bounding box.
+   Accessible fallback: visible by default without JS.
+   -------------------------------------------------------------------------- */
+.motion-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  position: relative;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+.motion-mask-block {
+  display: block;
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+.motion-line {
+  display: inline-block;
+  will-change: transform, opacity;
+  transition: transform var(--dur-reveal-text) var(--ease-cinematic),
+              opacity var(--dur-reveal-text) var(--ease-cinematic);
+}
+
+/* When initialized by JavaScript, initial hidden state is applied */
+.motion-init .motion-line {
+  transform: translateY(115%);
+  opacity: 0;
+}
+
+/* Triggered reveal state */
+.motion-revealed .motion-line,
+.motion-line.is-revealed {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+}
+
+/* Stagger timings for multi-line headings */
+.motion-stagger-1 { transition-delay: 0.04s; }
+.motion-stagger-2 { transition-delay: 0.14s; }
+.motion-stagger-3 { transition-delay: 0.24s; }
+.motion-stagger-4 { transition-delay: 0.34s; }
+.motion-stagger-5 { transition-delay: 0.44s; }
+
+/* --------------------------------------------------------------------------
+   2. HERO SEQUENCING
+   Coordinated timeline for Hero Badge -> Headline -> Lead -> Actions -> Metrics
+   -------------------------------------------------------------------------- */
+.hero-staged-badge {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s var(--ease-fluid), transform 0.6s var(--ease-fluid);
+}
+
+.hero-staged-lead {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s var(--ease-cinematic) 0.2s, transform 0.7s var(--ease-cinematic) 0.2s;
+}
+
+.hero-staged-actions {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s var(--ease-cinematic) 0.32s, transform 0.7s var(--ease-cinematic) 0.32s;
+}
+
+.hero-staged-metrics {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s var(--ease-cinematic) 0.44s, transform 0.7s var(--ease-cinematic) 0.44s;
+}
+
+.hero-staged-stage {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity 0.85s var(--ease-cinematic) 0.28s, transform 0.85s var(--ease-cinematic) 0.28s;
+}
+
+/* JavaScript initializes these classes on hero to create entrance */
+.hero-motion-prep .hero-staged-badge {
+  opacity: 0;
+  transform: translateY(-12px);
+}
+.hero-motion-prep .hero-staged-lead {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.hero-motion-prep .hero-staged-actions {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.hero-motion-prep .hero-staged-metrics {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.hero-motion-prep .hero-staged-stage {
+  opacity: 0;
+  transform: translateY(32px) scale(0.97);
+}
+
+.hero-motion-play .hero-staged-badge,
+.hero-motion-play .hero-staged-lead,
+.hero-motion-play .hero-staged-actions,
+.hero-motion-play .hero-staged-metrics,
+.hero-motion-play .hero-staged-stage {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. BUTTON ARROW SLIDE MICRO-INTERACTION (Casa di Solare Signature)
+   Arrow glides right out of view, clone slides in from left on hover.
+   -------------------------------------------------------------------------- */
+.btn-arrow-slide,
+.btn:has(.btn-arrow-icon) {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-arrow-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 1.15em;
+  height: 1.15em;
+  overflow: hidden;
+  vertical-align: middle;
+  margin-left: 0.45em;
+  pointer-events: none;
+}
+
+.btn-arrow-icon svg {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform: translateY(-50%);
+  transition: transform var(--dur-micro) var(--ease-cinematic);
+}
+
+.btn-arrow-icon .arrow-primary {
+  transform: translateY(-50%) translateX(0);
+}
+
+.btn-arrow-icon .arrow-clone {
+  transform: translateY(-50%) translateX(-130%);
+}
+
+.btn:hover .btn-arrow-icon .arrow-primary,
+.btn-arrow-slide:hover .btn-arrow-icon .arrow-primary {
+  transform: translateY(-50%) translateX(130%);
+}
+
+.btn:hover .btn-arrow-icon .arrow-clone,
+.btn-arrow-slide:hover .btn-arrow-icon .arrow-clone {
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Button hover elevation glow */
+.btn-primary {
+  transition: background-color var(--transition-fast),
+              color var(--transition-fast),
+              border-color var(--transition-fast),
+              transform 0.22s var(--ease-spring-soft),
+              box-shadow 0.26s var(--ease-fluid);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 24px -6px rgba(143, 224, 174, 0.28);
+}
+
+[data-theme="light"] .btn-primary:hover {
+  box-shadow: 0 8px 24px -6px rgba(49, 92, 70, 0.28);
+}
+
+[data-theme="night"] .btn-primary:hover {
+  box-shadow: 0 8px 24px -6px rgba(214, 209, 199, 0.24);
+}
+
+.btn-primary:active {
+  transform: translateY(0.5px) scale(0.99);
+}
+
+/* --------------------------------------------------------------------------
+   4. NAVIGATION LINK LUXURY UNDERLINE
+   -------------------------------------------------------------------------- */
+.nav-link {
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-primary);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.32s var(--ease-cinematic);
+  border-radius: 1px;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* --------------------------------------------------------------------------
+   5. PROGRESSIVE SCROLL-TRIGGERED CARDS & SECTIONS
+   Buttery smooth entrance for cards across all templates & pages.
+   -------------------------------------------------------------------------- */
+.motion-card,
+.cinematic-card {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity var(--dur-reveal-card) var(--ease-cinematic),
+              transform var(--dur-reveal-card) var(--ease-cinematic),
+              box-shadow 0.35s var(--ease-fluid),
+              border-color 0.35s var(--ease-fluid);
+  will-change: transform, opacity;
+}
+
+.motion-card-init {
+  opacity: 0;
+  transform: translateY(32px) scale(0.985);
+}
+
+.motion-card-init.is-revealed {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+}
+
+/* Stagger delay classes */
+.stagger-delay-1 { transition-delay: 0.05s; }
+.stagger-delay-2 { transition-delay: 0.12s; }
+.stagger-delay-3 { transition-delay: 0.19s; }
+.stagger-delay-4 { transition-delay: 0.26s; }
+.stagger-delay-5 { transition-delay: 0.33s; }
+.stagger-delay-6 { transition-delay: 0.40s; }
+
+/* Subtle restrained image zoom on project & template cards */
+.project-card,
+.template-card,
+.curated-profile-card,
+.bento-card {
+  transition: transform 0.4s var(--ease-cinematic),
+              box-shadow 0.4s var(--ease-cinematic),
+              border-color 0.3s ease;
+}
+
+.project-card:hover,
+.template-card:hover,
+.curated-profile-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -12px var(--shadow-color, rgba(0, 0, 0, 0.45));
+}
+
+.project-card .project-media-wrap img,
+.template-card .template-preview-frame img,
+.curated-avatar-wrap img {
+  transition: transform 0.65s var(--ease-cinematic);
+  will-change: transform;
+}
+
+.project-card:hover .project-media-wrap img,
+.template-card:hover .template-preview-frame img,
+.curated-profile-card:hover .curated-avatar-wrap img {
+  transform: scale(1.035);
+}
+
+/* --------------------------------------------------------------------------
+   6. DYNAMIC NUMBER COUNTERS
+   Tabular nums & smooth count animation
+   -------------------------------------------------------------------------- */
+.counter-animating {
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+  will-change: contents;
+}
+
+/* --------------------------------------------------------------------------
+   7. SUBTLE PARALLAX DEPTH & AMBIENT ORBS
+   Floaty background atmosphere
+   -------------------------------------------------------------------------- */
+.ambient-orb {
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0.4, 1);
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------------------
+   8. TASTEFUL PAGE ROUTE TRANSITION CURTAIN
+   Quick 220ms non-blocking veil for smooth cross-fades
+   -------------------------------------------------------------------------- */
+.folioryn-route-curtain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--bg-primary);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 99997;
+  transition: opacity 0.22s var(--ease-fluid), visibility 0.22s;
+}
+
+.folioryn-route-curtain.is-active {
+  opacity: 0.75;
+  visibility: visible;
+}
+
+/* --------------------------------------------------------------------------
+   9. TEMPLATE PERSONALITY MOTION STYLING
+   Subtle adaptations for each of the 6 templates
+   -------------------------------------------------------------------------- */
+/* Minimal Professional */
+[data-template="minimal-professional"] .project-card {
+  transition: transform 0.3s var(--ease-fluid), border-color 0.3s var(--ease-fluid);
+}
+
+/* Developer Portfolio */
+[data-template="developer-portfolio"] .hero-metric-item,
+[data-template="developer-portfolio"] .stat-pill {
+  font-family: var(--font-mono, monospace);
+}
+
+/* Creative Portfolio */
+[data-template="creative-portfolio"] .project-card:hover {
+  transform: translateY(-6px) rotate(0.4deg);
+}
+
+/* Editorial Portfolio */
+[data-template="editorial-portfolio"] .hero-title,
+[data-template="editorial-portfolio"] .section-title {
+  font-family: var(--font-serif, serif);
+  letter-spacing: -0.02em;
+}
+
+/* Student Portfolio */
+[data-template="student-portfolio"] .project-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Experience Focused */
+[data-template="experience-focused"] .timeline-item {
+  transition: transform 0.35s var(--ease-cinematic);
+}
+
+/* --------------------------------------------------------------------------
+   10. REDUCED MOTION PREFERENCES (Strict WCAG Accessibility)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .motion-mask,
+  .motion-mask-block {
+    overflow: visible !important;
+  }
+  
+  .motion-line,
+  .motion-card,
+  .cinematic-card,
+  .hero-staged-badge,
+  .hero-staged-lead,
+  .hero-staged-actions,
+  .hero-staged-metrics,
+  .hero-staged-stage,
+  .btn-arrow-icon svg,
+  .nav-link::after,
+  .ambient-orb {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  
+  .btn:hover .btn-arrow-icon .arrow-primary {
+    transform: translateY(-50%) translateX(0) !important;
+  }
+  
+  .btn:hover .btn-arrow-icon .arrow-clone {
+    display: none !important;
+  }
+
+  .folioryn-route-curtain {
+    display: none !important;
+  }
+}
