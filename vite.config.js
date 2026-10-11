@@ -11,8 +11,8 @@ function foliorynRouterPlugin() {
           const urlObj = new URL(req.url, 'http://localhost');
           const pathname = urlObj.pathname.replace(/\/+$/, '') || '/';
 
-          // 1. Rewrite /u/:slug (except /u/sunny and assets) to /u/index.html?u=:slug
-          if (pathname.startsWith('/u/') && pathname !== '/u/sunny' && !pathname.includes('.')) {
+          // 1. Rewrite /u/:slug (except /u/sunny, /u/ssrnov and assets) to /u/index.html?u=:slug
+          if (pathname.startsWith('/u/') && pathname !== '/u/sunny' && pathname !== '/u/ssrnov' && !pathname.includes('.')) {
             const slug = pathname.replace('/u/', '');
             if (slug && slug !== 'index.html') {
               req.url = `/u/index.html?u=${encodeURIComponent(slug)}` + (urlObj.search ? '&' + urlObj.search.slice(1) : '');
@@ -75,6 +75,7 @@ export default defineConfig({
         dashboardSettings: resolve(__dirname, 'dashboard/settings/index.html'),
         dashboardBlog: resolve(__dirname, 'dashboard/blog/index.html'),
         publicPortfolio: resolve(__dirname, 'u/sunny/index.html'),
+        ssrnovPortfolio: resolve(__dirname, 'u/ssrnov/index.html'),
         multiTenantPortfolio: resolve(__dirname, 'u/index.html'),
         features: resolve(__dirname, 'features/index.html'),
         explore: resolve(__dirname, 'explore/index.html'),
