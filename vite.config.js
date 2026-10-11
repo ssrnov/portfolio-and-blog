@@ -18,8 +18,18 @@ function foliorynRouterPlugin() {
             return next();
           }
 
-          // 2. Rewrite /u/:slug (except /u/sunny, /u/ssrnov and assets) to /u/index.html?u=:slug
-          if (pathname.startsWith('/u/') && pathname !== '/u/sunny' && pathname !== '/u/ssrnov' && !pathname.includes('.')) {
+          // 2. Rewrite /u/ssrnov and /u/sunny to their respective index.html
+          if (pathname === '/u/ssrnov') {
+            req.url = '/u/ssrnov/index.html' + urlObj.search;
+            return next();
+          }
+          if (pathname === '/u/sunny') {
+            req.url = '/u/sunny/index.html' + urlObj.search;
+            return next();
+          }
+
+          // 3. Rewrite /u/:slug (multi-tenant) to /u/index.html?u=:slug
+          if (pathname.startsWith('/u/') && !pathname.includes('.')) {
             const slug = pathname.replace('/u/', '');
             if (slug && slug !== 'index.html') {
               req.url = `/u/index.html?u=${encodeURIComponent(slug)}` + (urlObj.search ? '&' + urlObj.search.slice(1) : '');
