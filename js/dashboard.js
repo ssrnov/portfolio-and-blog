@@ -310,7 +310,7 @@ export function populateInboundMessages() {
     const mailtoUrl = `mailto:${encodeURIComponent(msg.sender_email)}?subject=${replySubject}`;
 
     return `
-      <div class="interactive-3d-card inbound-msg-card" data-msg-id="${escapeHtml(msg.id)}" style="background: ${isUnread ? 'var(--bg-surface)' : 'var(--bg-secondary)'}; border: 1px solid ${isUnread ? 'rgba(34, 197, 94, 0.4)' : 'var(--border-color)'}; border-left: 4px solid ${isUnread ? '#22c55e' : 'var(--border-color)'}; border-radius: var(--radius-md); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); transition: all var(--transition-fast);">
+      <div class="inbound-msg-card" data-msg-id="${escapeHtml(msg.id)}" style="background: ${isUnread ? 'var(--bg-surface)' : 'var(--bg-secondary)'}; border: 1px solid ${isUnread ? 'rgba(34, 197, 94, 0.4)' : 'var(--border-color)'}; border-left: 4px solid ${isUnread ? '#22c55e' : 'var(--border-color)'}; border-radius: var(--radius-md); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); transition: all var(--transition-fast);">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
           <div style="display: flex; align-items: center; gap: 10px;">
             <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-primary); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: var(--font-mono); color: var(--text-primary); font-size: 12px; flex-shrink: 0;">

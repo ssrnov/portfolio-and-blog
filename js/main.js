@@ -606,10 +606,19 @@ function initInteractive3D() {
   if (typeof window === 'undefined') return;
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const selector = '.interactive-3d-card, .project-card, .blog-card, .template-card, .feature-card, .about-bio-card, .fact-card, .article-portfolio-card, .tool-card, .inbound-msg-card, .curated-profile-card';
+  // Strictly disable 3D tilt effects on all dashboard pages
+  if (window.location.pathname.startsWith('/dashboard') || document.body.classList.contains('dashboard-shell')) {
+    return;
+  }
+
+  const selector = '.interactive-3d-card, .project-card, .blog-card, .template-card, .feature-card, .about-bio-card, .fact-card, .article-portfolio-card, .tool-card, .curated-profile-card';
 
   function attachTilt(card) {
     if (card.__tiltBound) return;
+    // Strictly exclude any cards or containers within the dashboard
+    if (card.closest('.dashboard-shell') || card.closest('.dashboard-content') || card.closest('.dashboard-main')) {
+      return;
+    }
     card.__tiltBound = true;
 
     let rafId = null;
